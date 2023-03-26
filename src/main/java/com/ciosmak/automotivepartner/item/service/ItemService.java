@@ -4,6 +4,7 @@ import com.ciosmak.automotivepartner.item.api.request.ItemRequest;
 import com.ciosmak.automotivepartner.item.api.response.ItemResponse;
 import com.ciosmak.automotivepartner.item.domain.Item;
 import com.ciosmak.automotivepartner.item.repository.ItemRepository;
+import com.ciosmak.automotivepartner.item.support.ItemExceptionSupplier;
 import com.ciosmak.automotivepartner.item.support.ItemMapper;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,7 @@ public class ItemService
 
     public ItemResponse find(Long id)
     {
-        Item item = itemRepository.findById(id).orElseThrow(RuntimeException::new);
+        Item item = itemRepository.findById(id).orElseThrow(ItemExceptionSupplier.itemNotFound(id));
         return itemMapper.toItemResponse(item);
     }
 }
