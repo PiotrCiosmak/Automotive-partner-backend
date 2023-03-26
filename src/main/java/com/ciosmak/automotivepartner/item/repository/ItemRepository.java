@@ -41,4 +41,9 @@ public class ItemRepository
     {
         return new ArrayList<>(map.values());
     }
+
+    public void deleteById(Long id)
+    {
+        map.remove(id);
+    }
 }

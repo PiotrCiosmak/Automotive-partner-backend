@@ -47,4 +47,10 @@ public class ItemService
         itemRepository.save(itemMapper.toItem(item, updateItemRequest));
         return itemMapper.toItemResponse(item);
     }
+
+    public void delete(Long id)
+    {
+        Item item = itemRepository.findById(id).orElseThrow(ItemExceptionSupplier.itemNotFound(id));
+        itemRepository.deleteById(item.getId());
+    }
 }

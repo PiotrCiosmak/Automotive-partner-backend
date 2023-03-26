@@ -56,4 +56,12 @@ public class ItemApi
         List<ItemResponse> itemResponses = itemService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(itemResponses);
     }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete item")
+    public ResponseEntity<Void> delete(@PathVariable Long id)
+    {
+        itemService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }
