@@ -3,9 +3,7 @@ package com.ciosmak.automotivepartner.item.repository;
 import com.ciosmak.automotivepartner.item.domain.Item;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class ItemRepository
@@ -15,20 +13,32 @@ public class ItemRepository
 
     public Item save(Item entity)
     {
-        setId(entity);
+        setData(entity);
         return entity;
     }
 
-    private Item setId(Item entity)
+    private Item setData(Item entity)
     {
-        entity.setId(counter);
-        map.put(counter, entity);
-        counter++;
+        if (entity.getId() != null)
+        {
+            map.put(entity.getId(), entity);
+        }
+        else
+        {
+            entity.setId(counter);
+            map.put(counter, entity);
+            counter++;
+        }
         return entity;
     }
 
     public Optional<Item> findById(Long id)
     {
         return Optional.ofNullable(map.get(id));
+    }
+
+    public List<Item> findAll()
+    {
+        return new ArrayList<>(map.values());
     }
 }

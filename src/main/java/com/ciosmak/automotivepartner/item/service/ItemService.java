@@ -1,12 +1,16 @@
 package com.ciosmak.automotivepartner.item.service;
 
 import com.ciosmak.automotivepartner.item.api.request.ItemRequest;
+import com.ciosmak.automotivepartner.item.api.request.UpdateItemRequest;
 import com.ciosmak.automotivepartner.item.api.response.ItemResponse;
 import com.ciosmak.automotivepartner.item.domain.Item;
 import com.ciosmak.automotivepartner.item.repository.ItemRepository;
 import com.ciosmak.automotivepartner.item.support.ItemExceptionSupplier;
 import com.ciosmak.automotivepartner.item.support.ItemMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemService
@@ -29,6 +33,18 @@ public class ItemService
     public ItemResponse find(Long id)
     {
         Item item = itemRepository.findById(id).orElseThrow(ItemExceptionSupplier.itemNotFound(id));
+        return itemMapper.toItemResponse(item);
+    }
+
+    public List<ItemResponse> findAll()
+    {
+        return itemRepository.findAll().stream().map(itemMapper::toItemResponse).collect(Collectors.toList());
+    }
+
+    public ItemResponse update(UpdateItemRequest updateItemRequest)
+    {
+        Item item = itemRepository.findById(updateItemRequest.getId()).orElseThrow(ItemExceptionSupplier.itemNotFound(updateItemRequest.getId()));
+        itemRepository.save(itemMapper.toItem(item, updateItemRequest));
         return itemMapper.toItemResponse(item);
     }
 }

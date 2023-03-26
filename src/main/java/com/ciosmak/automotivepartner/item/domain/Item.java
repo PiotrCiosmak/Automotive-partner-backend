@@ -3,7 +3,7 @@ package com.ciosmak.automotivepartner.item.domain;
 public class Item
 {
     private Long id;
-    private final String name;
+    private String name;
 
     public Item(String name)
     {
@@ -20,6 +20,10 @@ public class Item
         return id;
     }
 
+    public void setName(String name)
+    {
+        this.name = name;
+    }
     public String getName()
     {
         return name;
