@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.ciosmak</groupId>
-    <artifactId>automotive-partner</artifactId>
+    <artifactId>automotive-partner-back-end</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>automotive-partner</name>
-    <description>automotive-partner</description>
+    <name>automotive-partner-back-end</name>
+    <description>automotive-partner-back-end</description>
     <properties>
         <java.version>19</java.version>
     </properties>
