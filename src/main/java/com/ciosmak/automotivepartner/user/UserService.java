@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -68,11 +69,21 @@ public class UserService implements IUserService
         Calendar calendar = Calendar.getInstance();
         if ((verificationToken.getExpirationTime().getTime() - calendar.getTime().getTime()) <= 0)
         {
-            tokenRepository.delete(verificationToken);
             return "Token already expired";
         }
         user.setEnabled(true);
         userRepository.save(user);
         return "valid";
+    }
+
+
+    @Override
+    public VerificationToken generateNewVerificationToken(String oldToken)
+    {
+        VerificationToken verificationToken = tokenRepository.findByToken(oldToken);
+        var tokenExpirationTime = new VerificationToken();
+        verificationToken.setToken(UUID.randomUUID().toString());
+        verificationToken.setExpirationTime(tokenExpirationTime.getTokenExpirationTime());
+        return tokenRepository.save(verificationToken);
     }
 }
