@@ -16,11 +16,11 @@ public class Car
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
-    String registrationNumber;
+    private String registrationNumber;
 
-    Integer mileage;
+    private Integer mileage;
 
-    Boolean blocked;
+    private Boolean blocked;
 }
