@@ -19,4 +19,12 @@ public interface IUserService
     String validateToken(String token);
 
     VerificationToken generateNewVerificationToken(String oldToken);
+
+    void createPasswordResetTokenForUser(User user, String passwordToken);
+
+    String validatePasswordResetToken(String passwordResetToken);
+
+    User findUserByPasswordToken(String passwordResetToken);
+
+    void resetUserPassword(User user, String newPassword);
 }

@@ -1,4 +1,4 @@
-package com.ciosmak.automotivepartner.registration.token;
+package com.ciosmak.automotivepartner.registration.password;
 
 import com.ciosmak.automotivepartner.user.User;
 import jakarta.persistence.*;
@@ -13,8 +13,8 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "verification_token")
-public class VerificationToken
+@Table(name = "password_reset_token")
+public class PasswordResetToken
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class VerificationToken
     @JoinColumn(name = "user_id")
     private User user;
 
-    public VerificationToken(String token, User user)
+    public PasswordResetToken(String token, User user)
     {
         super();
         this.token = token;
@@ -35,7 +35,7 @@ public class VerificationToken
         this.expirationTime = this.getTokenExpirationTime();
     }
 
-    public VerificationToken(String token)
+    public PasswordResetToken(String token)
     {
         super();
         this.token = token;

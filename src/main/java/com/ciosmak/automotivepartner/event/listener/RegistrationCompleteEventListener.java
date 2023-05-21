@@ -59,4 +59,22 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
         messageHelper.setText(mailContent, true);
         mailSender.send(message);
     }
+
+    public void sendPasswordResetVerificationEmail(String url) throws MessagingException, UnsupportedEncodingException
+    {
+        String subject = "Password Reset Request Verification";
+        String senderName = "Automotive Partner";
+        String mailContent = "<p> Hi, " + user.getFirstName() + ", </p>" +
+                "<p><b>You recently requested to rest your password, </b>" +
+                "Please, follow the link below to complete the action.</p>"+
+                "<a href=\"" + url + "\">Reset password</a>" +
+                "<br> Automotive Partner";
+        MimeMessage message = mailSender.createMimeMessage();
+        var messageHelper = new MimeMessageHelper(message);
+        messageHelper.setFrom("piotrciosmak2001@gmail.com", senderName);
+        messageHelper.setTo(user.getEmail());
+        messageHelper.setSubject(subject);
+        messageHelper.setText(mailContent, true);
+        mailSender.send(message);
+    }
 }

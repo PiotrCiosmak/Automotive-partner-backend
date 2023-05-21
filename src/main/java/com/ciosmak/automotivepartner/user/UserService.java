@@ -2,6 +2,7 @@ package com.ciosmak.automotivepartner.user;
 
 import com.ciosmak.automotivepartner.exception.UserAlreadyExistsException;
 import com.ciosmak.automotivepartner.registration.RegistrationRequest;
+import com.ciosmak.automotivepartner.registration.password.PasswordResetTokenService;
 import com.ciosmak.automotivepartner.registration.token.VerificationToken;
 import com.ciosmak.automotivepartner.registration.token.VerificationTokenRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,8 @@ public class UserService implements IUserService
 {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final VerificationTokenRepository tokenRepository;
+    private final VerificationTokenRepository verificationTokenRepository;
+    private final PasswordResetTokenService passwordResetTokenService;
 
     @Override
     public List<User> getUsers()
@@ -54,13 +56,13 @@ public class UserService implements IUserService
     public void saveUserVerificationToken(User user, String token)
     {
         var verificationToken = new VerificationToken(token, user);
-        tokenRepository.save(verificationToken);
+        verificationTokenRepository.save(verificationToken);
     }
 
     @Override
     public String validateToken(String token)
     {
-        VerificationToken verificationToken = tokenRepository.findByToken(token);
+        VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
         if (verificationToken == null)
         {
             return "Invalid verification token";
@@ -69,21 +71,45 @@ public class UserService implements IUserService
         Calendar calendar = Calendar.getInstance();
         if ((verificationToken.getExpirationTime().getTime() - calendar.getTime().getTime()) <= 0)
         {
-            return "Token already expired";
+            return "Verification link already expired";
         }
         user.setEnabled(true);
         userRepository.save(user);
         return "valid";
     }
 
-
     @Override
     public VerificationToken generateNewVerificationToken(String oldToken)
     {
-        VerificationToken verificationToken = tokenRepository.findByToken(oldToken);
+        VerificationToken verificationToken = verificationTokenRepository.findByToken(oldToken);
         var tokenExpirationTime = new VerificationToken();
         verificationToken.setToken(UUID.randomUUID().toString());
         verificationToken.setExpirationTime(tokenExpirationTime.getTokenExpirationTime());
-        return tokenRepository.save(verificationToken);
+        return verificationTokenRepository.save(verificationToken);
+    }
+
+    @Override
+    public void createPasswordResetTokenForUser(User user, String passwordToken)
+    {
+        passwordResetTokenService.createPasswordResetTokenForUser(user, passwordToken);
+    }
+
+    @Override
+    public String validatePasswordResetToken(String passwordResetToken)
+    {
+        return passwordResetTokenService.validatePasswordResetToken(passwordResetToken);
+    }
+
+    @Override
+    public User findUserByPasswordToken(String passwordResetToken)
+    {
+        return passwordResetTokenService.findUserByPasswordToken(passwordResetToken).get();
+    }
+
+    @Override
+    public void resetUserPassword(User user, String newPassword)
+    {
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 }
