@@ -22,13 +22,13 @@ public class User
     private String firstName;
 
     private String lastName;
-    @NaturalId(mutable = true)
 
+    @NaturalId(mutable = true)
     private String email;
 
     private String password;
 
     private String role;
 
-    private boolean isEnabled = false;
+    private boolean enabled = false;
 }

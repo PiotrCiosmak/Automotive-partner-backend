@@ -16,14 +16,14 @@ public class UserRegistrationDetails implements UserDetails
 {
     private String userName;
     private String password;
-    private boolean isEnabled;
+    private boolean enabled;
     private List<GrantedAuthority> authorities;
 
     public UserRegistrationDetails(User user)
     {
         this.userName = user.getEmail();
         this.password = user.getPassword();
-        this.isEnabled = user.isEnabled();
+        this.enabled = user.isEnabled();
         this.authorities = Arrays.stream(user.getRole().split(",")).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
@@ -66,6 +66,6 @@ public class UserRegistrationDetails implements UserDetails
     @Override
     public boolean isEnabled()
     {
-        return isEnabled;
+        return enabled;
     }
 }
