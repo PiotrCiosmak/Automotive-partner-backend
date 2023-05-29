@@ -1,8 +1,8 @@
 package com.ciosmak.automotivepartner.availability;
 
-public enum State
+public enum Type
 {
-    day,
-    night,
-    free
+    DAY,
+    NIGHT,
+    FREE
 }
