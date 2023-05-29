@@ -1,6 +1,5 @@
 package com.ciosmak.automotivepartner.statistic;
 
-import com.ciosmak.automotivepartner.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,8 +27,4 @@ public class Statistic
     private Double litersOfGas;
 
     private Double litersOfGasoline;
-
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
 }
