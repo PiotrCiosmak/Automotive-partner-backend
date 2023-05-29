@@ -28,6 +28,6 @@ public class Car
 
     private Boolean blocked;//DEFAULT FALSE
 
-    @OneToMany(mappedBy = "cars", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "car", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Shift> shifts = new ArrayList<>();
 }

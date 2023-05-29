@@ -39,9 +39,9 @@ public class Shift
 
     private Boolean done;//DEFAULT FALSE
 
-    @OneToMany(mappedBy = "shifts", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "shift", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private List<Accident> accidents = new ArrayList<>();
 
-    @OneToMany(mappedBy = "shifts", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "shift", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private List<Image> images = new ArrayList<>();
 }

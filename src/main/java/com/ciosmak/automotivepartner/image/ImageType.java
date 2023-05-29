@@ -23,6 +23,6 @@ public class ImageType
 
     private String type;// {SHIFT_START, SHIFT_END, SHIFT_START_MILEAGE, SHIFT_END_MILEAGE, RECEIPT, CAR_DAMAGE, STATEMENT}
 
-    @OneToMany(mappedBy = "imagesTypes", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "imagesType", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private List<Image> images = new ArrayList<>();
 }
