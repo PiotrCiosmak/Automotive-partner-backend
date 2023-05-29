@@ -1,10 +1,14 @@
 package com.ciosmak.automotivepartner.car;
 
+import com.ciosmak.automotivepartner.shift.Shift;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,4 +27,7 @@ public class Car
     private Integer mileage;
 
     private Boolean blocked;
+
+    @OneToMany(mappedBy = "cars", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<Shift> shifts = new ArrayList<>();
 }
