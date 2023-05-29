@@ -1,26 +1,27 @@
 package com.ciosmak.automotivepartner.availability;
 
+import com.ciosmak.automotivepartner.entity.AbstractEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
+@ToString(onlyExplicitlyIncluded = true)
+
 @Entity
 @Table(name = "availability")
-public class Availability
+public class Availability extends AbstractEntity
 {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    @ToString.Include
+    @Column(name = "type", nullable = false)
     private Type type;
 
+    @ToString.Include
+    @Column(name = "date", columnDefinition = "DATE", nullable = false)
     private Date date;
 }

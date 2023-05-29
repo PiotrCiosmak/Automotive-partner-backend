@@ -1,36 +1,43 @@
 package com.ciosmak.automotivepartner.settlement;
 
+import com.ciosmak.automotivepartner.entity.AbstractEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
+@ToString(onlyExplicitlyIncluded = true)
+
 @Entity
 @Table(name = "settlements")
-public class Settlement
+public class Settlement extends AbstractEntity
 {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    @ToString.Include
+    @Column(name = "month_and_year", columnDefinition = "DATE", nullable = false)
     private Date monthAndYear;
 
-    private Double netProfit;
+    @Column(name = "net_profit", scale = 2, nullable = false)
+    private BigDecimal netProfit;
 
-    private Double factor;
+    @Column(name = "factor", scale = 2, nullable = false)
+    private BigDecimal factor;
 
-    private Double tips;
+    @Column(name = "tips", scale = 2, nullable = false)
+    private BigDecimal tips;
 
-    private Double penalties;
+    @Column(name = "penalties", scale = 2, nullable = false)
+    private BigDecimal penalties;
 
-    private Double finalProfit;
+    @ToString.Include
+    @Column(name = "final_profit", scale = 2, nullable = false)
+    private BigDecimal finalProfit;
 
-    private Boolean bugReported;//DEFAULT FALSE
+    @Column(name = "bug_reported", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean bugReported;
 }

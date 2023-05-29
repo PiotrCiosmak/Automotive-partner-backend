@@ -1,22 +1,21 @@
 package com.ciosmak.automotivepartner.image;
 
+import com.ciosmak.automotivepartner.entity.AbstractEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
+@ToString(onlyExplicitlyIncluded = true)
+
 @Entity
 @Table(name = "images")
-public class Image
+public class Image extends AbstractEntity
 {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    @ToString.Include
+    @Column(name = "url", nullable = false)
     private String url;
 }

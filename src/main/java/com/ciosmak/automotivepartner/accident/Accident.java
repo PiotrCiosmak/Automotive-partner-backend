@@ -1,22 +1,21 @@
 package com.ciosmak.automotivepartner.accident;
 
+import com.ciosmak.automotivepartner.entity.AbstractEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
+@ToString(onlyExplicitlyIncluded = true)
+
 @Entity
 @Table(name = "accidents")
-public class Accident
+public class Accident extends AbstractEntity
 {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private boolean guilty;
+    @ToString.Include
+    @Column(name = "guilty", nullable = false)
+    private Boolean guilty;
 }
