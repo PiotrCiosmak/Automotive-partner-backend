@@ -32,5 +32,5 @@ public class Settlement
 
     private Double finalProfit;
 
-    private Boolean bugReported;
+    private Boolean bugReported;//DEFAULT FALSE
 }
