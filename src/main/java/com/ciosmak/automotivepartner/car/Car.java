@@ -26,7 +26,7 @@ public class Car
 
     private Integer mileage;
 
-    private Boolean blocked;
+    private Boolean blocked;//DEFAULT FALSE
 
     @OneToMany(mappedBy = "cars", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Shift> shifts = new ArrayList<>();
