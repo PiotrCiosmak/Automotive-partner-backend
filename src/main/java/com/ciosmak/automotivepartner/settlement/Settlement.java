@@ -1,7 +1,5 @@
 package com.ciosmak.automotivepartner.settlement;
 
-
-import com.ciosmak.automotivepartner.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Entity
 @Table(name = "settlements")
-public class Settlements
+public class Settlement
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,8 +33,4 @@ public class Settlements
     private Double finalProfit;
 
     private Boolean bugReported;
-
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
 }
