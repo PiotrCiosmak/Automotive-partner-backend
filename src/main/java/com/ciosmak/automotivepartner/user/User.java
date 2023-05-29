@@ -1,6 +1,10 @@
 package com.ciosmak.automotivepartner.user;
 
 import com.ciosmak.automotivepartner.availability.Availability;
+import com.ciosmak.automotivepartner.image.Image;
+import com.ciosmak.automotivepartner.settlement.Settlement;
+import com.ciosmak.automotivepartner.shift.Shift;
+import com.ciosmak.automotivepartner.statistic.Statistic;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,10 +40,19 @@ public class User
 
     private String role;
 
-    private boolean enabled = false;
+    private boolean enabled = false;//DEFAULT FALSE
 
+    private boolean blocked = false;//DEFAULT FALSE
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinTable(name = "availability_users", joinColumns = {@JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "availability_id")})
-    private List<Availability> addresses = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    private List<Availability> availabilities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    private List<Settlement> settlements = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    private List<Statistic> statistics = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    private List<Shift> shifts = new ArrayList<>();
 }
