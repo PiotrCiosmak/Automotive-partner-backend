@@ -2,8 +2,10 @@ package com.ciosmak.automotivepartner.shift;
 
 import com.ciosmak.automotivepartner.accident.Accident;
 import com.ciosmak.automotivepartner.availability.Type;
+import com.ciosmak.automotivepartner.car.Car;
 import com.ciosmak.automotivepartner.entity.AbstractEntity;
 import com.ciosmak.automotivepartner.image.Image;
+import com.ciosmak.automotivepartner.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -46,6 +48,14 @@ public class Shift extends AbstractEntity
 
     @Column(name = "done", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean done;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "car_id")
+    private Car car;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @OneToMany(mappedBy = "shift", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private List<Accident> accidents = new ArrayList<>();

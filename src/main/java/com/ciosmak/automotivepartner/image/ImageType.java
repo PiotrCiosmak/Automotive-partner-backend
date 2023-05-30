@@ -22,6 +22,6 @@ public class ImageType extends AbstractEntity
     @Column(name = "type", nullable = false)
     private String type;// {SHIFT_START, SHIFT_END, SHIFT_START_MILEAGE, SHIFT_END_MILEAGE, RECEIPT, CAR_DAMAGE, STATEMENT}
 
-    @OneToMany(mappedBy = "imagesType", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "imageType", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private List<Image> images = new ArrayList<>();
 }

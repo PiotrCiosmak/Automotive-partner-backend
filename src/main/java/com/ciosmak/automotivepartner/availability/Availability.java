@@ -1,6 +1,7 @@
 package com.ciosmak.automotivepartner.availability;
 
 import com.ciosmak.automotivepartner.entity.AbstractEntity;
+import com.ciosmak.automotivepartner.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,4 +25,8 @@ public class Availability extends AbstractEntity
     @ToString.Include
     @Column(name = "date", columnDefinition = "DATE", nullable = false)
     private Date date;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "user_id")
+    private User user;
 }

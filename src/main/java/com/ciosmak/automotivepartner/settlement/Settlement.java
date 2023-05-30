@@ -1,6 +1,7 @@
 package com.ciosmak.automotivepartner.settlement;
 
 import com.ciosmak.automotivepartner.entity.AbstractEntity;
+import com.ciosmak.automotivepartner.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -40,4 +41,8 @@ public class Settlement extends AbstractEntity
 
     @Column(name = "bug_reported", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean bugReported;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "user_id")
+    private User user;
 }

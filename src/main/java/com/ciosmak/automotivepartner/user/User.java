@@ -4,7 +4,7 @@ import com.ciosmak.automotivepartner.availability.Availability;
 import com.ciosmak.automotivepartner.entity.AbstractEntity;
 import com.ciosmak.automotivepartner.settlement.Settlement;
 import com.ciosmak.automotivepartner.shift.Shift;
-import com.ciosmak.automotivepartner.statistic.Statistic;
+import com.ciosmak.automotivepartner.statistic.Statistics;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.NaturalId;
@@ -28,7 +28,7 @@ public class User extends AbstractEntity
     private String firstName;
 
     @ToString.Include
-    @Column(name = "first_name", nullable = false)
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
     @ToString.Include
@@ -58,7 +58,7 @@ public class User extends AbstractEntity
     private List<Settlement> settlements = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
-    private List<Statistic> statistics = new ArrayList<>();
+    private List<Statistics> statistics = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private List<Shift> shifts = new ArrayList<>();
