@@ -25,4 +25,10 @@ public class CarService
         Car car = carRepository.save(carMapper.toCar(carRequest));
         return carMapper.toCarResponse(car);
     }
+
+    public CarResponse find(Long id)
+    {
+        Car car = carRepository.findById(id).orElseThrow(RuntimeException::new);
+        return carMapper.toCarResponse(car);
+    }
 }

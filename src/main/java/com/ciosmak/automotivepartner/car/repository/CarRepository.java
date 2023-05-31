@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class CarRepository
@@ -21,8 +22,13 @@ public class CarRepository
     private Car setId(Car entity)
     {
         entity.setId(counter);
-        map.put(counter,entity);
+        map.put(counter, entity);
         counter++;
         return entity;
+    }
+
+    public Optional<Car> findById(Long id)
+    {
+        return Optional.ofNullable(map.get(id));
     }
 }

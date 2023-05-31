@@ -25,7 +25,13 @@ public class CarApi
     public ResponseEntity<CarResponse> create(@RequestBody CarRequest carRequest)
     {
         CarResponse carResponse = carService.create(carRequest);
-        return new ResponseEntity<>(carResponse, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(carResponse);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<CarResponse> find(@PathVariable Long id)
+    {
+        CarResponse carResponse = carService.find(id);
+        return ResponseEntity.status(HttpStatus.OK).body(carResponse);
+    }
 }
