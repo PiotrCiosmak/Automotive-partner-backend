@@ -2,10 +2,10 @@ package com.ciosmak.automotivepartner.car.domain;
 
 public class Car
 {
-    private final String registrationNumber;
-    private final Integer mileage;
-    private final Boolean blocked;
     private Long id;
+    private String registrationNumber;
+    private Integer mileage;
+    private Boolean blocked;
 
     public Car(String registrationNumber, Integer mileage, Boolean blocked)
     {
@@ -29,13 +29,28 @@ public class Car
         return registrationNumber;
     }
 
+    public void setRegistrationNumber(String registrationNumber)
+    {
+        this.registrationNumber = registrationNumber;
+    }
+
     public Integer getMileage()
     {
         return mileage;
     }
 
+    public void setMileage(Integer mileage)
+    {
+        this.mileage = mileage;
+    }
+
     public Boolean getBlocked()
     {
         return blocked;
+    }
+
+    public void setBlocked(Boolean blocked)
+    {
+        this.blocked = blocked;
     }
 }

@@ -1,6 +1,7 @@
 package com.ciosmak.automotivepartner.car.api;
 
 import com.ciosmak.automotivepartner.car.api.request.CarRequest;
+import com.ciosmak.automotivepartner.car.api.request.UpdateCarRequest;
 import com.ciosmak.automotivepartner.car.api.response.CarResponse;
 import com.ciosmak.automotivepartner.car.service.CarService;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,13 @@ public class CarApi
     public ResponseEntity<CarResponse> find(@PathVariable Long id)
     {
         CarResponse carResponse = carService.find(id);
+        return ResponseEntity.status(HttpStatus.OK).body(carResponse);
+    }
+
+    @PutMapping
+    public ResponseEntity<CarResponse> update(@RequestBody UpdateCarRequest updateCarRequest)
+    {
+        CarResponse carResponse = carService.update(updateCarRequest);
         return ResponseEntity.status(HttpStatus.OK).body(carResponse);
     }
 }

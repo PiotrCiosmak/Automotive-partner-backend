@@ -1,6 +1,7 @@
 package com.ciosmak.automotivepartner.car.service;
 
 import com.ciosmak.automotivepartner.car.api.request.CarRequest;
+import com.ciosmak.automotivepartner.car.api.request.UpdateCarRequest;
 import com.ciosmak.automotivepartner.car.api.response.CarResponse;
 import com.ciosmak.automotivepartner.car.domain.Car;
 import com.ciosmak.automotivepartner.car.repository.CarRepository;
@@ -30,6 +31,13 @@ public class CarService
     public CarResponse find(Long id)
     {
         Car car = carRepository.findById(id).orElseThrow(CarExceptionSupplier.carNotFound(id));
+        return carMapper.toCarResponse(car);
+    }
+
+    public CarResponse update(UpdateCarRequest updateCarRequest)
+    {
+        Car car = carRepository.findById(updateCarRequest.getId()).orElseThrow(CarExceptionSupplier.carNotFound(updateCarRequest.getId()));
+        carRepository.save(carMapper.toCar(car, updateCarRequest));
         return carMapper.toCarResponse(car);
     }
 }

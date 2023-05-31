@@ -15,15 +15,23 @@ public class CarRepository
 
     public Car save(Car entity)
     {
-        setId(entity);
+        setData(entity);
         return entity;
     }
 
-    private Car setId(Car entity)
+    private Car setData(Car entity)
     {
-        entity.setId(counter);
-        map.put(counter, entity);
-        counter++;
+        if (entity.getId() != null)
+        {
+            map.put(entity.getId(), entity);
+        }
+        else
+        {
+            entity.setId(counter);
+            map.put(counter, entity);
+            counter++;
+        }
+
         return entity;
     }
 
