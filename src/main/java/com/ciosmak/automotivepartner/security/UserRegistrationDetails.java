@@ -1,3 +1,4 @@
+/*
 package com.ciosmak.automotivepartner.security;
 
 import com.ciosmak.automotivepartner.user.User;
@@ -69,3 +70,4 @@ public class UserRegistrationDetails implements UserDetails
         return enabled;
     }
 }
+*/

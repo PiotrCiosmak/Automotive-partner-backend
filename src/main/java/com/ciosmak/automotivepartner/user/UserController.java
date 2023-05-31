@@ -1,3 +1,4 @@
+/*
 package com.ciosmak.automotivepartner.user;
 
 import lombok.RequiredArgsConstructor;
@@ -20,3 +21,4 @@ public class UserController
         return userService.getUsers();
     }
 }
+*/

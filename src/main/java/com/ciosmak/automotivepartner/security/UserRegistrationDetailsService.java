@@ -1,3 +1,4 @@
+/*
 package com.ciosmak.automotivepartner.security;
 
 import com.ciosmak.automotivepartner.user.UserRepository;
@@ -19,3 +20,4 @@ public class UserRegistrationDetailsService implements UserDetailsService
         return userRepository.findByEmail(email).map(UserRegistrationDetails::new).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }
+*/

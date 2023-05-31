@@ -1,3 +1,4 @@
+/*
 package com.ciosmak.automotivepartner.user;
 
 import com.ciosmak.automotivepartner.exception.UserAlreadyExistsException;
@@ -114,3 +115,4 @@ public class UserService implements IUserService
         userRepository.save(user);
     }
 }
+*/

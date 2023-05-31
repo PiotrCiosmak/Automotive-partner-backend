@@ -1,3 +1,4 @@
+/*
 package com.ciosmak.automotivepartner.registration.token;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,3 +8,4 @@ public interface VerificationTokenRepository extends JpaRepository<VerificationT
 
     VerificationToken findByToken(String token);
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package com.ciosmak.automotivepartner.registration.token;
 
 import com.ciosmak.automotivepartner.user.User;
@@ -50,3 +51,4 @@ public class VerificationToken
         return new Date(calendar.getTime().getTime());
     }
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package com.ciosmak.automotivepartner.registration.password;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -6,3 +7,4 @@ public interface PasswordResetTokenRepository extends JpaRepository<PasswordRese
 {
     PasswordResetToken findByToken(String token);
 }
+*/

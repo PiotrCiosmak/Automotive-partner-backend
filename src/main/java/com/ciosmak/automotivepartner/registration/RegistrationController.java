@@ -1,3 +1,4 @@
+/*
 package com.ciosmak.automotivepartner.registration;
 
 import com.ciosmak.automotivepartner.event.RegistrationCompleteEvent;
@@ -47,7 +48,7 @@ public class RegistrationController
     {
         String url = applicationUrl(servletRequest) + "/register/resend-verification-token?token=" + token;
         VerificationToken verificationToken = tokenRepository.findByToken(token);
-        if (verificationToken.getUser().isEnabled())
+        if (verificationTokean.getUser().isEnabled())
         {
             return "This account has already been verified, please login";
         }
@@ -119,3 +120,4 @@ public class RegistrationController
         return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
     }
 }
+*/

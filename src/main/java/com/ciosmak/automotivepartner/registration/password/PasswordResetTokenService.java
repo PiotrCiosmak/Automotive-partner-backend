@@ -1,3 +1,4 @@
+/*
 package com.ciosmak.automotivepartner.registration.password;
 
 import com.ciosmak.automotivepartner.registration.token.VerificationToken;
@@ -41,3 +42,4 @@ public class PasswordResetTokenService
         return Optional.ofNullable(passwordResetTokenRepository.findByToken(passwordToken).getUser());
     }
 }
+*/

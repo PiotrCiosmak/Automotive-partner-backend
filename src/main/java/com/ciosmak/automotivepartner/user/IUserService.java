@@ -1,3 +1,4 @@
+/*
 package com.ciosmak.automotivepartner.user;
 
 import com.ciosmak.automotivepartner.registration.RegistrationRequest;
@@ -28,3 +29,4 @@ public interface IUserService
 
     void resetUserPassword(User user, String newPassword);
 }
+*/

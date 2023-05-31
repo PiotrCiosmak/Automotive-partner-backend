@@ -1,3 +1,4 @@
+/*
 package com.ciosmak.automotivepartner.registration.password;
 
 import lombok.Data;
@@ -10,3 +11,4 @@ public class PasswordResetRequest
     private String newPassword;
     private String confirmPassword;
 }
+*/

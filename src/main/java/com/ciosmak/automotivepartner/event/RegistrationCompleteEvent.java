@@ -1,3 +1,4 @@
+/*
 package com.ciosmak.automotivepartner.event;
 
 import com.ciosmak.automotivepartner.user.User;
@@ -20,3 +21,4 @@ public class RegistrationCompleteEvent extends ApplicationEvent
         this.applicationUrl = applicationUrl;
     }
 }
+*/

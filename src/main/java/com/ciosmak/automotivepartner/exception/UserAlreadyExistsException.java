@@ -1,3 +1,4 @@
+/*
 package com.ciosmak.automotivepartner.exception;
 
 public class UserAlreadyExistsException extends RuntimeException
@@ -7,3 +8,4 @@ public class UserAlreadyExistsException extends RuntimeException
         super(message);
     }
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package com.ciosmak.automotivepartner.security;
 
 import org.springframework.context.annotation.Bean;
@@ -22,6 +23,8 @@ public class UserRegistrationSecurityConfig
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
     {
         return http.cors().and().csrf().disable().authorizeHttpRequests().requestMatchers("/register/**").permitAll().and().authorizeHttpRequests()
-                .requestMatchers("/users/**").hasAnyAuthority("USER", "ADMIN").and().formLogin().and().build();
+                .requestMatchers("/users/**").hasAnyAuthority("USER", "ADMIN").and().authorizeHttpRequests().requestMatchers("/**").permitAll().and().formLogin().and().build()
+                ;
     }
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package com.ciosmak.automotivepartner.event.listener;
 
 import com.ciosmak.automotivepartner.event.RegistrationCompleteEvent;
@@ -78,3 +79,4 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
         mailSender.send(message);
     }
 }
+*/
