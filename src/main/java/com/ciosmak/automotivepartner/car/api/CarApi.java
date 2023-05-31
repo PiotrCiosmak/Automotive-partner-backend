@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 //TODO dodane info dla swagger w wielu miejsach
 
 @RestController
@@ -29,6 +31,7 @@ public class CarApi
         return ResponseEntity.status(HttpStatus.CREATED).body(carResponse);
     }
 
+    //TODO może zmienić na @Path Variable
     @GetMapping("/{id}")
     public ResponseEntity<CarResponse> find(@PathVariable Long id)
     {
@@ -41,5 +44,12 @@ public class CarApi
     {
         CarResponse carResponse = carService.update(updateCarRequest);
         return ResponseEntity.status(HttpStatus.OK).body(carResponse);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CarResponse>> findAll()
+    {
+        List<CarResponse> carResponses = carService.findAll();
+        return ResponseEntity.status(HttpStatus.OK).body(carResponses);
     }
 }

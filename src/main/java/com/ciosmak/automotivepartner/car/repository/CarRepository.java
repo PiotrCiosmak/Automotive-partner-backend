@@ -3,9 +3,7 @@ package com.ciosmak.automotivepartner.car.repository;
 import com.ciosmak.automotivepartner.car.domain.Car;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class CarRepository
@@ -38,5 +36,10 @@ public class CarRepository
     public Optional<Car> findById(Long id)
     {
         return Optional.ofNullable(map.get(id));
+    }
+
+    public List<Car> findAll()
+    {
+        return new ArrayList<>(map.values());
     }
 }

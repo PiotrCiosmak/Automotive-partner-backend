@@ -9,6 +9,9 @@ import com.ciosmak.automotivepartner.car.support.CarExceptionSupplier;
 import com.ciosmak.automotivepartner.car.support.CarMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class CarService
 {
@@ -32,6 +35,11 @@ public class CarService
     {
         Car car = carRepository.findById(id).orElseThrow(CarExceptionSupplier.carNotFound(id));
         return carMapper.toCarResponse(car);
+    }
+
+    public List<CarResponse> findAll()
+    {
+        return carRepository.findAll().stream().map(carMapper::toCarResponse).collect(Collectors.toList());
     }
 
     public CarResponse update(UpdateCarRequest updateCarRequest)
