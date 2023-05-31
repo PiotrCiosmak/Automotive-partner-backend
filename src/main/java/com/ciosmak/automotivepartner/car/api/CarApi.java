@@ -53,7 +53,7 @@ public class CarApi
         return ResponseEntity.status(HttpStatus.OK).body(carResponses);
     }
 
-    @GetMapping("/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id)
     {
         carService.delete(id);
