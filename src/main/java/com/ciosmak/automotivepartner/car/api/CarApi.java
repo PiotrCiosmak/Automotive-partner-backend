@@ -52,4 +52,11 @@ public class CarApi
         List<CarResponse> carResponses = carService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(carResponses);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id)
+    {
+        carService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

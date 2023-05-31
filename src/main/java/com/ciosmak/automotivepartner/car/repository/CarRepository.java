@@ -42,4 +42,9 @@ public class CarRepository
     {
         return new ArrayList<>(map.values());
     }
+
+    public void deleteById(Long id)
+    {
+        map.remove(id);
+    }
 }

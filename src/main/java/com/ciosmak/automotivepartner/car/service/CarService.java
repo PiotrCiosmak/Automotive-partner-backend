@@ -48,4 +48,10 @@ public class CarService
         carRepository.save(carMapper.toCar(car, updateCarRequest));
         return carMapper.toCarResponse(car);
     }
+
+    public void delete(Long id)
+    {
+        Car car = carRepository.findById(id).orElseThrow(CarExceptionSupplier.carNotFound(id));
+        carRepository.deleteById(car.getId());
+    }
 }
