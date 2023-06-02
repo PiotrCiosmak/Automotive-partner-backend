@@ -2,7 +2,7 @@ package com.ciosmak.automotivepartner.shift;
 
 import com.ciosmak.automotivepartner.accident.Accident;
 import com.ciosmak.automotivepartner.availability.Type;
-import com.ciosmak.automotivepartner.car.Car;
+import com.ciosmak.automotivepartner.car.domain.Car;
 import com.ciosmak.automotivepartner.entity.AbstractEntity;
 import com.ciosmak.automotivepartner.image.Image;
 import com.ciosmak.automotivepartner.user.User;
