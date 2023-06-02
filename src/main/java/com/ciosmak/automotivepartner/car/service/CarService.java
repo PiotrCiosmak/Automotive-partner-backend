@@ -7,23 +7,18 @@ import com.ciosmak.automotivepartner.car.domain.Car;
 import com.ciosmak.automotivepartner.car.repository.CarRepository;
 import com.ciosmak.automotivepartner.car.support.CarExceptionSupplier;
 import com.ciosmak.automotivepartner.car.support.CarMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
 @Service
 public class CarService
 {
     private final CarRepository carRepository;
     private final CarMapper carMapper;
-
-    //TODO lombok
-    public CarService(CarRepository carRepository, CarMapper carMapper)
-    {
-        this.carRepository = carRepository;
-        this.carMapper = carMapper;
-    }
 
     public CarResponse create(CarRequest carRequest)
     {
