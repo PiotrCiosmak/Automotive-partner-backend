@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//TODO dodane info dla swagger w wielu miejsach
 
 @AllArgsConstructor
 @RestController
@@ -27,7 +26,7 @@ public class CarApi
         return ResponseEntity.status(HttpStatus.CREATED).body(carResponse);
     }
 
-    //TODO może zmienić na @Path Variable
+    //TODO w przyszłości zmienić na @Path Variable
     @GetMapping("/{id}")
     public ResponseEntity<CarResponse> find(@PathVariable Long id)
     {

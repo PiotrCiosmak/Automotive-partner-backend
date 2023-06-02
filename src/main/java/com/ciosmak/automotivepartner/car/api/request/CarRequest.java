@@ -10,8 +10,6 @@ public class CarRequest
     private final Integer mileage;
     private final Boolean blocked;
 
-    //TODO lombok konstruktor chyba też
-
     @JsonCreator
     public CarRequest(String registrationNumber, Integer mileage, Boolean blocked)
     {
