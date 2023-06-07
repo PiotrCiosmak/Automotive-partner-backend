@@ -29,7 +29,6 @@ public class CarApi
         return ResponseEntity.status(HttpStatus.CREATED).body(carResponse);
     }
 
-    //TODO w przyszłości zmienić na @Path Variable
     @GetMapping("/{id}")
     @Operation(summary = "Find car")
     public ResponseEntity<CarResponse> find(@PathVariable Long id)
