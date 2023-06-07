@@ -2,7 +2,7 @@
 package com.ciosmak.automotivepartner.registration.password;
 
 import com.ciosmak.automotivepartner.registration.token.VerificationToken;
-import com.ciosmak.automotivepartner.user.User;
+import com.ciosmak.automotivepartner.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

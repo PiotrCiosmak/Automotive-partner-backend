@@ -6,7 +6,7 @@ import com.ciosmak.automotivepartner.event.listener.RegistrationCompleteEventLis
 import com.ciosmak.automotivepartner.registration.password.PasswordResetRequest;
 import com.ciosmak.automotivepartner.registration.token.VerificationToken;
 import com.ciosmak.automotivepartner.registration.token.VerificationTokenRepository;
-import com.ciosmak.automotivepartner.user.User;
+import com.ciosmak.automotivepartner.user.domain.User;
 import com.ciosmak.automotivepartner.user.UserService;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;

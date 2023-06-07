@@ -1,7 +1,7 @@
 /*
 package com.ciosmak.automotivepartner.security;
 
-import com.ciosmak.automotivepartner.user.User;
+import com.ciosmak.automotivepartner.user.domain.User;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -1,7 +1,7 @@
 /*
 package com.ciosmak.automotivepartner.registration.token;
 
-import com.ciosmak.automotivepartner.user.User;
+import com.ciosmak.automotivepartner.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

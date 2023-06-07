@@ -1,7 +1,7 @@
 /*
 package com.ciosmak.automotivepartner.event;
 
-import com.ciosmak.automotivepartner.user.User;
+import com.ciosmak.automotivepartner.user.domain.User;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.ApplicationEvent;

@@ -2,7 +2,7 @@
 package com.ciosmak.automotivepartner.event.listener;
 
 import com.ciosmak.automotivepartner.event.RegistrationCompleteEvent;
-import com.ciosmak.automotivepartner.user.User;
+import com.ciosmak.automotivepartner.user.domain.User;
 import com.ciosmak.automotivepartner.user.UserService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
