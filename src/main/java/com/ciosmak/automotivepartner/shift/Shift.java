@@ -5,7 +5,7 @@ import com.ciosmak.automotivepartner.availability.Type;
 import com.ciosmak.automotivepartner.car.domain.Car;
 import com.ciosmak.automotivepartner.entity.AbstractEntity;
 import com.ciosmak.automotivepartner.image.Image;
-import com.ciosmak.automotivepartner.user.User;
+import com.ciosmak.automotivepartner.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
 

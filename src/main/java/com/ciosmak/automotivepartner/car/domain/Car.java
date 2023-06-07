@@ -19,6 +19,7 @@ import java.util.List;
 @Table(name = "cars")
 public class Car extends AbstractEntity
 {
+    //TODO usunac go jakoś
     public Car(String registrationNumber, Integer mileage, Boolean blocked)
     {
         this.registrationNumber = registrationNumber;
