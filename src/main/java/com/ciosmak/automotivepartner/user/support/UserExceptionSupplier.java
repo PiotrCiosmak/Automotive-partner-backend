@@ -1,6 +1,7 @@
 package com.ciosmak.automotivepartner.user.support;
 
 import com.ciosmak.automotivepartner.user.support.exception.EmailAlreadyExists;
+import com.ciosmak.automotivepartner.user.support.exception.EmailIsNotInDatabase;
 import com.ciosmak.automotivepartner.user.support.exception.IncorrectUserData;
 import com.ciosmak.automotivepartner.user.support.exception.UserNotFoundException;
 
@@ -21,5 +22,10 @@ public class UserExceptionSupplier
     public static Supplier<IncorrectUserData> incorrectData()
     {
         return () -> new IncorrectUserData();
+    }
+
+    public static Supplier<EmailIsNotInDatabase> emailIsNotInDatabase(String email)
+    {
+        return () -> new EmailIsNotInDatabase(email);
     }
 }

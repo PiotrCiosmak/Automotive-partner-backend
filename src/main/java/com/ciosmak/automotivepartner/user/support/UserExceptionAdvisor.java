@@ -2,6 +2,7 @@ package com.ciosmak.automotivepartner.user.support;
 
 import com.ciosmak.automotivepartner.shared.api.response.ErrorMessageResponse;
 import com.ciosmak.automotivepartner.user.support.exception.EmailAlreadyExists;
+import com.ciosmak.automotivepartner.user.support.exception.EmailIsNotInDatabase;
 import com.ciosmak.automotivepartner.user.support.exception.IncorrectUserData;
 import com.ciosmak.automotivepartner.user.support.exception.UserNotFoundException;
 import org.slf4j.Logger;
@@ -39,6 +40,15 @@ public class UserExceptionAdvisor
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorMessageResponse incorrectData(IncorrectUserData exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getMessage());
+    }
+
+    @ExceptionHandler(EmailIsNotInDatabase.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ErrorMessageResponse emailIsNotInDatabase(EmailIsNotInDatabase exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getMessage());
