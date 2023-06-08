@@ -1,7 +1,7 @@
 package com.ciosmak.automotivepartner.email.support;
 
 import com.ciosmak.automotivepartner.email.support.exception.EmailTakenException;
-import com.ciosmak.automotivepartner.email.support.exception.IncorrectEmailException;
+import com.ciosmak.automotivepartner.email.support.exception.InValidEmailException;
 import com.ciosmak.automotivepartner.shared.api.response.ErrorMessageResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +25,10 @@ public class EmailExceptionAdvisor
         return new ErrorMessageResponse(exception.getMessage());
     }
 
-    @ExceptionHandler(IncorrectEmailException.class)
+    @ExceptionHandler(InValidEmailException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorMessageResponse incorrectEmail(IncorrectEmailException exception)
+    public ErrorMessageResponse inValidEmail(InValidEmailException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getMessage());

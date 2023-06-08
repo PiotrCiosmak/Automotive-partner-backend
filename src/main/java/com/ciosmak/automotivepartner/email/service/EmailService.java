@@ -21,12 +21,12 @@ public class EmailService
         String emailCandidate = emailRequest.getEmail();
         if (isEmailTaken(emailCandidate))
         {
-            throw EmailExceptionSupplier.emailTakenException().get();
+            throw EmailExceptionSupplier.emailTaken().get();
         }
 
         if (isEmailInValid(emailCandidate))
         {
-            throw EmailExceptionSupplier.incorrectEmail().get();
+            throw EmailExceptionSupplier.inValidEmail().get();
         }
 
         Email email = emailRepository.save(emailMapper.toEmail(emailRequest));
