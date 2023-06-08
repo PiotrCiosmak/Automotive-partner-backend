@@ -26,7 +26,7 @@ public class EmailService
 
         if (isEmailInValid(emailCandidate))
         {
-            throw EmailExceptionSupplier.inValidEmail().get();
+            throw EmailExceptionSupplier.inCorrectEmail().get();
         }
 
         Email email = emailRepository.save(emailMapper.toEmail(emailRequest));

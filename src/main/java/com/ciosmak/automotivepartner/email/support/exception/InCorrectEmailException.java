@@ -1,8 +1,8 @@
 package com.ciosmak.automotivepartner.email.support.exception;
 
-public class InValidEmailException extends RuntimeException
+public class InCorrectEmailException extends RuntimeException
 {
-    public InValidEmailException()
+    public InCorrectEmailException()
     {
         super("Podany email jest nieprawidłowy");
     }

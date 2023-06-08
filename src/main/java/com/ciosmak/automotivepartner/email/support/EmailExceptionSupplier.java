@@ -1,7 +1,7 @@
 package com.ciosmak.automotivepartner.email.support;
 
 import com.ciosmak.automotivepartner.email.support.exception.EmailTakenException;
-import com.ciosmak.automotivepartner.email.support.exception.InValidEmailException;
+import com.ciosmak.automotivepartner.email.support.exception.InCorrectEmailException;
 
 import java.util.function.Supplier;
 
@@ -12,8 +12,8 @@ public class EmailExceptionSupplier
         return EmailTakenException::new;
     }
 
-    public static Supplier<InValidEmailException> inValidEmail()
+    public static Supplier<InCorrectEmailException> inCorrectEmail()
     {
-        return InValidEmailException::new;
+        return InCorrectEmailException::new;
     }
 }
