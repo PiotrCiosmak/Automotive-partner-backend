@@ -1,8 +1,8 @@
 package com.ciosmak.automotivepartner.user.support.exception;
 
-public class EmailAlreadyExists extends RuntimeException
+public class EmailTakenException extends RuntimeException
 {
-    public EmailAlreadyExists(String email)
+    public EmailTakenException(String email)
     {
         super(String.format("Email: %s is already taken", email));
     }
