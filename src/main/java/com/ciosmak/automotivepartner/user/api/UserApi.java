@@ -20,7 +20,7 @@ public class UserApi
 {
     private final UserService userService;
 
-    @PostMapping
+    @PostMapping("/create")
     @Operation(summary = "Create user")
     public ResponseEntity<UserResponse> create(@RequestBody UserRequest userRequest)
     {
@@ -28,7 +28,7 @@ public class UserApi
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/find/{id}")
     @Operation(summary = "Find user")
     public ResponseEntity<UserResponse> find(@PathVariable Long id)
     {
@@ -36,7 +36,7 @@ public class UserApi
         return ResponseEntity.status(HttpStatus.OK).body(userResponse);
     }
 
-    @GetMapping
+    @GetMapping("/find")
     @Operation(summary = "Find all users")
     public ResponseEntity<List<UserResponse>> findAll()
     {
@@ -44,7 +44,32 @@ public class UserApi
         return ResponseEntity.status(HttpStatus.OK).body(userResponses);
     }
 
-    @DeleteMapping("/{id}")
+    @GetMapping("/find/unblocked")
+    @Operation(summary = "Find all unblocked users")
+    public ResponseEntity<List<UserResponse>> findAllUnblocked()
+    {
+        List<UserResponse> userResponses = userService.findAllUnblocked();
+        return ResponseEntity.status(HttpStatus.OK).body(userResponses);
+    }
+
+    @GetMapping("/find/blocked")
+    @Operation(summary = "Find all blocked users")
+    public ResponseEntity<List<UserResponse>> findAllBlocked()
+    {
+        List<UserResponse> userResponses = userService.findAllBlocked();
+        return ResponseEntity.status(HttpStatus.OK).body(userResponses);
+    }
+
+    @GetMapping("/is_blocked/{id}")
+    @Operation(summary = "Check if user is blocked")
+    public ResponseEntity<Boolean> isBlocked(@PathVariable Long id)
+    {
+        userService.find(id);
+        Boolean isBlocked = userService.isBlocked(id);
+        return ResponseEntity.status(HttpStatus.OK).body(isBlocked);
+    }
+
+    @DeleteMapping("/delete/{id}")
     @Operation(summary = "Delete user")
     public ResponseEntity<Void> delete(@PathVariable Long id)
     {
