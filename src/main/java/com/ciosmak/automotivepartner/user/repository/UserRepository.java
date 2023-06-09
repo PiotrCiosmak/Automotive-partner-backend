@@ -2,6 +2,7 @@ package com.ciosmak.automotivepartner.user.repository;
 
 import com.ciosmak.automotivepartner.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -18,6 +19,10 @@ public interface UserRepository extends JpaRepository<User, Long>
 
     List<User> findAllByBlockedTrue();
 
-    @Query("SELECT CASE WHEN u.blocked = true THEN true ELSE false END FROM User u WHERE u.id = :id")
-    Boolean isUserBlocked(@Param("id") Long id);
+    @Query("SELECT u.blocked FROM User u WHERE u.id = :id")
+    boolean isBlocked(@Param("id") Long id);
+
+    @Modifying
+    @Query("UPDATE User u SET u.blocked = true WHERE u.id = :id")
+    void setBlockedTrue(@Param("id") Long id);
 }

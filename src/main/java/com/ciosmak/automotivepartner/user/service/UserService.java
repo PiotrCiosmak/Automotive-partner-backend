@@ -1,13 +1,13 @@
 package com.ciosmak.automotivepartner.user.service;
 
+import com.ciosmak.automotivepartner.email.repository.EmailRepository;
 import com.ciosmak.automotivepartner.user.api.request.UserRequest;
 import com.ciosmak.automotivepartner.user.api.response.UserResponse;
 import com.ciosmak.automotivepartner.user.domain.User;
 import com.ciosmak.automotivepartner.user.repository.UserRepository;
 import com.ciosmak.automotivepartner.user.support.UserExceptionSupplier;
 import com.ciosmak.automotivepartner.user.support.UserMapper;
-import com.ciosmak.automotivepartner.user.support.exception.EmailAlreadyExists;
-import com.ciosmak.automotivepartner.user.support.exception.IncorrectUserData;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,20 +21,23 @@ public class UserService
 {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final EmailRepository emailRepository;
 
-    public UserResponse create(UserRequest userRequest)
+    public UserResponse register(UserRequest userRequest)
     {
+        if (areUserDataIncorrect(userRequest))
+        {
+            throw UserExceptionSupplier.incorrectData().get();
+        }
+
         String email = userRequest.getEmail();
+
+        emailRepository.findByEmail(email).orElseThrow(UserExceptionSupplier.emailNotInDatabase());
 
         Optional<User> existingUser = userRepository.findByEmail(email);
         if (existingUser.isPresent())
         {
-            throw new EmailAlreadyExists(email);
-        }
-
-        if (areUserDataIncorrect(userRequest))
-        {
-            throw new IncorrectUserData();
+            throw UserExceptionSupplier.emailTaken().get();
         }
 
         User user = userRepository.save(userMapper.toUser(userRequest));
@@ -45,10 +48,22 @@ public class UserService
     {
         return userRequest.getFirstName().isEmpty() ||
                 userRequest.getLastName().isEmpty() ||
-                userRequest.getEmail().isEmpty() ||
+                !userRequest.getEmail().contains("@.") ||
                 userRequest.getPassword().isEmpty() ||
                 userRequest.getPhoneNumber().isEmpty() ||
                 userRequest.getRole().isEmpty();
+    }
+
+    @Transactional
+    public void block(Long id)
+    {
+        User user = userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
+        boolean userIsAlreadyBlocked = userRepository.isBlocked(id);
+        if (userIsAlreadyBlocked)
+        {
+            throw UserExceptionSupplier.userBlocked(id).get();
+        }
+        userRepository.setBlockedTrue(user.getId());
     }
 
     public UserResponse find(Long id)
@@ -70,11 +85,6 @@ public class UserService
     public List<UserResponse> findAllBlocked()
     {
         return userRepository.findAllByBlockedTrue().stream().map(userMapper::toUserResponse).collect(Collectors.toList());
-    }
-
-    public Boolean isBlocked(Long id)
-    {
-        return userRepository.isUserBlocked(id);
     }
 
     public void delete(Long id)

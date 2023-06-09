@@ -20,12 +20,20 @@ public class UserApi
 {
     private final UserService userService;
 
-    @PostMapping("/create")
-    @Operation(summary = "Create user")
-    public ResponseEntity<UserResponse> create(@RequestBody UserRequest userRequest)
+    @PostMapping("/register")
+    @Operation(summary = "Register user")
+    public ResponseEntity<UserResponse> register(@RequestBody UserRequest userRequest)
     {
-        UserResponse userResponse = userService.create(userRequest);
+        UserResponse userResponse = userService.register(userRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
+    }
+
+    @PutMapping("/block/{id}")
+    @Operation(summary = "Block user")
+    public ResponseEntity<Void> block(@PathVariable Long id)
+    {
+        userService.block(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @GetMapping("/find/{id}")
@@ -60,15 +68,6 @@ public class UserApi
         return ResponseEntity.status(HttpStatus.OK).body(userResponses);
     }
 
-    @GetMapping("/is_blocked/{id}")
-    @Operation(summary = "Check if user is blocked")
-    public ResponseEntity<Boolean> isBlocked(@PathVariable Long id)
-    {
-        userService.find(id);
-        Boolean isBlocked = userService.isBlocked(id);
-        return ResponseEntity.status(HttpStatus.OK).body(isBlocked);
-    }
-
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "Delete user")
     public ResponseEntity<Void> delete(@PathVariable Long id)
@@ -76,5 +75,4 @@ public class UserApi
         userService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
 }
