@@ -58,12 +58,24 @@ public class UserService
     public void block(Long id)
     {
         User user = userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
-        boolean userIsAlreadyBlocked = userRepository.isBlocked(id);
-        if (userIsAlreadyBlocked)
+        boolean userIsBlocked = userRepository.isBlocked(id);
+        if (userIsBlocked)
         {
             throw UserExceptionSupplier.userBlocked(id).get();
         }
         userRepository.setBlockedTrue(user.getId());
+    }
+
+    @Transactional
+    public void unblock(Long id)
+    {
+        User user = userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
+        boolean userIsBlocked = userRepository.isBlocked(id);
+        if (!userIsBlocked)
+        {
+            throw UserExceptionSupplier.userUnblocked(id).get();
+        }
+        userRepository.setBlockedFalse(user.getId());
     }
 
     public UserResponse find(Long id)

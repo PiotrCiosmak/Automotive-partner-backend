@@ -36,6 +36,14 @@ public class UserApi
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @PutMapping("unblock/{id}")
+    @Operation(summary = "Unblock user")
+    public ResponseEntity<Void> unblock(@PathVariable Long id)
+    {
+        userService.unblock(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
     @GetMapping("/find/{id}")
     @Operation(summary = "Find user")
     public ResponseEntity<UserResponse> find(@PathVariable Long id)

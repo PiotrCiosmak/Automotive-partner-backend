@@ -25,4 +25,8 @@ public interface UserRepository extends JpaRepository<User, Long>
     @Modifying
     @Query("UPDATE User u SET u.blocked = true WHERE u.id = :id")
     void setBlockedTrue(@Param("id") Long id);
+
+    @Modifying
+    @Query("UPDATE User u SET u.blocked = false WHERE u.id = :id")
+    void setBlockedFalse(@Param("id") Long id);
 }

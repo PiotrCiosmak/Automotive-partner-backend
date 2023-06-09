@@ -25,9 +25,14 @@ public class UserExceptionSupplier
     {
         return IncorrectUserDataException::new;
     }
+
     public static Supplier<UserBlockedException> userBlocked(Long id)
     {
         return () -> new UserBlockedException(id);
     }
 
+    public static Supplier<UserUnblockedException> userUnblocked(Long id)
+    {
+        return () -> new UserUnblockedException(id);
+    }
 }

@@ -59,4 +59,13 @@ public class UserExceptionAdvisor
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getMessage());
     }
+
+    @ExceptionHandler(UserUnblockedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse userUnblocked(UserUnblockedException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getMessage());
+    }
 }
