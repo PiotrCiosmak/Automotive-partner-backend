@@ -2,8 +2,8 @@ package com.ciosmak.automotivepartner.user.support.exception;
 
 public class EmailTakenException extends RuntimeException
 {
-    public EmailTakenException(String email)
+    public EmailTakenException()
     {
-        super(String.format("Email: %s is already taken", email));
+        super("Podany email jest już przypisany do istniejącego konta");
     }
 }
