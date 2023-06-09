@@ -1,9 +1,6 @@
 package com.ciosmak.automotivepartner.user.support;
 
-import com.ciosmak.automotivepartner.user.support.exception.EmailAlreadyExists;
-import com.ciosmak.automotivepartner.user.support.exception.EmailIsNotInDatabase;
-import com.ciosmak.automotivepartner.user.support.exception.IncorrectUserData;
-import com.ciosmak.automotivepartner.user.support.exception.UserNotFoundException;
+import com.ciosmak.automotivepartner.user.support.exception.*;
 
 import java.util.function.Supplier;
 
@@ -14,18 +11,23 @@ public class UserExceptionSupplier
         return () -> new UserNotFoundException(id);
     }
 
-    public static Supplier<EmailAlreadyExists> emailAlreadyExists(String email)
+    public static Supplier<EmailTakenException> emailTaken()
     {
-        return () -> new EmailAlreadyExists(email);
+        return EmailTakenException::new;
     }
 
-    public static Supplier<IncorrectUserData> incorrectData()
+    public static Supplier<EmailNotInDatabaseException> emailNotInDatabase()
     {
-        return () -> new IncorrectUserData();
+        return EmailNotInDatabaseException::new;
     }
 
-    public static Supplier<EmailIsNotInDatabase> emailIsNotInDatabase(String email)
+    public static Supplier<IncorrectUserDataException> incorrectData()
     {
-        return () -> new EmailIsNotInDatabase(email);
+        return IncorrectUserDataException::new;
     }
+    public static Supplier<UserBlockedException> userBlocked(Long id)
+    {
+        return () -> new UserBlockedException(id);
+    }
+
 }
