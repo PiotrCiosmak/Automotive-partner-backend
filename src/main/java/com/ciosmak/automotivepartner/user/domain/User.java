@@ -55,7 +55,7 @@ public class User extends AbstractEntity
     @Column(name = "phone_number", length = 12, nullable = false)
     private String phoneNumber;
 
-    @Column(name = "role", nullable = false)
+    @Column(name = "role", nullable = false, columnDefinition = "STRING DEFAULT 'driver'")
     private String role;
 
     @Column(name = "enabled", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")

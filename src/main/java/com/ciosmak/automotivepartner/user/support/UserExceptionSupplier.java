@@ -35,4 +35,14 @@ public class UserExceptionSupplier
     {
         return () -> new UserUnblockedException(id);
     }
+
+    public static Supplier<UserAdminException> userAdmin(Long id)
+    {
+        return () -> new UserAdminException(id);
+    }
+
+    public static Supplier<UserNotAdminException> userNotAdmin(Long id)
+    {
+        return () -> new UserNotAdminException(id);
+    }
 }

@@ -44,6 +44,21 @@ public class UserApi
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @PutMapping("admins/{id}")
+    @Operation(summary = "Make admin")
+    public ResponseEntity<Void> makeAdmin(@PathVariable Long id)
+    {
+        userService.makeAdmin(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+    @PutMapping("admins/{id}")
+    @Operation(summary = "Demote admin")
+    public ResponseEntity<Void> demoteAdmin(@PathVariable Long id)
+    {
+        userService.demoteAdmin(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
     @GetMapping("/find/{id}")
     @Operation(summary = "Find user")
     public ResponseEntity<UserResponse> find(@PathVariable Long id)
@@ -73,6 +88,22 @@ public class UserApi
     public ResponseEntity<List<UserResponse>> findAllBlocked()
     {
         List<UserResponse> userResponses = userService.findAllBlocked();
+        return ResponseEntity.status(HttpStatus.OK).body(userResponses);
+    }
+
+    @GetMapping("/find/admins")
+    @Operation(summary = "Find all admins")
+    public ResponseEntity<List<UserResponse>> findAllAdmins()
+    {
+        List<UserResponse> userResponses = userService.findAllAdmins();
+        return ResponseEntity.status(HttpStatus.OK).body(userResponses);
+    }
+
+    @GetMapping("/find/drivers")
+    @Operation(summary = "Find all drivers")
+    public ResponseEntity<List<UserResponse>> findAllDrivers()
+    {
+        List<UserResponse> userResponses = userService.findAllDrivers();
         return ResponseEntity.status(HttpStatus.OK).body(userResponses);
     }
 
