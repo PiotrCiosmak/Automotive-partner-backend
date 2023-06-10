@@ -1,7 +1,7 @@
 package com.ciosmak.automotivepartner.car.api;
 
 import com.ciosmak.automotivepartner.car.api.request.CarRequest;
-import com.ciosmak.automotivepartner.car.api.request.UpdateCarRequest;
+import com.ciosmak.automotivepartner.car.api.request.UpdateCarMileageRequest;
 import com.ciosmak.automotivepartner.car.api.response.CarResponse;
 import com.ciosmak.automotivepartner.car.service.CarService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -55,9 +55,9 @@ public class CarApi
 
     @PutMapping("/update/{id}")
     @Operation(summary = "Update car")
-    public ResponseEntity<CarResponse> update(@PathVariable Long id, @RequestBody UpdateCarRequest updateCarRequest)
+    public ResponseEntity<CarResponse> update(@PathVariable Long id, @RequestBody UpdateCarMileageRequest updateCarMileageRequest)
     {
-        CarResponse carResponse = carService.update(id, updateCarRequest);
+        CarResponse carResponse = carService.update(id, updateCarMileageRequest);
         return ResponseEntity.status(HttpStatus.OK).body(carResponse);
     }
 

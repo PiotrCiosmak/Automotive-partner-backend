@@ -1,7 +1,7 @@
 package com.ciosmak.automotivepartner.car.service;
 
 import com.ciosmak.automotivepartner.car.api.request.CarRequest;
-import com.ciosmak.automotivepartner.car.api.request.UpdateCarRequest;
+import com.ciosmak.automotivepartner.car.api.request.UpdateCarMileageRequest;
 import com.ciosmak.automotivepartner.car.api.response.CarResponse;
 import com.ciosmak.automotivepartner.car.domain.Car;
 import com.ciosmak.automotivepartner.car.repository.CarRepository;
@@ -57,7 +57,6 @@ public class CarService
         return carMapper.toCarResponse(car);
     }
 
-
     @Transactional
     public CarResponse unblock(Long id)
     {
@@ -68,6 +67,13 @@ public class CarService
             throw CarExceptionSupplier.carUnblocked(id).get();
         }
         carRepository.setBlocked(car.getId(), Boolean.FALSE);
+        return carMapper.toCarResponse(car);
+    }
+
+    public CarResponse update(Long id, UpdateCarMileageRequest updateCarMileageRequest)
+    {
+        Car car = carRepository.findById(id).orElseThrow(CarExceptionSupplier.carNotFound(id));
+        carRepository.save(carMapper.toCar(car, updateCarMileageRequest));
         return carMapper.toCarResponse(car);
     }
 
@@ -90,13 +96,6 @@ public class CarService
     public List<CarResponse> findAllBlocked()
     {
         return carRepository.findAllByBlocked(Boolean.TRUE).stream().map(carMapper::toCarResponse).collect(Collectors.toList());
-    }
-
-    public CarResponse update(Long id, UpdateCarRequest updateCarRequest)
-    {
-        Car car = carRepository.findById(id).orElseThrow(CarExceptionSupplier.carNotFound(id));
-        carRepository.save(carMapper.toCar(car, updateCarRequest));
-        return carMapper.toCarResponse(car);
     }
 
     public void delete(Long id)

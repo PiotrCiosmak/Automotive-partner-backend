@@ -1,7 +1,7 @@
 package com.ciosmak.automotivepartner.car.support;
 
 import com.ciosmak.automotivepartner.car.api.request.CarRequest;
-import com.ciosmak.automotivepartner.car.api.request.UpdateCarRequest;
+import com.ciosmak.automotivepartner.car.api.request.UpdateCarMileageRequest;
 import com.ciosmak.automotivepartner.car.api.response.CarResponse;
 import com.ciosmak.automotivepartner.car.domain.Car;
 import org.springframework.stereotype.Component;
@@ -14,11 +14,9 @@ public class CarMapper
         return new Car(carRequest.getRegistrationNumber(), carRequest.getMileage(), carRequest.getBlocked());
     }
 
-    public Car toCar(Car car, UpdateCarRequest carRequest)
+    public Car toCar(Car car, UpdateCarMileageRequest carRequest)
     {
-        car.setRegistrationNumber(carRequest.getRegistrationNumber());
         car.setMileage(carRequest.getMileage());
-        car.setBlocked(carRequest.getBlocked());
         return car;
     }
 
