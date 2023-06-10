@@ -21,15 +21,15 @@ public class CarApi
 {
     private final CarService carService;
 
-    @PostMapping
-    @Operation(summary = "Create car")
-    public ResponseEntity<CarResponse> create(@RequestBody CarRequest carRequest)
+    @PostMapping("/add")
+    @Operation(summary = "Add car")
+    public ResponseEntity<CarResponse> add(@RequestBody CarRequest carRequest)
     {
-        CarResponse carResponse = carService.create(carRequest);
+        CarResponse carResponse = carService.add(carRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(carResponse);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/find/{id}")
     @Operation(summary = "Find car")
     public ResponseEntity<CarResponse> find(@PathVariable Long id)
     {
@@ -37,15 +37,15 @@ public class CarApi
         return ResponseEntity.status(HttpStatus.OK).body(carResponse);
     }
 
-    @PutMapping
+    @PutMapping("/update/{id}")
     @Operation(summary = "Update car")
-    public ResponseEntity<CarResponse> update(@RequestBody UpdateCarRequest updateCarRequest)
+    public ResponseEntity<CarResponse> update(@PathVariable Long id, @RequestBody UpdateCarRequest updateCarRequest)
     {
-        CarResponse carResponse = carService.update(updateCarRequest);
+        CarResponse carResponse = carService.update(id, updateCarRequest);
         return ResponseEntity.status(HttpStatus.OK).body(carResponse);
     }
 
-    @GetMapping
+    @GetMapping("/find")
     @Operation(summary = "Find all cars")
     public ResponseEntity<List<CarResponse>> findAll()
     {
@@ -53,7 +53,23 @@ public class CarApi
         return ResponseEntity.status(HttpStatus.OK).body(carResponses);
     }
 
-    @DeleteMapping("/{id}")
+    @GetMapping("/find/unblocked")
+    @Operation(summary = "Find all unblocked cars")
+    public ResponseEntity<List<CarResponse>> findAllUnblocked()
+    {
+        List<CarResponse> carResponses = carService.findAllUnblocked();
+        return ResponseEntity.status(HttpStatus.OK).body(carResponses);
+    }
+
+    @GetMapping("/find/blocked")
+    @Operation(summary = "Find all blocked cars")
+    public ResponseEntity<List<CarResponse>> findAllBlocked()
+    {
+        List<CarResponse> carResponses = carService.findAllBlocked();
+        return ResponseEntity.status(HttpStatus.OK).body(carResponses);
+    }
+
+    @DeleteMapping("/delete/{id}")
     @Operation(summary = "Delete car")
     public ResponseEntity<Void> delete(@PathVariable Long id)
     {

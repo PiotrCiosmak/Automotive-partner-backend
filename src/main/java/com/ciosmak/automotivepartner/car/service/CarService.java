@@ -20,7 +20,7 @@ public class CarService
     private final CarRepository carRepository;
     private final CarMapper carMapper;
 
-    public CarResponse create(CarRequest carRequest)
+    public CarResponse add(CarRequest carRequest)
     {
         Car car = carRepository.save(carMapper.toCar(carRequest));
         return carMapper.toCarResponse(car);
@@ -37,9 +37,19 @@ public class CarService
         return carRepository.findAll().stream().map(carMapper::toCarResponse).collect(Collectors.toList());
     }
 
-    public CarResponse update(UpdateCarRequest updateCarRequest)
+    public List<CarResponse> findAllUnblocked()
     {
-        Car car = carRepository.findById(updateCarRequest.getId()).orElseThrow(CarExceptionSupplier.carNotFound(updateCarRequest.getId()));
+        return carRepository.findAllByBlocked(Boolean.FALSE).stream().map(carMapper::toCarResponse).collect(Collectors.toList());
+    }
+
+    public List<CarResponse> findAllBlocked()
+    {
+        return carRepository.findAllByBlocked(Boolean.TRUE).stream().map(carMapper::toCarResponse).collect(Collectors.toList());
+    }
+
+    public CarResponse update(Long id, UpdateCarRequest updateCarRequest)
+    {
+        Car car = carRepository.findById(id).orElseThrow(CarExceptionSupplier.carNotFound(id));
         carRepository.save(carMapper.toCar(car, updateCarRequest));
         return carMapper.toCarResponse(car);
     }

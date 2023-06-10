@@ -19,7 +19,6 @@ import java.util.List;
 @Table(name = "cars")
 public class Car extends AbstractEntity
 {
-    //TODO usunac go jakoś
     public Car(String registrationNumber, Integer mileage, Boolean blocked)
     {
         this.registrationNumber = registrationNumber;
@@ -28,7 +27,7 @@ public class Car extends AbstractEntity
     }
 
     @ToString.Include
-    @Column(name = "registration_number", length = 7, nullable = false)
+    @Column(name = "registration_number", length = 7, nullable = false, unique = true)
     private String registrationNumber;
 
     @ToString.Include
