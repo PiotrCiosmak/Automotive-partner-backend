@@ -29,6 +29,22 @@ public class CarApi
         return ResponseEntity.status(HttpStatus.CREATED).body(carResponse);
     }
 
+    @PutMapping("/block/{id}")
+    @Operation(summary = "Block car")
+    public ResponseEntity<CarResponse> block(@PathVariable Long id)
+    {
+        CarResponse carResponse = carService.block(id);
+        return ResponseEntity.status(HttpStatus.OK).body(carResponse);
+    }
+
+    @PutMapping("/unblock/{id}")
+    @Operation(summary = "Unblock car")
+    public ResponseEntity<CarResponse> unblock(@PathVariable Long id)
+    {
+        CarResponse carResponse = carService.unblock(id);
+        return ResponseEntity.status(HttpStatus.OK).body(carResponse);
+    }
+
     @GetMapping("/find/{id}")
     @Operation(summary = "Find car")
     public ResponseEntity<CarResponse> find(@PathVariable Long id)

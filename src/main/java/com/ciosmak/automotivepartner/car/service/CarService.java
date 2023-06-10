@@ -7,6 +7,7 @@ import com.ciosmak.automotivepartner.car.domain.Car;
 import com.ciosmak.automotivepartner.car.repository.CarRepository;
 import com.ciosmak.automotivepartner.car.support.CarExceptionSupplier;
 import com.ciosmak.automotivepartner.car.support.CarMapper;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,7 @@ public class CarService
     public CarResponse add(CarRequest carRequest)
     {
         Optional<Car> existingCar = carRepository.findByRegistrationNumber(carRequest.getRegistrationNumber());
-        if(existingCar.isPresent())
+        if (existingCar.isPresent())
         {
             throw CarExceptionSupplier.registrationNumberTaken().get();
         }
@@ -41,6 +42,33 @@ public class CarService
         return carRequest.getRegistrationNumber().isEmpty() ||
                 carRequest.getMileage() < 0 ||
                 carRequest.getRegistrationNumber().length() > 7;
+    }
+
+    @Transactional
+    public CarResponse block(Long id)
+    {
+        Car car = carRepository.findById(id).orElseThrow(CarExceptionSupplier.carNotFound(id));
+        boolean carIsBlocked = carRepository.isBlocked(id);
+        if (carIsBlocked)
+        {
+            throw CarExceptionSupplier.carBlocked(id).get();
+        }
+        carRepository.setBlocked(car.getId(), Boolean.TRUE);
+        return carMapper.toCarResponse(car);
+    }
+
+
+    @Transactional
+    public CarResponse unblock(Long id)
+    {
+        Car car = carRepository.findById(id).orElseThrow(CarExceptionSupplier.carNotFound(id));
+        boolean carIsBlocked = carRepository.isBlocked(id);
+        if (!carIsBlocked)
+        {
+            throw CarExceptionSupplier.carUnblocked(id).get();
+        }
+        carRepository.setBlocked(car.getId(), Boolean.FALSE);
+        return carMapper.toCarResponse(car);
     }
 
     public CarResponse find(Long id)

@@ -1,8 +1,6 @@
 package com.ciosmak.automotivepartner.car.support;
 
-import com.ciosmak.automotivepartner.car.support.exception.CarNotFoundException;
-import com.ciosmak.automotivepartner.car.support.exception.IncorrectCarDetailsException;
-import com.ciosmak.automotivepartner.car.support.exception.RegistrationNumberTakenException;
+import com.ciosmak.automotivepartner.car.support.exception.*;
 
 import java.util.function.Supplier;
 
@@ -21,5 +19,15 @@ public class CarExceptionSupplier
     public static Supplier<RegistrationNumberTakenException> registrationNumberTaken()
     {
         return RegistrationNumberTakenException::new;
+    }
+
+    public static Supplier<CarBlockedException> carBlocked(Long id)
+    {
+        return () -> new CarBlockedException(id);
+    }
+
+    public static Supplier<CarUnblockedException> carUnblocked(Long id)
+    {
+        return () -> new CarUnblockedException(id);
     }
 }
