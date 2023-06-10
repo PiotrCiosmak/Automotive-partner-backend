@@ -1,6 +1,7 @@
 package com.ciosmak.automotivepartner.car.support;
 
 import com.ciosmak.automotivepartner.car.support.exception.CarNotFoundException;
+import com.ciosmak.automotivepartner.car.support.exception.IncorrectCarDetailsException;
 import com.ciosmak.automotivepartner.shared.api.response.ErrorMessageResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,15 @@ public class CarExceptionAdvisor
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public ErrorMessageResponse carNotFound(CarNotFoundException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getLocalizedMessage());
+    }
+
+    @ExceptionHandler(IncorrectCarDetailsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse incorrectCarDetails(IncorrectCarDetailsException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getLocalizedMessage());

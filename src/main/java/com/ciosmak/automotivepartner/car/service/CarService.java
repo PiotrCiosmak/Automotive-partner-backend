@@ -22,8 +22,19 @@ public class CarService
 
     public CarResponse add(CarRequest carRequest)
     {
+        if (areCarDetailsIncorrect(carRequest))
+        {
+            throw CarExceptionSupplier.incorrectCarDetails().get();
+        }
         Car car = carRepository.save(carMapper.toCar(carRequest));
         return carMapper.toCarResponse(car);
+    }
+
+    private boolean areCarDetailsIncorrect(CarRequest carRequest)
+    {
+        return carRequest.getRegistrationNumber().isEmpty() ||
+                carRequest.getMileage() < 0 ||
+                carRequest.getRegistrationNumber().length() > 7;
     }
 
     public CarResponse find(Long id)
