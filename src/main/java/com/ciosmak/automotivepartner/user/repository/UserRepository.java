@@ -15,18 +15,12 @@ public interface UserRepository extends JpaRepository<User, Long>
 {
     Optional<User> findByEmail(String email);
 
-    List<User> findAllByBlockedFalse();
-
-    List<User> findAllByBlockedTrue();
+    List<User> findAllByBlocked(Boolean isBlocked);
 
     @Query("SELECT u.blocked FROM User u WHERE u.id = :id")
     boolean isBlocked(@Param("id") Long id);
 
     @Modifying
-    @Query("UPDATE User u SET u.blocked = true WHERE u.id = :id")
-    void setBlockedTrue(@Param("id") Long id);
-
-    @Modifying
-    @Query("UPDATE User u SET u.blocked = false WHERE u.id = :id")
-    void setBlockedFalse(@Param("id") Long id);
+    @Query("UPDATE User u SET u.blocked = :isBlocked WHERE u.id = :id")
+    void setBlocked(@Param("id") Long id, @Param("isBlocked") Boolean isBlocked);
 }

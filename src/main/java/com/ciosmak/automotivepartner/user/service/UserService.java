@@ -63,7 +63,7 @@ public class UserService
         {
             throw UserExceptionSupplier.userBlocked(id).get();
         }
-        userRepository.setBlockedTrue(user.getId());
+        userRepository.setBlocked(user.getId(), Boolean.TRUE);
     }
 
     @Transactional
@@ -75,7 +75,7 @@ public class UserService
         {
             throw UserExceptionSupplier.userUnblocked(id).get();
         }
-        userRepository.setBlockedFalse(user.getId());
+        userRepository.setBlocked(user.getId(), Boolean.FALSE);
     }
 
     public UserResponse find(Long id)
@@ -91,13 +91,18 @@ public class UserService
 
     public List<UserResponse> findAllUnblocked()
     {
-        return userRepository.findAllByBlockedFalse().stream().map(userMapper::toUserResponse).collect(Collectors.toList());
+        return userRepository.findAllByBlocked(Boolean.FALSE).stream().map(userMapper::toUserResponse).collect(Collectors.toList());
     }
 
     public List<UserResponse> findAllBlocked()
     {
-        return userRepository.findAllByBlockedTrue().stream().map(userMapper::toUserResponse).collect(Collectors.toList());
+        return userRepository.findAllByBlocked(Boolean.TRUE).stream().map(userMapper::toUserResponse).collect(Collectors.toList());
     }
+/*
+    public final List<UserResponse> findAllAdmins()
+    {
+        return userRepository.findAllByRole().stream().map(userMapper::toUserResponse).collect(Collectors.toList());
+    }*/
 
     public void delete(Long id)
     {
