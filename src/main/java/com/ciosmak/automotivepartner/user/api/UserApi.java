@@ -76,6 +76,14 @@ public class UserApi
         return ResponseEntity.status(HttpStatus.OK).body(userResponses);
     }
 
+/*    @GetMapping("/find/admins")
+    @Operation(summary = "Find all admins")
+    public ResponseEntity<List<UserResponse>> findAllAdmins()
+    {
+        List<UserResponse> userResponses = userService.findAllAdmins();
+        return ResponseEntity.status(HttpStatus.OK).body(userResponses);
+    }*/
+
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "Delete user")
     public ResponseEntity<Void> delete(@PathVariable Long id)
