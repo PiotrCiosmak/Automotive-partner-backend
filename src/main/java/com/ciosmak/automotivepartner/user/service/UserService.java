@@ -99,6 +99,16 @@ public class UserService
         return userRepository.findAllByBlockedTrue().stream().map(userMapper::toUserResponse).collect(Collectors.toList());
     }
 
+    public List<UserResponse> findAllAdmins()
+    {
+        return userRepository.findAllByRole("admin").stream().map(userMapper::toUserResponse).collect(Collectors.toList());
+    }
+
+    public List<UserResponse> findAllDrivers()
+    {
+        return userRepository.findAllByRole("driver").stream().map(userMapper::toUserResponse).collect(Collectors.toList());
+    }
+
     public void delete(Long id)
     {
         User user = userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));

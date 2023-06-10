@@ -19,6 +19,8 @@ public interface UserRepository extends JpaRepository<User, Long>
 
     List<User> findAllByBlockedTrue();
 
+    List<User> findAllByRole(String role);
+
     @Query("SELECT u.blocked FROM User u WHERE u.id = :id")
     boolean isBlocked(@Param("id") Long id);
 
