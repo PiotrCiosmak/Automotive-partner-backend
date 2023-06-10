@@ -21,7 +21,7 @@ public class UserExceptionSupplier
         return EmailNotInDatabaseException::new;
     }
 
-    public static Supplier<IncorrectUserDataException> incorrectData()
+    public static Supplier<IncorrectUserDataException> incorrectUserData()
     {
         return IncorrectUserDataException::new;
     }

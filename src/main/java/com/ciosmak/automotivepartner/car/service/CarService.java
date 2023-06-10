@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -22,6 +23,11 @@ public class CarService
 
     public CarResponse add(CarRequest carRequest)
     {
+        Optional<Car> existingCar = carRepository.findByRegistrationNumber(carRequest.getRegistrationNumber());
+        if(existingCar.isPresent())
+        {
+            throw CarExceptionSupplier.registrationNumberTaken().get();
+        }
         if (areCarDetailsIncorrect(carRequest))
         {
             throw CarExceptionSupplier.incorrectCarDetails().get();

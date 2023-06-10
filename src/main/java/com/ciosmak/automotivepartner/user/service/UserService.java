@@ -27,7 +27,7 @@ public class UserService
     {
         if (areUserDataIncorrect(userRequest))
         {
-            throw UserExceptionSupplier.incorrectData().get();
+            throw UserExceptionSupplier.incorrectUserData().get();
         }
 
         String email = userRequest.getEmail();
