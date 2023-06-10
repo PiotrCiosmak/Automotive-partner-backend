@@ -68,4 +68,22 @@ public class UserExceptionAdvisor
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getMessage());
     }
+
+    @ExceptionHandler(UserAdminException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse userAdmin(UserAdminException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getMessage());
+    }
+
+    @ExceptionHandler(UserNotAdminException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse userNotAdmin(UserNotAdminException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getMessage());
+    }
 }

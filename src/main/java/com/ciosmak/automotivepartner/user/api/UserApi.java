@@ -44,6 +44,21 @@ public class UserApi
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @PutMapping("admins/make/{id}")
+    @Operation(summary = "Make admin")
+    public ResponseEntity<Void> makeAdmin(@PathVariable Long id)
+    {
+        userService.makeAdmin(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+    @PutMapping("admins/demote/{id}")
+    @Operation(summary = "Demote admin")
+    public ResponseEntity<Void> demoteAdmin(@PathVariable Long id)
+    {
+        userService.demoteAdmin(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
     @GetMapping("/find/{id}")
     @Operation(summary = "Find user")
     public ResponseEntity<UserResponse> find(@PathVariable Long id)

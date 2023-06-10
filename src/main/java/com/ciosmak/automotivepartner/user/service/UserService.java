@@ -78,6 +78,35 @@ public class UserService
         userRepository.setBlocked(user.getId(), Boolean.FALSE);
     }
 
+    @Transactional
+    public void makeAdmin(Long id)
+    {
+        User user = userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
+        String userRole = userRepository.getRole(id);
+        if (isAdmin(userRole))
+        {
+            throw UserExceptionSupplier.userAdmin(id).get();
+        }
+        userRepository.setRole(user.getId(), "admin");
+    }
+
+    @Transactional
+    public void demoteAdmin(Long id)
+    {
+        User user = userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
+        String userRole = userRepository.getRole(id);
+        if (!isAdmin(userRole))
+        {
+            throw UserExceptionSupplier.userNotAdmin(id).get();
+        }
+        userRepository.setRole(user.getId(), "driver");
+    }
+
+    private boolean isAdmin(String role)
+    {
+        return role.equals("admin");
+    }
+
     public UserResponse find(Long id)
     {
         User user = userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));

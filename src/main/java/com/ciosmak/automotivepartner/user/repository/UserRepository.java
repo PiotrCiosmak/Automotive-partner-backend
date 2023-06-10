@@ -25,4 +25,11 @@ public interface UserRepository extends JpaRepository<User, Long>
     @Modifying
     @Query("UPDATE User u SET u.blocked = :isBlocked WHERE u.id = :id")
     void setBlocked(@Param("id") Long id, Boolean isBlocked);
+
+    @Query("SELECT u.role FROM User u WHERE u.id = :id")
+    String getRole(@Param("id") Long id);
+
+    @Modifying
+    @Query("UPDATE User u SET u.role = :role WHERE u.id = :id")
+    void setRole(@Param("id") Long id, String role);
 }
