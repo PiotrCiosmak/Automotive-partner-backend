@@ -30,33 +30,34 @@ public class UserApi
 
     @PutMapping("/block/{id}")
     @Operation(summary = "Block user")
-    public ResponseEntity<Void> block(@PathVariable Long id)
+    public ResponseEntity<UserResponse> block(@PathVariable Long id)
     {
-        userService.block(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        UserResponse userResponse = userService.block(id);
+        return ResponseEntity.status(HttpStatus.OK).body(userResponse);
     }
 
     @PutMapping("unblock/{id}")
     @Operation(summary = "Unblock user")
-    public ResponseEntity<Void> unblock(@PathVariable Long id)
+    public ResponseEntity<UserResponse> unblock(@PathVariable Long id)
     {
-        userService.unblock(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        UserResponse userResponse = userService.unblock(id);
+        return ResponseEntity.status(HttpStatus.OK).body(userResponse);
     }
 
     @PutMapping("admins/make/{id}")
     @Operation(summary = "Make admin")
-    public ResponseEntity<Void> makeAdmin(@PathVariable Long id)
+    public ResponseEntity<UserResponse> makeAdmin(@PathVariable Long id)
     {
-        userService.makeAdmin(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        UserResponse userResponse = userService.makeAdmin(id);
+        return ResponseEntity.status(HttpStatus.OK).body(userResponse);
     }
+
     @PutMapping("admins/demote/{id}")
     @Operation(summary = "Demote admin")
-    public ResponseEntity<Void> demoteAdmin(@PathVariable Long id)
+    public ResponseEntity<UserResponse> demoteAdmin(@PathVariable Long id)
     {
-        userService.demoteAdmin(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        UserResponse userResponse = userService.demoteAdmin(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userResponse);
     }
 
     @GetMapping("/find/{id}")

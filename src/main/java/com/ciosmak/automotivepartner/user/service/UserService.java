@@ -55,7 +55,7 @@ public class UserService
     }
 
     @Transactional
-    public void block(Long id)
+    public UserResponse block(Long id)
     {
         User user = userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
         boolean userIsBlocked = userRepository.isBlocked(id);
@@ -64,10 +64,11 @@ public class UserService
             throw UserExceptionSupplier.userBlocked(id).get();
         }
         userRepository.setBlocked(user.getId(), Boolean.TRUE);
+        return userMapper.toUserResponse(user);
     }
 
     @Transactional
-    public void unblock(Long id)
+    public UserResponse unblock(Long id)
     {
         User user = userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
         boolean userIsBlocked = userRepository.isBlocked(id);
@@ -76,10 +77,11 @@ public class UserService
             throw UserExceptionSupplier.userUnblocked(id).get();
         }
         userRepository.setBlocked(user.getId(), Boolean.FALSE);
+        return userMapper.toUserResponse(user);
     }
 
     @Transactional
-    public void makeAdmin(Long id)
+    public UserResponse makeAdmin(Long id)
     {
         User user = userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
         String userRole = userRepository.getRole(id);
@@ -88,10 +90,11 @@ public class UserService
             throw UserExceptionSupplier.userAdmin(id).get();
         }
         userRepository.setRole(user.getId(), "admin");
+        return userMapper.toUserResponse(user);
     }
 
     @Transactional
-    public void demoteAdmin(Long id)
+    public UserResponse demoteAdmin(Long id)
     {
         User user = userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
         String userRole = userRepository.getRole(id);
@@ -100,6 +103,7 @@ public class UserService
             throw UserExceptionSupplier.userNotAdmin(id).get();
         }
         userRepository.setRole(user.getId(), "driver");
+        return userMapper.toUserResponse(user);
     }
 
     private boolean isAdmin(String role)
