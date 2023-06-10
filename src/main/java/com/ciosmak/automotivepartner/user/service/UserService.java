@@ -17,13 +17,16 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
-public class UserService {
+public class UserService
+{
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final EmailRepository emailRepository;
 
-    public UserResponse register(UserRequest userRequest) {
-        if (areUserDataIncorrect(userRequest)) {
+    public UserResponse register(UserRequest userRequest)
+    {
+        if (areUserDataIncorrect(userRequest))
+        {
             throw UserExceptionSupplier.incorrectData().get();
         }
 
@@ -32,7 +35,8 @@ public class UserService {
         emailRepository.findByEmail(email).orElseThrow(UserExceptionSupplier.emailNotInDatabase());
 
         Optional<User> existingUser = userRepository.findByEmail(email);
-        if (existingUser.isPresent()) {
+        if (existingUser.isPresent())
+        {
             throw UserExceptionSupplier.emailTaken().get();
         }
 
@@ -40,7 +44,8 @@ public class UserService {
         return userMapper.toUserResponse(user);
     }
 
-    private boolean areUserDataIncorrect(UserRequest userRequest) {
+    private boolean areUserDataIncorrect(UserRequest userRequest)
+    {
         return userRequest.getFirstName().isEmpty() ||
                 userRequest.getLastName().isEmpty() ||
                 !userRequest.getEmail().contains("@.") ||
@@ -50,71 +55,57 @@ public class UserService {
     }
 
     @Transactional
-    public void block(Long id) {
+    public void block(Long id)
+    {
         User user = userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
         boolean userIsBlocked = userRepository.isBlocked(id);
-        if (userIsBlocked) {
+        if (userIsBlocked)
+        {
             throw UserExceptionSupplier.userBlocked(id).get();
         }
-        userRepository.setBlockedTrue(user.getId());
+        userRepository.setBlocked(user.getId(), Boolean.TRUE);
     }
 
     @Transactional
-    public void unblock(Long id) {
+    public void unblock(Long id)
+    {
         User user = userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
         boolean userIsBlocked = userRepository.isBlocked(id);
-        if (!userIsBlocked) {
+        if (!userIsBlocked)
+        {
             throw UserExceptionSupplier.userUnblocked(id).get();
         }
-        userRepository.setBlockedFalse(user.getId());
+        userRepository.setBlocked(user.getId(), Boolean.FALSE);
     }
 
-    @Transactional
-    public void makeAdmin(Long id) {
-        User user = userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
-        boolean userIsAdmin = userRepository.isAdmin(id);
-        if (userIsAdmin) {
-            throw UserExceptionSupplier.userAdmin(id).get();
-        }
-        userRepository.setRole(user.getId(), "admin");
-    }
-
-    @Transactional
-    public void demoteAdmin(Long id) {
-        User user = userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
-        boolean userIsAdmin = userRepository.isAdmin(id);
-        if (!userIsAdmin) {
-            throw UserExceptionSupplier.userNotAdmin(id).get();
-        }
-        userRepository.setRole(user.getId(), "driver");
-    }
-
-    public UserResponse find(Long id) {
+    public UserResponse find(Long id)
+    {
         User user = userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
         return userMapper.toUserResponse(user);
     }
 
-    public List<UserResponse> findAll() {
+    public List<UserResponse> findAll()
+    {
         return userRepository.findAll().stream().map(userMapper::toUserResponse).collect(Collectors.toList());
     }
 
-    public List<UserResponse> findAllUnblocked() {
-        return userRepository.findAllByBlockedFalse().stream().map(userMapper::toUserResponse).collect(Collectors.toList());
+    public List<UserResponse> findAllUnblocked()
+    {
+        return userRepository.findAllByBlocked(Boolean.FALSE).stream().map(userMapper::toUserResponse).collect(Collectors.toList());
     }
 
-    public List<UserResponse> findAllBlocked() {
-        return userRepository.findAllByBlockedTrue().stream().map(userMapper::toUserResponse).collect(Collectors.toList());
+    public List<UserResponse> findAllBlocked()
+    {
+        return userRepository.findAllByBlocked(Boolean.TRUE).stream().map(userMapper::toUserResponse).collect(Collectors.toList());
     }
+/*
+    public final List<UserResponse> findAllAdmins()
+    {
+        return userRepository.findAllByRole().stream().map(userMapper::toUserResponse).collect(Collectors.toList());
+    }*/
 
-    public List<UserResponse> findAllAdmins() {
-        return userRepository.findAllByRole("admin").stream().map(userMapper::toUserResponse).collect(Collectors.toList());
-    }
-
-    public List<UserResponse> findAllDrivers() {
-        return userRepository.findAllByRole("driver").stream().map(userMapper::toUserResponse).collect(Collectors.toList());
-    }
-
-    public void delete(Long id) {
+    public void delete(Long id)
+    {
         User user = userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
         userRepository.deleteById(user.getId());
     }

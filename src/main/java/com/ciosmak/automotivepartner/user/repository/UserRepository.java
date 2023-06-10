@@ -15,27 +15,12 @@ public interface UserRepository extends JpaRepository<User, Long>
 {
     Optional<User> findByEmail(String email);
 
-    List<User> findAllByBlockedFalse();
-
-    List<User> findAllByBlockedTrue();
-
-    List<User> findAllByRole(String role);
+    List<User> findAllByBlocked(Boolean isBlocked);
 
     @Query("SELECT u.blocked FROM User u WHERE u.id = :id")
     boolean isBlocked(@Param("id") Long id);
-//TODO zmienić na jedno setBlocked z parametrem w którym jest true/false
-    @Modifying
-    @Query("UPDATE User u SET u.blocked = true WHERE u.id = :id")
-    void setBlockedTrue(@Param("id") Long id);
 
     @Modifying
-    @Query("UPDATE User u SET u.blocked = false WHERE u.id = :id")
-    void setBlockedFalse(@Param("id") Long id);
-
-    @Query("SELECT u.role FROM User u WHERE u.id = :id")
-    boolean isAdmin(@Param("id") Long id);
-
-    @Modifying
-    @Query("UPDATE User u SET u.role = :role WHERE u.id = :id")
-    void setRole(@Param("id") Long id, @Param("role") String role);
+    @Query("UPDATE User u SET u.blocked = :isBlocked WHERE u.id = :id")
+    void setBlocked(@Param("id") Long id, @Param("isBlocked") Boolean isBlocked);
 }
