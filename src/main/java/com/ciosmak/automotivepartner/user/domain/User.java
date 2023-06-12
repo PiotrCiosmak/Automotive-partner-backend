@@ -1,6 +1,6 @@
 package com.ciosmak.automotivepartner.user.domain;
 
-import com.ciosmak.automotivepartner.availability.Availability;
+import com.ciosmak.automotivepartner.availability.domain.Availability;
 import com.ciosmak.automotivepartner.entity.AbstractEntity;
 import com.ciosmak.automotivepartner.settlement.Settlement;
 import com.ciosmak.automotivepartner.shift.Shift;
