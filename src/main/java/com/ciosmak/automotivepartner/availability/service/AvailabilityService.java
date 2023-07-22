@@ -6,6 +6,7 @@ import com.ciosmak.automotivepartner.availability.domain.Availability;
 import com.ciosmak.automotivepartner.availability.repository.AvailabilityRepository;
 import com.ciosmak.automotivepartner.availability.support.AvailabilityExceptionSupplier;
 import com.ciosmak.automotivepartner.availability.support.AvailabilityMapper;
+import com.ciosmak.automotivepartner.availability.support.Type;
 import com.ciosmak.automotivepartner.user.repository.UserRepository;
 import com.ciosmak.automotivepartner.user.support.UserExceptionSupplier;
 import lombok.AllArgsConstructor;
@@ -53,5 +54,17 @@ public class AvailabilityService
         }
         Availability availability = availabilityRepository.save(availabilityMapper.toAvailability(availabilityRequest));
         return availabilityMapper.toAvailabilityResponse(availability);
+    }
+
+    public Type getTypeOfAvailability(Long userId, LocalDate date)
+    {
+        userRepository.findById(userId).orElseThrow(UserExceptionSupplier.userNotFound(userId));
+        Availability existingAvailability = availabilityRepository.findByUser_IdAndDate(userId, date).orElseThrow(AvailabilityExceptionSupplier.availabilityNotFound(userId, date));
+        return existingAvailability.getType();
+    }
+
+    public Integer getNumberOfApplicants(LocalDate date, Type type)
+    {
+        return availabilityRepository.countByDateAndType(date, type);
     }
 }

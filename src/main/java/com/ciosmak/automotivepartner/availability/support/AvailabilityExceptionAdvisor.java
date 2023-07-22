@@ -1,5 +1,6 @@
 package com.ciosmak.automotivepartner.availability.support;
 
+import com.ciosmak.automotivepartner.availability.support.exception.AvailabilityNotFoundException;
 import com.ciosmak.automotivepartner.availability.support.exception.AvailabilitySubmittedException;
 import com.ciosmak.automotivepartner.car.support.CarExceptionAdvisor;
 import com.ciosmak.automotivepartner.shared.api.response.ErrorMessageResponse;
@@ -20,6 +21,15 @@ public class AvailabilityExceptionAdvisor
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorMessageResponse availabilitySubmitted(AvailabilitySubmittedException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getLocalizedMessage());
+    }
+
+    @ExceptionHandler(AvailabilityNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse availabilityNotFound(AvailabilityNotFoundException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getLocalizedMessage());
