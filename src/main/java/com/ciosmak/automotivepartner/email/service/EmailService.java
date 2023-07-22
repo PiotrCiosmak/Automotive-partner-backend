@@ -40,6 +40,18 @@ public class EmailService
 
     private Boolean isEmailInValid(String email)
     {
-        return !email.contains("@.");
+        if (!email.contains("@"))
+        {
+            return true;
+        }
+
+        int indexOfAt = email.indexOf("@");
+        int lastIndexOfDot = email.lastIndexOf(".");
+        if (lastIndexOfDot == -1 || lastIndexOfDot < indexOfAt)
+        {
+            return true;
+        }
+
+        return email.endsWith(".");
     }
 }

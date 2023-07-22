@@ -48,7 +48,6 @@ public class UserService
     {
         return userRequest.getFirstName().isEmpty() ||
                 userRequest.getLastName().isEmpty() ||
-                !userRequest.getEmail().contains("@.") ||
                 userRequest.getPassword().isEmpty() ||
                 userRequest.getPhoneNumber().isEmpty() ||
                 userRequest.getRole().isEmpty();
