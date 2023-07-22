@@ -121,7 +121,13 @@ public class UserService
     public UserResponse changeEmail(Long id, String email)
     {
         User user = userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
+
+        emailRepository.findByEmail(email).orElseThrow(UserExceptionSupplier.emailNotInDatabase());
         user.setEmail(email);
+
+        EmailRequest emailRequest = new EmailRequest(email);
+        emailService.delete(emailRequest);
+
         return userMapper.toUserResponse(user);
     }
 
