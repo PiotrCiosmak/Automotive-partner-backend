@@ -60,6 +60,14 @@ public class UserApi
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userResponse);
     }
 
+    @PutMapping("user/change/email/{id}")
+    @Operation(summary = "Change user's email")
+    public ResponseEntity<UserResponse> changeEmail(@PathVariable Long id, @RequestParam String email)
+    {
+        UserResponse userResponse = userService.changeEmail(id, email);
+        return ResponseEntity.status(HttpStatus.OK).body(userResponse);
+    }
+
     @GetMapping("/find/{id}")
     @Operation(summary = "Find user")
     public ResponseEntity<UserResponse> find(@PathVariable Long id)

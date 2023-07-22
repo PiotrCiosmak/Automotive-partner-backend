@@ -69,7 +69,7 @@ public class UserService
         {
             throw UserExceptionSupplier.userBlocked(id).get();
         }
-        userRepository.setBlocked(user.getId(), Boolean.TRUE);
+        user.setBlocked(Boolean.TRUE);
         return userMapper.toUserResponse(user);
     }
 
@@ -82,7 +82,7 @@ public class UserService
         {
             throw UserExceptionSupplier.userUnblocked(id).get();
         }
-        userRepository.setBlocked(user.getId(), Boolean.FALSE);
+        user.setBlocked(Boolean.FALSE);
         return userMapper.toUserResponse(user);
     }
 
@@ -95,7 +95,7 @@ public class UserService
         {
             throw UserExceptionSupplier.userAdmin(id).get();
         }
-        userRepository.setRole(user.getId(), "admin");
+        user.setRole("admin");
         return userMapper.toUserResponse(user);
     }
 
@@ -108,13 +108,21 @@ public class UserService
         {
             throw UserExceptionSupplier.userNotAdmin(id).get();
         }
-        userRepository.setRole(user.getId(), "driver");
+        user.setRole("driver");
         return userMapper.toUserResponse(user);
     }
 
     private boolean isAdmin(String role)
     {
         return role.equals("admin");
+    }
+
+    @Transactional
+    public UserResponse changeEmail(Long id, String email)
+    {
+        User user = userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
+        user.setEmail(email);
+        return userMapper.toUserResponse(user);
     }
 
     public UserResponse find(Long id)
