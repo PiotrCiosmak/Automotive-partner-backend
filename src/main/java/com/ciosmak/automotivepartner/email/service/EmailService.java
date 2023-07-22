@@ -54,4 +54,10 @@ public class EmailService
 
         return email.endsWith(".");
     }
+
+    public void delete(EmailRequest emailRequest)
+    {
+        Email email = emailRepository.findByEmail(emailRequest.getEmail()).orElseThrow(EmailExceptionSupplier.emailNotFound());
+        emailRepository.delete(email);
+    }
 }

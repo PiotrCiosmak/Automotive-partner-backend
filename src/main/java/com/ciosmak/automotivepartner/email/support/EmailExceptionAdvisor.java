@@ -1,5 +1,6 @@
 package com.ciosmak.automotivepartner.email.support;
 
+import com.ciosmak.automotivepartner.email.support.exception.EmailNotFoundException;
 import com.ciosmak.automotivepartner.email.support.exception.EmailTakenException;
 import com.ciosmak.automotivepartner.email.support.exception.InCorrectEmailException;
 import com.ciosmak.automotivepartner.shared.api.response.ErrorMessageResponse;
@@ -29,6 +30,15 @@ public class EmailExceptionAdvisor
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorMessageResponse inCorrectEmail(InCorrectEmailException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getMessage());
+    }
+
+    @ExceptionHandler(EmailNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse emailNotFound(EmailNotFoundException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getMessage());

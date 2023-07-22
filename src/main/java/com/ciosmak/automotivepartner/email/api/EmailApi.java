@@ -19,11 +19,19 @@ public class EmailApi
 {
     private final EmailService emailService;
 
-    @PostMapping
+    @PostMapping("/add")
     @Operation(summary = "Add email")
-    private ResponseEntity<EmailResponse> add(@RequestBody EmailRequest emailRequest)
+    public ResponseEntity<EmailResponse> add(@RequestBody EmailRequest emailRequest)
     {
         EmailResponse emailResponse = emailService.add(emailRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(emailResponse);
+    }
+
+    @DeleteMapping("delete")
+    @Operation(summary = "Delete email")
+    public ResponseEntity<Void> delete(@RequestBody EmailRequest emailRequest)
+    {
+        emailService.delete(emailRequest);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

@@ -1,6 +1,8 @@
 package com.ciosmak.automotivepartner.user.service;
 
+import com.ciosmak.automotivepartner.email.api.request.EmailRequest;
 import com.ciosmak.automotivepartner.email.repository.EmailRepository;
+import com.ciosmak.automotivepartner.email.service.EmailService;
 import com.ciosmak.automotivepartner.user.api.request.UserRequest;
 import com.ciosmak.automotivepartner.user.api.response.UserResponse;
 import com.ciosmak.automotivepartner.user.domain.User;
@@ -22,6 +24,7 @@ public class UserService
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final EmailRepository emailRepository;
+    private final EmailService emailService;
 
     public UserResponse register(UserRequest userRequest)
     {
@@ -32,15 +35,19 @@ public class UserService
 
         String email = userRequest.getEmail();
 
-        emailRepository.findByEmail(email).orElseThrow(UserExceptionSupplier.emailNotInDatabase());
-
         Optional<User> existingUser = userRepository.findByEmail(email);
         if (existingUser.isPresent())
         {
             throw UserExceptionSupplier.emailTaken().get();
         }
 
+        emailRepository.findByEmail(email).orElseThrow(UserExceptionSupplier.emailNotInDatabase());
+
         User user = userRepository.save(userMapper.toUser(userRequest));
+
+        EmailRequest emailRequest = new EmailRequest(email);
+        emailService.delete(emailRequest);
+
         return userMapper.toUserResponse(user);
     }
 
