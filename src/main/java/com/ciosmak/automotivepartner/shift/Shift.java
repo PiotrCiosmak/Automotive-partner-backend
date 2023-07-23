@@ -1,6 +1,6 @@
 package com.ciosmak.automotivepartner.shift;
 
-import com.ciosmak.automotivepartner.accident.Accident;
+import com.ciosmak.automotivepartner.accident.domain.Accident;
 import com.ciosmak.automotivepartner.availability.support.Type;
 import com.ciosmak.automotivepartner.car.domain.Car;
 import com.ciosmak.automotivepartner.entity.AbstractEntity;
@@ -10,8 +10,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -27,7 +27,7 @@ public class Shift extends AbstractEntity
 {
     @ToString.Include
     @Column(name = "date", columnDefinition = "DATE", nullable = false)
-    private Date date;
+    private LocalDate date;
 
     @ToString.Include
     @Column(name = "type", nullable = false)

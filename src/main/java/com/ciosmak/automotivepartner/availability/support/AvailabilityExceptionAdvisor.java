@@ -2,7 +2,6 @@ package com.ciosmak.automotivepartner.availability.support;
 
 import com.ciosmak.automotivepartner.availability.support.exception.AvailabilityNotFoundException;
 import com.ciosmak.automotivepartner.availability.support.exception.AvailabilitySubmittedException;
-import com.ciosmak.automotivepartner.car.support.CarExceptionAdvisor;
 import com.ciosmak.automotivepartner.shared.api.response.ErrorMessageResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class AvailabilityExceptionAdvisor
 {
-    private static final Logger LOG = LoggerFactory.getLogger(CarExceptionAdvisor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AvailabilityExceptionAdvisor.class);
 
     @ExceptionHandler(AvailabilitySubmittedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
