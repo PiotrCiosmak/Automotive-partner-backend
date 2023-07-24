@@ -39,7 +39,7 @@ public class AvailabilityApi
 
     @GetMapping("/type/{user_id}/{date}")
     @Operation(summary = "Get type of availability")
-    public ResponseEntity<Type> getTypeOfAvailability(@PathVariable Long user_id, @PathVariable LocalDate date)
+    public ResponseEntity<Type> getType(@PathVariable Long user_id, @PathVariable LocalDate date)
     {
         Type type = availabilityService.getTypeOfAvailability(user_id, date);
         return ResponseEntity.status(HttpStatus.OK).body(type);

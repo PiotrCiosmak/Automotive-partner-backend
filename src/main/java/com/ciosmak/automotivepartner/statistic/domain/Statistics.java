@@ -1,4 +1,4 @@
-package com.ciosmak.automotivepartner.statistic;
+package com.ciosmak.automotivepartner.statistic.domain;
 
 import com.ciosmak.automotivepartner.entity.AbstractEntity;
 import com.ciosmak.automotivepartner.user.domain.User;
@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -21,7 +21,7 @@ public class Statistics extends AbstractEntity
 {
     @ToString.Include
     @Column(name = "month_and_year", columnDefinition = "DATE", nullable = false)
-    private Date monthAndYear;
+    private LocalDate monthAndYear;
 
     @ToString.Include
     @Column(name = "mileage", nullable = false)

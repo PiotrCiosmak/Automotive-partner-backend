@@ -4,7 +4,7 @@ import com.ciosmak.automotivepartner.availability.domain.Availability;
 import com.ciosmak.automotivepartner.entity.AbstractEntity;
 import com.ciosmak.automotivepartner.settlement.Settlement;
 import com.ciosmak.automotivepartner.shift.Shift;
-import com.ciosmak.automotivepartner.statistic.Statistics;
+import com.ciosmak.automotivepartner.statistic.domain.Statistics;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.NaturalId;
