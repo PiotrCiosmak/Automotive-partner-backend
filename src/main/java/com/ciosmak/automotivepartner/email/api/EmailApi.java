@@ -1,6 +1,5 @@
 package com.ciosmak.automotivepartner.email.api;
 
-
 import com.ciosmak.automotivepartner.email.api.request.EmailRequest;
 import com.ciosmak.automotivepartner.email.api.response.EmailResponse;
 import com.ciosmak.automotivepartner.email.service.EmailService;
