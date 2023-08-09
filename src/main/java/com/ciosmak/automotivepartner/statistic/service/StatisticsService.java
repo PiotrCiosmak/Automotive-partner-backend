@@ -25,7 +25,8 @@ public class StatisticsService
     {
         userRepository.findById(userId).orElseThrow(UserExceptionSupplier.userNotFound(userId));
         Statistics statistics = statisticsRepository.findByUserId(userId).orElseThrow(StatisticsExceptionSupplier.userStatisticsNotExists(userId));
-        return statisticsMapper.toStatisticsResponse(statistics);
+        // return statisticsMapper.toStatisticsResponse(statistics);
+        return null;
     }
 
     public StatisticsResponse findUserInSelectedMonth(Long userId, YearMonth date)
@@ -36,6 +37,6 @@ public class StatisticsService
     public StatisticsResponse findInSelectedYear(Year year)
     {
         return null;
-       // Statistics statistics = statisticsRepository.findByYear(year).orElseThrow(StatisticsExceptionSupplier.statisticsNotExists(year));
+        // Statistics statistics = statisticsRepository.findByYear(year).orElseThrow(StatisticsExceptionSupplier.statisticsNotExists(year));
     }
 }

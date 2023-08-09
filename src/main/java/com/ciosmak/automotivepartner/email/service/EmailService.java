@@ -6,11 +6,14 @@ import com.ciosmak.automotivepartner.email.domain.Email;
 import com.ciosmak.automotivepartner.email.repository.EmailRepository;
 import com.ciosmak.automotivepartner.email.support.EmailExceptionSupplier;
 import com.ciosmak.automotivepartner.email.support.EmailMapper;
+import com.ciosmak.automotivepartner.user.domain.User;
 import com.ciosmak.automotivepartner.user.repository.UserRepository;
 import com.ciosmak.automotivepartner.user.support.UserExceptionSupplier;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -40,7 +43,12 @@ public class EmailService
             throw EmailExceptionSupplier.incorrectEmail().get();
         }
 
-        userRepository.findByEmail(emailCandidate).orElseThrow(UserExceptionSupplier.emailTaken());
+        Optional<User> user = userRepository.findByEmail(emailCandidate);
+
+        if (user.isPresent())
+        {
+            throw UserExceptionSupplier.emailTaken().get();
+        }
 
         Email email = emailRepository.save(emailMapper.toEmail(emailRequest));
         return emailMapper.toEmailResponse(email);

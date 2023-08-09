@@ -4,6 +4,6 @@ public class EmailTakenException extends RuntimeException
 {
     public EmailTakenException()
     {
-        super("Ten adres email został już użyty. Podaj inny adres email.");
+        super("Ten adres email został już dodany. Podaj inny adres email.");
     }
 }
