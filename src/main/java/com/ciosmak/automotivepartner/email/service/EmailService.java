@@ -6,13 +6,11 @@ import com.ciosmak.automotivepartner.email.domain.Email;
 import com.ciosmak.automotivepartner.email.repository.EmailRepository;
 import com.ciosmak.automotivepartner.email.support.EmailExceptionSupplier;
 import com.ciosmak.automotivepartner.email.support.EmailMapper;
-import com.ciosmak.automotivepartner.user.domain.User;
 import com.ciosmak.automotivepartner.user.repository.UserRepository;
 import com.ciosmak.automotivepartner.user.support.UserExceptionSupplier;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -22,6 +20,7 @@ public class EmailService
     private final EmailRepository emailRepository;
     private final EmailMapper emailMapper;
 
+    @Transactional
     public EmailResponse add(EmailRequest emailRequest)
     {
         String emailCandidate = emailRequest.getEmail();
@@ -31,17 +30,17 @@ public class EmailService
             throw EmailExceptionSupplier.emailTaken().get();
         }
 
-        if (isEmailInValid(emailCandidate))
+        if (isEmailEmpty(emailCandidate))
         {
-            throw EmailExceptionSupplier.inCorrectEmail().get();
+            throw EmailExceptionSupplier.emptyEmail().get();
         }
 
-        Optional<User> user = userRepository.findByEmail(emailCandidate);
-
-        if (user.isPresent())
+        if (isEmailIncorrect(emailCandidate))
         {
-            throw UserExceptionSupplier.emailTaken().get();
+            throw EmailExceptionSupplier.incorrectEmail().get();
         }
+
+        userRepository.findByEmail(emailCandidate).orElseThrow(UserExceptionSupplier.emailTaken());
 
         Email email = emailRepository.save(emailMapper.toEmail(emailRequest));
         return emailMapper.toEmailResponse(email);
@@ -52,7 +51,12 @@ public class EmailService
         return emailRepository.findByEmail(email).isPresent();
     }
 
-    private Boolean isEmailInValid(String email)
+    private Boolean isEmailEmpty(String email)
+    {
+        return email.isEmpty();
+    }
+
+    private Boolean isEmailIncorrect(String email)
     {
         if (!email.contains("@"))
         {
@@ -69,9 +73,10 @@ public class EmailService
         return email.endsWith(".");
     }
 
+    @Transactional
     public void delete(EmailRequest emailRequest)
     {
-        Email email = emailRepository.findByEmail(emailRequest.getEmail()).orElseThrow(EmailExceptionSupplier.emailNotFound());
+        Email email = emailRepository.findByEmail(emailRequest.getEmail()).orElseThrow(EmailExceptionSupplier.incorrectEmail());
         emailRepository.delete(email);
     }
 }
