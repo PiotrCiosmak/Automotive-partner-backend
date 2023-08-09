@@ -36,9 +36,9 @@ public class UserExceptionSupplier
         return () -> new UserUnblockedException(id);
     }
 
-    public static Supplier<UserAdminException> userAdmin(Long id)
+    public static Supplier<UserAlreadyAdminException> userAdmin(Long id)
     {
-        return () -> new UserAdminException(id);
+        return () -> new UserAlreadyAdminException(id);
     }
 
     public static Supplier<UserNotAdminException> userNotAdmin(Long id)

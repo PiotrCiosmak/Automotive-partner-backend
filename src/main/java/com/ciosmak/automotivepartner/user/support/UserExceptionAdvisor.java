@@ -69,10 +69,10 @@ public class UserExceptionAdvisor
         return new ErrorMessageResponse(exception.getMessage());
     }
 
-    @ExceptionHandler(UserAdminException.class)
+    @ExceptionHandler(UserAlreadyAdminException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorMessageResponse userAdmin(UserAdminException exception)
+    public ErrorMessageResponse userAdmin(UserAlreadyAdminException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getMessage());

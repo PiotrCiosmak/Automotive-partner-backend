@@ -2,8 +2,8 @@ package com.ciosmak.automotivepartner.user.support.exception;
 
 public class UserBlockedException extends RuntimeException
 {
-    public UserBlockedException(Long id)
+    public UserBlockedException()
     {
-        super(String.format("User with %d id is blocked", id));
+        super("Twoje konto jest zablokowane, skontakuj się z administratorem.");
     }
 }

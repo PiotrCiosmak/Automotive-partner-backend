@@ -2,8 +2,8 @@ package com.ciosmak.automotivepartner.user.support.exception;
 
 public class UserNotAdminException extends RuntimeException
 {
-    public UserNotAdminException(Long id)
+    public UserNotAdminException()
     {
-        super(String.format("User with %d id is not admin", id));
+        super("Użytkownik nie jest administratorem.");
     }
 }
