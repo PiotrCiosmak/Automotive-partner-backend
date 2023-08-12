@@ -19,7 +19,7 @@ public class EmailApi
     private final EmailService emailService;
 
     @PostMapping("/add")
-    @Operation(summary = "Add email")
+    @Operation(summary = "Add")
     public ResponseEntity<EmailResponse> add(@RequestBody EmailRequest emailRequest)
     {
         EmailResponse emailResponse = emailService.add(emailRequest);
@@ -27,7 +27,7 @@ public class EmailApi
     }
 
     @DeleteMapping("/delete")
-    @Operation(summary = "Delete email")
+    @Operation(summary = "Delete")
     public ResponseEntity<Void> delete(@RequestBody EmailRequest emailRequest)
     {
         emailService.delete(emailRequest);
