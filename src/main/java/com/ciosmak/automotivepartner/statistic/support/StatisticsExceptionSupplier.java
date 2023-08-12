@@ -1,13 +1,13 @@
 package com.ciosmak.automotivepartner.statistic.support;
 
-import com.ciosmak.automotivepartner.statistic.support.exception.UserStatisticsNotExistsException;
+import com.ciosmak.automotivepartner.statistic.support.exception.IncorrectDateException;
 
 import java.util.function.Supplier;
 
 public class StatisticsExceptionSupplier
 {
-    public static Supplier<UserStatisticsNotExistsException> userStatisticsNotExists(Long userId)
+    public static Supplier<IncorrectDateException> Incorrect()
     {
-        return () -> new UserStatisticsNotExistsException(userId);
+        return IncorrectDateException::new;
     }
 }

@@ -9,16 +9,16 @@ import java.time.LocalDate;
 @Getter
 public class StatisticsRequest
 {
-    private final LocalDate monthAndYear;
+    private final LocalDate date;
     private final Integer mileage;
     private final BigDecimal lpg;
     private final BigDecimal petrol;
     private final Long userId;
 
     @JsonCreator
-    public StatisticsRequest(LocalDate monthAndYear, Integer mileage, BigDecimal lpg, BigDecimal petrol, Long userId)
+    public StatisticsRequest(LocalDate date, Integer mileage, BigDecimal lpg, BigDecimal petrol, Long userId)
     {
-        this.monthAndYear = monthAndYear;
+        this.date = date;
         this.mileage = mileage;
         this.lpg = lpg;
         this.petrol = petrol;

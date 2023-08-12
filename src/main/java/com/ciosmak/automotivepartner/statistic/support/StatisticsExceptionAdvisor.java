@@ -1,7 +1,7 @@
 package com.ciosmak.automotivepartner.statistic.support;
 
 import com.ciosmak.automotivepartner.shared.api.response.ErrorMessageResponse;
-import com.ciosmak.automotivepartner.statistic.support.exception.UserStatisticsNotExistsException;
+import com.ciosmak.automotivepartner.statistic.support.exception.IncorrectDateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -15,10 +15,10 @@ public class StatisticsExceptionAdvisor
 {
     private static final Logger LOG = LoggerFactory.getLogger(StatisticsExceptionAdvisor.class);
 
-    @ExceptionHandler(UserStatisticsNotExistsException.class)
+    @ExceptionHandler(IncorrectDateException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorMessageResponse userStatisticsNotExists(UserStatisticsNotExistsException exception)
+    public ErrorMessageResponse incorrectDate(IncorrectDateException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getLocalizedMessage());

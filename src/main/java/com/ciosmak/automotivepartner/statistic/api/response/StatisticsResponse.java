@@ -11,7 +11,7 @@ import java.time.LocalDate;
 public class StatisticsResponse
 {
     private final Long id;
-    private final LocalDate monthAndYear;
+    private final LocalDate date;
     private final Integer mileage;
     private final BigDecimal lpg;
     private final BigDecimal petrol;
