@@ -208,7 +208,7 @@ public class UserService
         boolean userIsBlocked = userRepository.isBlocked(id);
         if (userIsBlocked)
         {
-            throw UserExceptionSupplier.userBlocked().get();
+            throw UserExceptionSupplier.userAlreadyBlocked().get();
         }
         user.setBlocked(Boolean.TRUE);
         return userMapper.toUserResponse(user);
@@ -266,43 +266,40 @@ public class UserService
     public List<UserResponse> findAll(String filterText)
     {
         List<User> users = userRepository.findAll();
-        return getAllProperUsers(users, filterText);
+        return getFilteredUsers(users, filterText);
     }
 
     public List<UserResponse> findAllUnblocked(String filterText)
     {
         List<User> unblockedUsers = userRepository.findAllByBlocked(Boolean.FALSE);
-        return getAllProperUsers(unblockedUsers, filterText);
+        return getFilteredUsers(unblockedUsers, filterText);
     }
 
     public List<UserResponse> findAllBlocked(String filterText)
     {
         List<User> blockedUsers = userRepository.findAllByBlocked(Boolean.TRUE);
-        return getAllProperUsers(blockedUsers, filterText);
+        return getFilteredUsers(blockedUsers, filterText);
     }
 
     public List<UserResponse> findAllAdmins(String filterText)
     {
         List<User> adminUsers = userRepository.findAllByRole("admin");
-        return getAllProperUsers(adminUsers, filterText);
+        return getFilteredUsers(adminUsers, filterText);
     }
 
     public List<UserResponse> findAllDrivers(String filterText)
     {
         List<User> driverUsers = userRepository.findAllByRole("driver");
-        return getAllProperUsers(driverUsers, filterText);
+        return getFilteredUsers(driverUsers, filterText);
     }
 
-    private List<UserResponse> getAllProperUsers(List<User> users, String filterText)
+    private List<UserResponse> getFilteredUsers(List<User> users, String filterText)
     {
         if (filterText.isEmpty())
         {
             return users.stream().map(userMapper::toUserResponse).collect(Collectors.toList());
         }
-        else
-        {
-            return users.stream().filter(user -> user.getFirstName().toLowerCase().contains(filterText.toLowerCase()) || user.getLastName().toLowerCase().contains(filterText.toLowerCase())).map(userMapper::toUserResponse).collect(Collectors.toList());
-        }
+        return users.stream().filter(user -> user.getFirstName().toLowerCase().contains(filterText.toLowerCase()) || user.getLastName().toLowerCase().contains(filterText.toLowerCase())).map(userMapper::toUserResponse).collect(Collectors.toList());
     }
 
     @Transactional

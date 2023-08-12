@@ -4,6 +4,6 @@ public class IncorrectRegistrationNumberException extends RuntimeException
 {
     public IncorrectRegistrationNumberException()
     {
-        super("Podaj poprawny numer rejestracyjny auta..");
+        super("Podaj poprawny numer rejestracyjny auta.");
     }
 }

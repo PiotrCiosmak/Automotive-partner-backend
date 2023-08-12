@@ -8,7 +8,6 @@ public class UpdateCarMileageRequest
 {
     private final Integer mileage;
 
-
     @JsonCreator
     public UpdateCarMileageRequest(Integer mileage)
     {

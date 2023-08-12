@@ -2,7 +2,6 @@ package com.ciosmak.automotivepartner.car.repository;
 
 import com.ciosmak.automotivepartner.car.domain.Car;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -19,8 +18,4 @@ public interface CarRepository extends JpaRepository<Car, Long>
 
     @Query("SELECT c.blocked FROM Car c WHERE c.id = :id")
     boolean isBlocked(@Param("id") Long id);
-
-    @Modifying
-    @Query("UPDATE Car c SET c.blocked = :isBlocked WHERE c.id = :id")
-    void setBlocked(@Param("id") Long id, Boolean isBlocked);
 }

@@ -22,7 +22,7 @@ public class UserApi
     private final UserService userService;
 
     @PostMapping("/register")
-    @Operation(summary = "Register user")
+    @Operation(summary = "Register")
     public ResponseEntity<UserResponse> register(@RequestBody UserRequest userRequest)
     {
         UserResponse userResponse = userService.register(userRequest);
@@ -46,7 +46,7 @@ public class UserApi
     }
 
     @PutMapping("/block/{id}")
-    @Operation(summary = "Block user")
+    @Operation(summary = "Block")
     public ResponseEntity<UserResponse> block(@PathVariable Long id)
     {
         UserResponse userResponse = userService.block(id);
@@ -54,7 +54,7 @@ public class UserApi
     }
 
     @PutMapping("/unblock/{id}")
-    @Operation(summary = "Unblock user")
+    @Operation(summary = "Unblock")
     public ResponseEntity<UserResponse> unblock(@PathVariable Long id)
     {
         UserResponse userResponse = userService.unblock(id);
@@ -79,7 +79,7 @@ public class UserApi
 
     @GetMapping("/find")
     @Operation(summary = "Find all")
-    public ResponseEntity<List<UserResponse>> findAll(@RequestBody String filterText)
+    public ResponseEntity<List<UserResponse>> findAll(@RequestParam(required = false, defaultValue = "") String filterText)
     {
         List<UserResponse> userResponses = userService.findAll(filterText);
         return ResponseEntity.status(HttpStatus.OK).body(userResponses);
@@ -87,7 +87,7 @@ public class UserApi
 
     @GetMapping("/find/unblocked")
     @Operation(summary = "Find all unblocked")
-    public ResponseEntity<List<UserResponse>> findAllUnblocked(@RequestBody String filterText)
+    public ResponseEntity<List<UserResponse>> findAllUnblocked(@RequestParam(required = false, defaultValue = "") String filterText)
     {
         List<UserResponse> userResponses = userService.findAllUnblocked(filterText);
         return ResponseEntity.status(HttpStatus.OK).body(userResponses);
@@ -95,7 +95,7 @@ public class UserApi
 
     @GetMapping("/find/blocked")
     @Operation(summary = "Find all blocked")
-    public ResponseEntity<List<UserResponse>> findAllBlocked(@RequestBody String filterText)
+    public ResponseEntity<List<UserResponse>> findAllBlocked(@RequestParam(required = false, defaultValue = "") String filterText)
     {
         List<UserResponse> userResponses = userService.findAllBlocked(filterText);
         return ResponseEntity.status(HttpStatus.OK).body(userResponses);
@@ -103,7 +103,7 @@ public class UserApi
 
     @GetMapping("/find/admins")
     @Operation(summary = "Find all admins")
-    public ResponseEntity<List<UserResponse>> findAllAdmins(@RequestBody String filterText)
+    public ResponseEntity<List<UserResponse>> findAllAdmins(@RequestParam(required = false, defaultValue = "") String filterText)
     {
         List<UserResponse> userResponses = userService.findAllAdmins(filterText);
         return ResponseEntity.status(HttpStatus.OK).body(userResponses);
@@ -111,14 +111,14 @@ public class UserApi
 
     @GetMapping("/find/drivers")
     @Operation(summary = "Find all drivers")
-    public ResponseEntity<List<UserResponse>> findAllDrivers(@RequestBody String filterText)
+    public ResponseEntity<List<UserResponse>> findAllDrivers(@RequestParam(required = false, defaultValue = "") String filterText)
     {
         List<UserResponse> userResponses = userService.findAllDrivers(filterText);
         return ResponseEntity.status(HttpStatus.OK).body(userResponses);
     }
 
     @DeleteMapping("/delete/{id}")
-    @Operation(summary = "Delete user")
+    @Operation(summary = "Delete")
     public ResponseEntity<Void> delete(@PathVariable Long id)
     {
         userService.delete(id);

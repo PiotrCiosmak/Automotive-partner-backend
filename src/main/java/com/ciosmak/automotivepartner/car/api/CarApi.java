@@ -22,7 +22,7 @@ public class CarApi
     private final CarService carService;
 
     @PostMapping("/add")
-    @Operation(summary = "Add car")
+    @Operation(summary = "Add")
     public ResponseEntity<CarResponse> add(@RequestBody CarRequest carRequest)
     {
         CarResponse carResponse = carService.add(carRequest);
@@ -30,7 +30,7 @@ public class CarApi
     }
 
     @PutMapping("/block/{id}")
-    @Operation(summary = "Block car")
+    @Operation(summary = "Block")
     public ResponseEntity<CarResponse> block(@PathVariable Long id)
     {
         CarResponse carResponse = carService.block(id);
@@ -38,50 +38,42 @@ public class CarApi
     }
 
     @PutMapping("/unblock/{id}")
-    @Operation(summary = "Unblock car")
+    @Operation(summary = "Unblock")
     public ResponseEntity<CarResponse> unblock(@PathVariable Long id)
     {
         CarResponse carResponse = carService.unblock(id);
         return ResponseEntity.status(HttpStatus.OK).body(carResponse);
     }
 
-    @GetMapping("/find/{id}")
-    @Operation(summary = "Find car")
-    public ResponseEntity<CarResponse> find(@PathVariable Long id)
+    @PutMapping("/update_mileage/{id}")
+    @Operation(summary = "Update mileage")
+    public ResponseEntity<CarResponse> updateMileage(@PathVariable Long id, @RequestBody UpdateCarMileageRequest updateCarMileageRequest)
     {
-        CarResponse carResponse = carService.find(id);
-        return ResponseEntity.status(HttpStatus.OK).body(carResponse);
-    }
-
-    @PutMapping("/update/{id}")
-    @Operation(summary = "Update car")
-    public ResponseEntity<CarResponse> update(@PathVariable Long id, @RequestBody UpdateCarMileageRequest updateCarMileageRequest)
-    {
-        CarResponse carResponse = carService.update(id, updateCarMileageRequest);
+        CarResponse carResponse = carService.updateMileage(id, updateCarMileageRequest);
         return ResponseEntity.status(HttpStatus.OK).body(carResponse);
     }
 
     @GetMapping("/find")
-    @Operation(summary = "Find all cars")
-    public ResponseEntity<List<CarResponse>> findAll()
+    @Operation(summary = "Find all")
+    public ResponseEntity<List<CarResponse>> findAll(@RequestParam(required = false, defaultValue = "") String filterText)
     {
-        List<CarResponse> carResponses = carService.findAll();
+        List<CarResponse> carResponses = carService.findAll(filterText);
         return ResponseEntity.status(HttpStatus.OK).body(carResponses);
     }
 
     @GetMapping("/find/unblocked")
-    @Operation(summary = "Find all unblocked cars")
-    public ResponseEntity<List<CarResponse>> findAllUnblocked()
+    @Operation(summary = "Find all unblocked")
+    public ResponseEntity<List<CarResponse>> findAllUnblocked(@RequestParam(required = false, defaultValue = "") String filterText)
     {
-        List<CarResponse> carResponses = carService.findAllUnblocked();
+        List<CarResponse> carResponses = carService.findAllUnblocked(filterText);
         return ResponseEntity.status(HttpStatus.OK).body(carResponses);
     }
 
     @GetMapping("/find/blocked")
-    @Operation(summary = "Find all blocked cars")
-    public ResponseEntity<List<CarResponse>> findAllBlocked()
+    @Operation(summary = "Find all blocked")
+    public ResponseEntity<List<CarResponse>> findAllBlocked(@RequestParam(required = false, defaultValue = "") String filterText)
     {
-        List<CarResponse> carResponses = carService.findAllBlocked();
+        List<CarResponse> carResponses = carService.findAllBlocked(filterText);
         return ResponseEntity.status(HttpStatus.OK).body(carResponses);
     }
 

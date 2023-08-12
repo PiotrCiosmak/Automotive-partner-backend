@@ -11,7 +11,7 @@ public class CarMapper
 {
     public Car toCar(CarRequest carRequest)
     {
-        return new Car(carRequest.getRegistrationNumber(), carRequest.getMileage(), carRequest.getBlocked());
+        return new Car(carRequest.getRegistrationNumber().toUpperCase().replace(" ", ""), carRequest.getMileage(), carRequest.getBlocked());
     }
 
     public Car toCar(Car car, UpdateCarMileageRequest carRequest)
@@ -22,7 +22,7 @@ public class CarMapper
 
     public Car toCar(Car car, CarRequest carRequest)
     {
-        car.setRegistrationNumber(carRequest.getRegistrationNumber());
+        car.setRegistrationNumber(carRequest.getRegistrationNumber().toUpperCase());
         car.setMileage(carRequest.getMileage());
         car.setBlocked(carRequest.getBlocked());
         return car;
@@ -30,6 +30,6 @@ public class CarMapper
 
     public CarResponse toCarResponse(Car car)
     {
-        return new CarResponse(car.getId(), car.getRegistrationNumber(), car.getMileage(), car.getBlocked());
+        return new CarResponse(car.getId(), car.getRegistrationNumber().toUpperCase().replace(" ", ""), car.getMileage(), car.getBlocked());
     }
 }
