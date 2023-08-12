@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -19,12 +20,8 @@ import java.math.BigDecimal;
 public class Statistics extends AbstractEntity
 {
     @ToString.Include
-    @Column(name = "month", nullable = false)
-    private Integer month;
-
-    @ToString.Include
-    @Column(name = "year", nullable = false)
-    private Integer year;
+    @Column(name = "date", nullable = false)
+    private LocalDate date;
 
     @ToString.Include
     @Column(name = "mileage", nullable = false)

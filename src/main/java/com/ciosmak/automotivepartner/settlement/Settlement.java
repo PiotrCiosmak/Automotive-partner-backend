@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -19,12 +20,8 @@ import java.math.BigDecimal;
 public class Settlement extends AbstractEntity
 {
     @ToString.Include
-    @Column(name = "month", nullable = false)
-    private Integer month;
-
-    @ToString.Include
-    @Column(name = "year", nullable = false)
-    private Integer year;
+    @Column(name = "date", nullable = false)
+    private LocalDate date;
 
     @Column(name = "net_profit", scale = 2, nullable = false)
     private BigDecimal netProfit;
@@ -35,7 +32,7 @@ public class Settlement extends AbstractEntity
     @Column(name = "tips", scale = 2, nullable = false)
     private BigDecimal tips;
 
-    @Column(name = "penalties", scale = 2, nullable = false)
+    @Column(name = "penalties", scale = 2, nullable = false, columnDefinition = "DECIMAL(10, 2) DEFAULT 0.0")
     private BigDecimal penalties;
 
     @ToString.Include
