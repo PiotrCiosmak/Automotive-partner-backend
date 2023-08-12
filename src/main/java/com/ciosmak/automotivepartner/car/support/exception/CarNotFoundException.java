@@ -4,6 +4,6 @@ public class CarNotFoundException extends RuntimeException
 {
     public CarNotFoundException(Long id)
     {
-        super(String.format("Car with %d id not found", id));
+        super(String.format("Brak auta od id %d", id));
     }
 }

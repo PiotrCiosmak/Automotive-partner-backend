@@ -15,6 +15,24 @@ public class CarExceptionAdvisor
 {
     private static final Logger LOG = LoggerFactory.getLogger(CarExceptionAdvisor.class);
 
+    @ExceptionHandler(CarAlreadyBlockedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse carAlreadyBlocked(CarAlreadyBlockedException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getLocalizedMessage());
+    }
+
+    @ExceptionHandler(CarNotBlockedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse arNotBlocked(CarNotBlockedException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getLocalizedMessage());
+    }
+
     @ExceptionHandler(CarNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
@@ -24,10 +42,37 @@ public class CarExceptionAdvisor
         return new ErrorMessageResponse(exception.getLocalizedMessage());
     }
 
-    @ExceptionHandler(IncorrectCarDetailsException.class)
+    @ExceptionHandler(EmptyMileageException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorMessageResponse incorrectCarDetails(IncorrectCarDetailsException exception)
+    public ErrorMessageResponse emptyMileage(EmptyMileageException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getLocalizedMessage());
+    }
+
+    @ExceptionHandler(EmptyRegistrationNumberException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse emptyRegistrationNumber(EmptyRegistrationNumberException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getLocalizedMessage());
+    }
+
+    @ExceptionHandler(IncorrectMileageException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse incorrectMileage(IncorrectMileageException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getLocalizedMessage());
+    }
+
+    @ExceptionHandler(IncorrectRegistrationNumberException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse incorrectRegistrationNumber(IncorrectRegistrationNumberException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getLocalizedMessage());
@@ -37,24 +82,6 @@ public class CarExceptionAdvisor
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorMessageResponse registrationNumberTaken(RegistrationNumberTakenException exception)
-    {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getLocalizedMessage());
-    }
-
-    @ExceptionHandler(CarBlockedException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    public ErrorMessageResponse carBlocked(CarBlockedException exception)
-    {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getLocalizedMessage());
-    }
-
-    @ExceptionHandler(CarUnblockedException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    public ErrorMessageResponse carUnblocked(CarUnblockedException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getLocalizedMessage());

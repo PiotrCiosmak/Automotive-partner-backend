@@ -4,6 +4,6 @@ public class RegistrationNumberTakenException extends RuntimeException
 {
     public RegistrationNumberTakenException()
     {
-        super("Podaney numer rejestracyjny jest już zajęty");
+        super("Auto o podanym numerze rejestracyjnym zostało już dodane. Podaj inny numer rejestracyjny.");
     }
 }
