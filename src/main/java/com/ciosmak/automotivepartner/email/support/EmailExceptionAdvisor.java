@@ -35,7 +35,6 @@ public class EmailExceptionAdvisor
         return new ErrorMessageResponse(exception.getMessage());
     }
 
-
     @ExceptionHandler(IncorrectEmailException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody

@@ -26,7 +26,7 @@ public class EmailApi
         return ResponseEntity.status(HttpStatus.CREATED).body(emailResponse);
     }
 
-    @DeleteMapping("delete")
+    @DeleteMapping("/delete")
     @Operation(summary = "Delete email")
     public ResponseEntity<Void> delete(@RequestBody EmailRequest emailRequest)
     {

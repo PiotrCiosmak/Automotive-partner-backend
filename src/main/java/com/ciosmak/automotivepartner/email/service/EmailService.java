@@ -28,20 +28,7 @@ public class EmailService
     {
         String emailCandidate = emailRequest.getEmail();
 
-        if (isEmailTaken(emailCandidate))
-        {
-            throw EmailExceptionSupplier.emailTaken().get();
-        }
-
-        if (isEmailEmpty(emailCandidate))
-        {
-            throw EmailExceptionSupplier.emptyEmail().get();
-        }
-
-        if (isEmailIncorrect(emailCandidate))
-        {
-            throw EmailExceptionSupplier.incorrectEmail().get();
-        }
+        checkIfEmailIsCorrect(emailCandidate);
 
         Optional<User> user = userRepository.findByEmail(emailCandidate);
 
@@ -52,6 +39,24 @@ public class EmailService
 
         Email email = emailRepository.save(emailMapper.toEmail(emailRequest));
         return emailMapper.toEmailResponse(email);
+    }
+
+    private void checkIfEmailIsCorrect(String email)
+    {
+        if (isEmailTaken(email))
+        {
+            throw EmailExceptionSupplier.emailTaken().get();
+        }
+
+        if (isEmailEmpty(email))
+        {
+            throw EmailExceptionSupplier.emptyEmail().get();
+        }
+
+        if (isEmailIncorrect(email))
+        {
+            throw EmailExceptionSupplier.incorrectEmail().get();
+        }
     }
 
     private Boolean isEmailTaken(String email)
