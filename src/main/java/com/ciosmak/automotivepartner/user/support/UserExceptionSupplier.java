@@ -6,43 +6,98 @@ import java.util.function.Supplier;
 
 public class UserExceptionSupplier
 {
-    public static Supplier<UserNotFoundException> userNotFound(Long id)
-    {
-        return () -> new UserNotFoundException(id);
-    }
-
     public static Supplier<EmailTakenException> emailTaken()
     {
         return EmailTakenException::new;
     }
 
-    public static Supplier<EmailNotInDatabaseException> emailNotInDatabase()
+    public static Supplier<EmptyEmailException> emptyEmail()
     {
-        return EmailNotInDatabaseException::new;
+        return EmptyEmailException::new;
     }
 
-    public static Supplier<IncorrectUserDataException> incorrectUserData()
+    public static Supplier<EmptyFirstNameException> emptyFirstName()
     {
-        return IncorrectUserDataException::new;
+        return EmptyFirstNameException::new;
     }
 
-    public static Supplier<UserBlockedException> userBlocked(Long id)
+    public static Supplier<EmptyLastNameException> emptyLastName()
     {
-        return () -> new UserBlockedException(id);
+        return EmptyLastNameException::new;
     }
 
-    public static Supplier<UserUnblockedException> userUnblocked(Long id)
+    public static Supplier<EmptyPasswordException> emptyPassword()
     {
-        return () -> new UserUnblockedException(id);
+        return EmptyPasswordException::new;
     }
 
-    public static Supplier<UserAlreadyAdminException> userAdmin(Long id)
+    public static Supplier<EmptyPhoneNumberException> emptyPhoneNumber()
     {
-        return () -> new UserAlreadyAdminException(id);
+        return EmptyPhoneNumberException::new;
     }
 
-    public static Supplier<UserNotAdminException> userNotAdmin(Long id)
+    public static Supplier<IncorrectEmailException> incorrectEmail()
     {
-        return () -> new UserNotAdminException(id);
+        return IncorrectEmailException::new;
+    }
+
+    public static Supplier<IncorrectLoginDataException> incorrectLoginData()
+    {
+        return IncorrectLoginDataException::new;
+    }
+
+    public static Supplier<IncorrectPhoneNumberException> incorrectPhoneNumber()
+    {
+        return IncorrectPhoneNumberException::new;
+    }
+
+    public static Supplier<TooShortPasswordException> tooShortPassword()
+    {
+        return TooShortPasswordException::new;
+    }
+
+    public static Supplier<UnapprovedEmailException> unapprovedEmail()
+    {
+        return UnapprovedEmailException::new;
+    }
+
+    public static Supplier<UserAlreadyAdminException> userAlreadyAdmin()
+    {
+        return UserAlreadyAdminException::new;
+    }
+
+    public static Supplier<UserAlreadyBlockedException> userAlreadyBlocked()
+    {
+        return UserAlreadyBlockedException::new;
+    }
+
+    public static Supplier<UserBlockedException> userBlocked()
+    {
+        return UserBlockedException::new;
+    }
+
+    public static Supplier<UserDisabledException> userDisabled()
+    {
+        return UserDisabledException::new;
+    }
+
+    public static Supplier<UserAlreadyDriverException> userAlreadyDriver()
+    {
+        return UserAlreadyDriverException::new;
+    }
+
+    public static Supplier<UserNotBlockedException> userNotBlocked()
+    {
+        return UserNotBlockedException::new;
+    }
+
+    public static Supplier<UserNotFoundException> userNotFound(Long id)
+    {
+        return () -> new UserNotFoundException(id);
+    }
+
+    public static Supplier<WeakPasswordException> weakPassword()
+    {
+        return WeakPasswordException::new;
     }
 }

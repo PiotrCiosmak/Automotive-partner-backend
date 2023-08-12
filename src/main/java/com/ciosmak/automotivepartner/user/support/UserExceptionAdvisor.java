@@ -15,15 +15,6 @@ public class UserExceptionAdvisor
 {
     private static final Logger LOG = LoggerFactory.getLogger(UserExceptionAdvisor.class);
 
-    @ExceptionHandler(UserNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ResponseBody
-    public ErrorMessageResponse userNotFound(UserNotFoundException exception)
-    {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getMessage());
-    }
-
     @ExceptionHandler(EmailTakenException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     @ResponseBody
@@ -33,37 +24,91 @@ public class UserExceptionAdvisor
         return new ErrorMessageResponse(exception.getMessage());
     }
 
-    @ExceptionHandler(IncorrectUserDataException.class)
+    @ExceptionHandler(EmptyEmailException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorMessageResponse incorrectData(IncorrectUserDataException exception)
+    public ErrorMessageResponse emptyEmail(EmptyEmailException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getMessage());
     }
 
-    @ExceptionHandler(EmailNotInDatabaseException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(EmptyFirstNameException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorMessageResponse emailNotInDatabase(EmailNotInDatabaseException exception)
+    public ErrorMessageResponse emptyFirstName(EmptyFirstNameException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getMessage());
     }
 
-    @ExceptionHandler(UserBlockedException.class)
+    @ExceptionHandler(EmptyLastNameException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorMessageResponse emailNotInDatabase(UserBlockedException exception)
+    public ErrorMessageResponse emptyLastName(EmptyLastNameException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getMessage());
     }
 
-    @ExceptionHandler(UserUnblockedException.class)
+    @ExceptionHandler(EmptyPasswordException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorMessageResponse userUnblocked(UserUnblockedException exception)
+    public ErrorMessageResponse emptyPassword(EmptyPasswordException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getMessage());
+    }
+
+    @ExceptionHandler(EmptyPhoneNumberException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse emptyPhoneNumber(EmptyPhoneNumberException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getMessage());
+    }
+
+    @ExceptionHandler(IncorrectEmailException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse incorrectEmail(IncorrectEmailException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getMessage());
+    }
+
+    @ExceptionHandler(IncorrectLoginDataException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse incorrectLoginData(IncorrectLoginDataException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getMessage());
+    }
+
+    @ExceptionHandler(IncorrectPhoneNumberException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse incorrectPhoneNumber(IncorrectPhoneNumberException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getMessage());
+    }
+
+    @ExceptionHandler(TooShortPasswordException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse tooShortPassword(TooShortPasswordException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getMessage());
+    }
+
+    @ExceptionHandler(UnapprovedEmailException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse unapprovedEmail(UnapprovedEmailException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getMessage());
@@ -78,10 +123,55 @@ public class UserExceptionAdvisor
         return new ErrorMessageResponse(exception.getMessage());
     }
 
-    @ExceptionHandler(UserNotAdminException.class)
+    @ExceptionHandler(UserAlreadyBlockedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorMessageResponse userNotAdmin(UserNotAdminException exception)
+    public ErrorMessageResponse userAlreadyBlocked(UserAlreadyBlockedException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getMessage());
+    }
+
+    @ExceptionHandler(UserBlockedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse userBlocked(UserBlockedException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getMessage());
+    }
+
+    @ExceptionHandler(UserAlreadyDriverException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse userAlreadyDriver(UserAlreadyDriverException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getMessage());
+    }
+
+    @ExceptionHandler(UserNotBlockedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse userNotBlocked(UserNotBlockedException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getMessage());
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ErrorMessageResponse userNotFound(UserNotFoundException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getMessage());
+    }
+
+    @ExceptionHandler(WeakPasswordException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse weakPassword(WeakPasswordException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getMessage());

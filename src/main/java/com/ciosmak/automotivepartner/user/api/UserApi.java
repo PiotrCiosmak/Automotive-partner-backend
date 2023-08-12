@@ -1,5 +1,6 @@
 package com.ciosmak.automotivepartner.user.api;
 
+import com.ciosmak.automotivepartner.user.api.request.UserLoginDataRequest;
 import com.ciosmak.automotivepartner.user.api.request.UserRequest;
 import com.ciosmak.automotivepartner.user.api.response.UserResponse;
 import com.ciosmak.automotivepartner.user.service.UserService;
@@ -28,6 +29,22 @@ public class UserApi
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
 
+    @PostMapping("/login")
+    @Operation(summary = "Login")
+    public ResponseEntity<UserResponse> login(@RequestBody UserLoginDataRequest userLoginDataRequest)
+    {
+        UserResponse userResponse = userService.login(userLoginDataRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(userResponse);
+    }
+
+    @PutMapping("/restart_password")
+    @Operation(summary = "Restart password")
+    public ResponseEntity<String> restartPassword(@RequestBody String emailRequest)
+    {
+        String message = userService.restartPassword(emailRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
+
     @PutMapping("/block/{id}")
     @Operation(summary = "Block user")
     public ResponseEntity<UserResponse> block(@PathVariable Long id)
@@ -36,7 +53,7 @@ public class UserApi
         return ResponseEntity.status(HttpStatus.OK).body(userResponse);
     }
 
-    @PutMapping("unblock/{id}")
+    @PutMapping("/unblock/{id}")
     @Operation(summary = "Unblock user")
     public ResponseEntity<UserResponse> unblock(@PathVariable Long id)
     {
@@ -44,7 +61,7 @@ public class UserApi
         return ResponseEntity.status(HttpStatus.OK).body(userResponse);
     }
 
-    @PutMapping("admins/make/{id}")
+    @PutMapping("/make_admin/{id}")
     @Operation(summary = "Make admin")
     public ResponseEntity<UserResponse> makeAdmin(@PathVariable Long id)
     {
@@ -52,67 +69,51 @@ public class UserApi
         return ResponseEntity.status(HttpStatus.OK).body(userResponse);
     }
 
-    @PutMapping("admins/demote/{id}")
-    @Operation(summary = "Demote admin")
-    public ResponseEntity<UserResponse> demoteAdmin(@PathVariable Long id)
+    @PutMapping("/make_driver/{id}")
+    @Operation(summary = "Make driver")
+    public ResponseEntity<UserResponse> makeDriver(@PathVariable Long id)
     {
-        UserResponse userResponse = userService.demoteAdmin(id);
+        UserResponse userResponse = userService.makeDriver(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userResponse);
     }
 
-    @PutMapping("user/change/email/{id}")
-    @Operation(summary = "Change user's email")
-    public ResponseEntity<UserResponse> changeEmail(@PathVariable Long id, @RequestParam String email)
-    {
-        UserResponse userResponse = userService.changeEmail(id, email);
-        return ResponseEntity.status(HttpStatus.OK).body(userResponse);
-    }
-
-    @GetMapping("/find/{id}")
-    @Operation(summary = "Find user")
-    public ResponseEntity<UserResponse> find(@PathVariable Long id)
-    {
-        UserResponse userResponse = userService.find(id);
-        return ResponseEntity.status(HttpStatus.OK).body(userResponse);
-    }
-
     @GetMapping("/find")
-    @Operation(summary = "Find all users")
-    public ResponseEntity<List<UserResponse>> findAll()
+    @Operation(summary = "Find all")
+    public ResponseEntity<List<UserResponse>> findAll(@RequestBody String filterText)
     {
-        List<UserResponse> userResponses = userService.findAll();
+        List<UserResponse> userResponses = userService.findAll(filterText);
         return ResponseEntity.status(HttpStatus.OK).body(userResponses);
     }
 
     @GetMapping("/find/unblocked")
-    @Operation(summary = "Find all unblocked users")
-    public ResponseEntity<List<UserResponse>> findAllUnblocked()
+    @Operation(summary = "Find all unblocked")
+    public ResponseEntity<List<UserResponse>> findAllUnblocked(@RequestBody String filterText)
     {
-        List<UserResponse> userResponses = userService.findAllUnblocked();
+        List<UserResponse> userResponses = userService.findAllUnblocked(filterText);
         return ResponseEntity.status(HttpStatus.OK).body(userResponses);
     }
 
     @GetMapping("/find/blocked")
-    @Operation(summary = "Find all blocked users")
-    public ResponseEntity<List<UserResponse>> findAllBlocked()
+    @Operation(summary = "Find all blocked")
+    public ResponseEntity<List<UserResponse>> findAllBlocked(@RequestBody String filterText)
     {
-        List<UserResponse> userResponses = userService.findAllBlocked();
+        List<UserResponse> userResponses = userService.findAllBlocked(filterText);
         return ResponseEntity.status(HttpStatus.OK).body(userResponses);
     }
 
     @GetMapping("/find/admins")
     @Operation(summary = "Find all admins")
-    public ResponseEntity<List<UserResponse>> findAllAdmins()
+    public ResponseEntity<List<UserResponse>> findAllAdmins(@RequestBody String filterText)
     {
-        List<UserResponse> userResponses = userService.findAllAdmins();
+        List<UserResponse> userResponses = userService.findAllAdmins(filterText);
         return ResponseEntity.status(HttpStatus.OK).body(userResponses);
     }
 
     @GetMapping("/find/drivers")
     @Operation(summary = "Find all drivers")
-    public ResponseEntity<List<UserResponse>> findAllDrivers()
+    public ResponseEntity<List<UserResponse>> findAllDrivers(@RequestBody String filterText)
     {
-        List<UserResponse> userResponses = userService.findAllDrivers();
+        List<UserResponse> userResponses = userService.findAllDrivers(filterText);
         return ResponseEntity.status(HttpStatus.OK).body(userResponses);
     }
 
@@ -121,6 +122,14 @@ public class UserApi
     public ResponseEntity<Void> delete(@PathVariable Long id)
     {
         userService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PostMapping("/logout/{id}")
+    @Operation(summary = "Logout")
+    public ResponseEntity<Void> logout(@PathVariable Long id)
+    {
+        userService.logout(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
