@@ -4,7 +4,6 @@ import com.ciosmak.automotivepartner.availability.api.request.AvailabilityReques
 import com.ciosmak.automotivepartner.availability.api.response.AvailabilityResponse;
 import com.ciosmak.automotivepartner.availability.domain.Availability;
 import com.ciosmak.automotivepartner.availability.repository.AvailabilityRepository;
-import com.ciosmak.automotivepartner.availability.support.AvailabilityExceptionSupplier;
 import com.ciosmak.automotivepartner.availability.support.AvailabilityMapper;
 import com.ciosmak.automotivepartner.availability.support.Type;
 import com.ciosmak.automotivepartner.user.repository.UserRepository;
@@ -48,10 +47,10 @@ public class AvailabilityService
     public AvailabilityResponse submit(AvailabilityRequest availabilityRequest)
     {
         Optional<Availability> existingAvailability = availabilityRepository.findByUser_IdAndDate(availabilityRequest.getUserId(), availabilityRequest.getDate());
-        if (existingAvailability.isPresent())
+       /* if (existingAvailability.isPresent())
         {
             throw AvailabilityExceptionSupplier.availabilitySubmitted(availabilityRequest.getUserId(), availabilityRequest.getDate()).get();
-        }
+        }*/
         Availability availability = availabilityRepository.save(availabilityMapper.toAvailability(availabilityRequest));
         return availabilityMapper.toAvailabilityResponse(availability);
     }
@@ -59,8 +58,9 @@ public class AvailabilityService
     public Type getTypeOfAvailability(Long userId, LocalDate date)
     {
         userRepository.findById(userId).orElseThrow(UserExceptionSupplier.userNotFound(userId));
-        Availability existingAvailability = availabilityRepository.findByUser_IdAndDate(userId, date).orElseThrow(AvailabilityExceptionSupplier.availabilityNotFound(userId, date));
-        return existingAvailability.getType();
+        // Availability existingAvailability = availabilityRepository.findByUser_IdAndDate(userId, date).orElseThrow(AvailabilityExceptionSupplier.availabilityNotFound(userId, date));
+        // return existingAvailability.getType();
+        return null;
     }
 
     public Integer getNumberOfApplicants(LocalDate date, Type type)

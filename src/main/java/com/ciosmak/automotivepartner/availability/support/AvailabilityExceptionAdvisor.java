@@ -1,7 +1,8 @@
 package com.ciosmak.automotivepartner.availability.support;
 
-import com.ciosmak.automotivepartner.availability.support.exception.AvailabilityNotFoundException;
-import com.ciosmak.automotivepartner.availability.support.exception.AvailabilitySubmittedException;
+import com.ciosmak.automotivepartner.availability.support.exception.AvailabilityAlreadySubmittedException;
+import com.ciosmak.automotivepartner.availability.support.exception.IncorrectDateException;
+import com.ciosmak.automotivepartner.availability.support.exception.IncorrectTypeException;
 import com.ciosmak.automotivepartner.shared.api.response.ErrorMessageResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,19 +17,28 @@ public class AvailabilityExceptionAdvisor
 {
     private static final Logger LOG = LoggerFactory.getLogger(AvailabilityExceptionAdvisor.class);
 
-    @ExceptionHandler(AvailabilitySubmittedException.class)
+    @ExceptionHandler(AvailabilityAlreadySubmittedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorMessageResponse availabilitySubmitted(AvailabilitySubmittedException exception)
+    public ErrorMessageResponse availabilityAlreadySubmitted(AvailabilityAlreadySubmittedException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getLocalizedMessage());
     }
 
-    @ExceptionHandler(AvailabilityNotFoundException.class)
+    @ExceptionHandler(IncorrectDateException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorMessageResponse availabilityNotFound(AvailabilityNotFoundException exception)
+    public ErrorMessageResponse IncorrectDate(IncorrectDateException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getLocalizedMessage());
+    }
+
+    @ExceptionHandler(IncorrectTypeException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse IncorrectType(IncorrectTypeException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getLocalizedMessage());

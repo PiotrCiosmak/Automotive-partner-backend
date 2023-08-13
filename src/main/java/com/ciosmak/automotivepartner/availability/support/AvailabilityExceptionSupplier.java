@@ -1,20 +1,25 @@
 package com.ciosmak.automotivepartner.availability.support;
 
-import com.ciosmak.automotivepartner.availability.support.exception.AvailabilityNotFoundException;
-import com.ciosmak.automotivepartner.availability.support.exception.AvailabilitySubmittedException;
+import com.ciosmak.automotivepartner.availability.support.exception.AvailabilityAlreadySubmittedException;
+import com.ciosmak.automotivepartner.availability.support.exception.IncorrectDateException;
+import com.ciosmak.automotivepartner.availability.support.exception.IncorrectTypeException;
 
-import java.time.LocalDate;
 import java.util.function.Supplier;
 
 public class AvailabilityExceptionSupplier
 {
-    public static Supplier<AvailabilitySubmittedException> availabilitySubmitted(Long userId, LocalDate date)
+    public static Supplier<AvailabilityAlreadySubmittedException> availabilityAlreadySubmitted()
     {
-        return () -> new AvailabilitySubmittedException(userId, date);
+        return AvailabilityAlreadySubmittedException::new;
     }
 
-    public static Supplier<AvailabilityNotFoundException> availabilityNotFound(Long userId, LocalDate date)
+    public static Supplier<IncorrectDateException> incorrectDate()
     {
-        return () -> new AvailabilityNotFoundException(userId, date);
+        return IncorrectDateException::new;
+    }
+
+    public static Supplier<IncorrectTypeException> incorrectType()
+    {
+        return IncorrectTypeException::new;
     }
 }
