@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 
 public class StatisticsExceptionSupplier
 {
-    public static Supplier<IncorrectDateException> Incorrect()
+    public static Supplier<IncorrectDateException> IncorrectDate()
     {
         return IncorrectDateException::new;
     }
