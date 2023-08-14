@@ -1,4 +1,4 @@
-package com.ciosmak.automotivepartner.settlement;
+package com.ciosmak.automotivepartner.settlement.domain;
 
 import com.ciosmak.automotivepartner.entity.AbstractEntity;
 import com.ciosmak.automotivepartner.user.domain.User;
@@ -26,7 +26,7 @@ public class Settlement extends AbstractEntity
     @Column(name = "net_profit", scale = 2, nullable = false)
     private BigDecimal netProfit;
 
-    @Column(name = "factor", scale = 2, nullable = false)
+    @Column(name = "factor", scale = 2, nullable = false, columnDefinition = "DECIMAL(10, 2) DEFAULT 1.0")
     private BigDecimal factor;
 
     @Column(name = "tips", scale = 2, nullable = false)
