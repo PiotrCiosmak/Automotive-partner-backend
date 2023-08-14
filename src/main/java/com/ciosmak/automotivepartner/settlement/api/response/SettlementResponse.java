@@ -18,4 +18,5 @@ public class SettlementResponse
     private final BigDecimal penalties;
     private final BigDecimal finalProfit;
     private final Boolean bugReported;
+    private final Long userId;
 }

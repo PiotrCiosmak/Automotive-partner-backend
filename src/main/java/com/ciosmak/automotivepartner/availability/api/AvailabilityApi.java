@@ -34,8 +34,8 @@ public class AvailabilityApi
     @Operation(summary = "Is submitted")
     public ResponseEntity<Boolean> isSubmitted(@PathVariable Long user_id)
     {
-        Boolean availabilityResponse = availabilityService.isSubmitted(user_id);
-        return ResponseEntity.status(HttpStatus.OK).body(availabilityResponse);
+        Boolean isSubmitted = availabilityService.isSubmitted(user_id);
+        return ResponseEntity.status(HttpStatus.OK).body(isSubmitted);
     }
 
     @GetMapping("/type/{user_id}")
