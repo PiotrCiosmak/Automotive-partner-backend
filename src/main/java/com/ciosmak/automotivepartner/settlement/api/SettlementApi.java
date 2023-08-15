@@ -41,8 +41,8 @@ public class SettlementApi
     @Operation(summary = "Is bug reported")
     public ResponseEntity<Boolean> isBugReported(@PathVariable Long id)
     {
-        Boolean isBugReported = settlementService.isBugReported(id);
-        return ResponseEntity.status(HttpStatus.OK).body(isBugReported);
+        Boolean bugIsReported = settlementService.isBugReported(id);
+        return ResponseEntity.status(HttpStatus.OK).body(bugIsReported);
     }
 
     @PostMapping("/complete")

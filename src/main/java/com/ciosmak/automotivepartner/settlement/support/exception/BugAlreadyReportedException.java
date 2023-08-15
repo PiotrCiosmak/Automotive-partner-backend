@@ -4,6 +4,6 @@ public class BugAlreadyReportedException extends RuntimeException
 {
     public BugAlreadyReportedException()
     {
-        super("Błąd został już zgłoszony.");
+        super("Błąd do tego rozliczenia został już zgłoszony..");
     }
 }

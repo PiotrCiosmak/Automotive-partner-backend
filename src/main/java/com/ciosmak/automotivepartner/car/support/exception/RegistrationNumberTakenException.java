@@ -2,8 +2,8 @@ package com.ciosmak.automotivepartner.car.support.exception;
 
 public class RegistrationNumberTakenException extends RuntimeException
 {
-    public RegistrationNumberTakenException()
+    public RegistrationNumberTakenException(String registrationNumber)
     {
-        super("Auto o podanym numerze rejestracyjnym zostało już dodane. Podaj inny numer rejestracyjny.");
+        super(String.format("Auto o numerze rejestracyjnym: %s zostało już dodane. Podaj inny numer rejestracyjny.", registrationNumber));
     }
 }

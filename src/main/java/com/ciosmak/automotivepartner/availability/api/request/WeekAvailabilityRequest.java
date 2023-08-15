@@ -4,7 +4,6 @@ import com.ciosmak.automotivepartner.availability.support.Type;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 @Getter
@@ -14,8 +13,7 @@ public class WeekAvailabilityRequest
     private final Long userId;
 
     @JsonCreator
-
-    public WeekAvailabilityRequest(ArrayList<Type> types, LocalDate date, Long userId)
+    public WeekAvailabilityRequest(ArrayList<Type> types, Long userId)
     {
         this.types = types;
         this.userId = userId;

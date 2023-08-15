@@ -10,5 +10,5 @@ public class CarResponse
     private final Long id;
     private final String registrationNumber;
     private final Integer mileage;
-    private final Boolean blocked;
+    private final Boolean isBlocked;
 }

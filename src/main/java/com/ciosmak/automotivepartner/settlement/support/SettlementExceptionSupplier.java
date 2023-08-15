@@ -41,14 +41,14 @@ public class SettlementExceptionSupplier
         return IncorrectTipAmountException::new;
     }
 
-    public static Supplier<SettlementAlreadyCompletedException> settlementAlreadyCompleted()
+    public static Supplier<SettlementAlreadyCompletedException> settlementAlreadyCompleted(String firstName, String lastName, Integer month, Integer year)
     {
-        return SettlementAlreadyCompletedException::new;
+        return () -> new SettlementAlreadyCompletedException(firstName, lastName, month, year);
     }
 
-    public static Supplier<SettlementIncompleteException> settlementIncomplete()
+    public static Supplier<SettlementIncompleteException> settlementIncomplete(String firstName, String lastName, Integer month, Integer year)
     {
-        return SettlementIncompleteException::new;
+        return () -> new SettlementIncompleteException(firstName, lastName, month, year);
     }
 
     public static Supplier<SettlementNotFoundException> settlementNotFound(Long id)

@@ -21,26 +21,26 @@ public class AccidentMapper
 
     public Accident toAccident(AccidentRequest accidentRequest)
     {
-        return new Accident(accidentRequest.getGuilty(), accidentRequest.getEndOfWork(), shiftRepository.findById(accidentRequest.getShiftId()).orElseThrow(ShiftExceptionSupplier.shiftNotFound(accidentRequest.getShiftId())));
+        return new Accident(accidentRequest.getIsGuilty(), accidentRequest.getIsEndOfWork(), shiftRepository.findById(accidentRequest.getShiftId()).orElseThrow(ShiftExceptionSupplier.shiftNotFound(accidentRequest.getShiftId())));
     }
 
     public Accident toAccident(Accident accident, AccidentRequest accidentRequest)
     {
-        accident.setGuilty(accidentRequest.getGuilty());
+        accident.setIsGuilty(accidentRequest.getIsGuilty());
         accident.setShift(shiftRepository.findById(accidentRequest.getShiftId()).orElseThrow(ShiftExceptionSupplier.shiftNotFound(accidentRequest.getShiftId())));
         return accident;
     }
 
     public AccidentResponse toAccidentResponse(Accident accident)
     {
-        return new AccidentResponse(accident.getId(), accident.getGuilty(), accident.getEndOfWork(), accident.getShift().getId());
+        return new AccidentResponse(accident.getId(), accident.getIsGuilty(), accident.getIsEndOfWork(), accident.getShift().getId());
     }
 
     public BaseAccidentResponse toBaseAccidentResponse(Accident accident)
     {
         Shift shift = accident.getShift();
         User user = shift.getUser();
-        return new BaseAccidentResponse(shift.getDate(), shift.getType(), user.getFirstName(), user.getLastName(), accident.getEndOfWork(), shift.getId());
+        return new BaseAccidentResponse(shift.getDate(), shift.getType(), user.getFirstName(), user.getLastName(), accident.getIsEndOfWork(), shift.getId());
     }
 
     public AdvancedAccidentResponse toAdvanceAccidentResponse(Accident accident)
@@ -48,6 +48,6 @@ public class AccidentMapper
         Shift shift = accident.getShift();
         User user = shift.getUser();
         Car car = shift.getCar();
-        return new AdvancedAccidentResponse(shift.getDate(), shift.getType(), user.getFirstName(), user.getLastName(), car.getRegistrationNumber(), accident.getGuilty(), accident.getEndOfWork(), shift.getId());
+        return new AdvancedAccidentResponse(shift.getDate(), shift.getType(), user.getFirstName(), user.getLastName(), car.getRegistrationNumber(), accident.getIsGuilty(), accident.getIsEndOfWork(), shift.getId());
     }
 }

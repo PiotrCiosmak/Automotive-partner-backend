@@ -8,9 +8,9 @@ import java.util.function.Supplier;
 
 public class EmailExceptionSupplier
 {
-    public static Supplier<EmailTakenException> emailTaken()
+    public static Supplier<EmailTakenException> emailTaken(String email)
     {
-        return EmailTakenException::new;
+        return () -> new EmailTakenException(email);
     }
 
     public static Supplier<EmptyEmailException> emptyEmail()

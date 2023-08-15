@@ -8,7 +8,7 @@ import lombok.Getter;
 public class AccidentResponse
 {
     private final Long id;
-    private final Boolean guilty;
-    private final Boolean endOfWork;
+    private final Boolean isGuilty;
+    private final Boolean isEndOfWork;
     private final Long shiftId;
 }

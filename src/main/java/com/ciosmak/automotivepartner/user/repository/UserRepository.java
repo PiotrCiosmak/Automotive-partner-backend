@@ -14,11 +14,11 @@ public interface UserRepository extends JpaRepository<User, Long>
 {
     Optional<User> findByEmail(String email);
 
-    List<User> findAllByBlocked(Boolean isBlocked);
+    List<User> findAllByIsBlocked(Boolean isBlocked);
 
     List<User> findAllByRole(String role);
 
-    @Query("SELECT u.blocked FROM User u WHERE u.id = :id")
+    @Query("SELECT u.isBlocked FROM User u WHERE u.id = :id")
     boolean isBlocked(@Param("id") Long id);
 
     @Query("SELECT u.role FROM User u WHERE u.id = :id")

@@ -14,8 +14,8 @@ public interface CarRepository extends JpaRepository<Car, Long>
 {
     Optional<Car> findByRegistrationNumber(String registrationNumber);
 
-    List<Car> findAllByBlocked(Boolean isBlocked);
+    List<Car> findAllByIsBlocked(Boolean isBlocked);
 
-    @Query("SELECT c.blocked FROM Car c WHERE c.id = :id")
+    @Query("SELECT c.isBlocked FROM Car c WHERE c.id = :id")
     boolean isBlocked(@Param("id") Long id);
 }

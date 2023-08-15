@@ -14,6 +14,6 @@ public class UserResponse
     private final String password;
     private final String phoneNumber;
     private final String role;
-    private final Boolean enabled;
-    private final Boolean blocked;
+    private final Boolean isEnabled;
+    private final Boolean isBlocked;
 }

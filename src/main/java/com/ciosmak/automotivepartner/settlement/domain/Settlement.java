@@ -39,8 +39,8 @@ public class Settlement extends AbstractEntity
     @Column(name = "final_profit", scale = 2, nullable = false)
     private BigDecimal finalProfit;
 
-    @Column(name = "bug_reported", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
-    private Boolean bugReported;
+    @Column(name = "is_bug_reported", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean isBugReported;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "user_id")

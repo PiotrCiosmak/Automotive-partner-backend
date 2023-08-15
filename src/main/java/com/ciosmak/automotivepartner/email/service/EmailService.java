@@ -34,7 +34,7 @@ public class EmailService
 
         if (user.isPresent())
         {
-            throw UserExceptionSupplier.emailTaken().get();
+            throw UserExceptionSupplier.emailTaken(user.get().getEmail()).get();
         }
 
         Email email = emailRepository.save(emailMapper.toEmail(emailRequest));
@@ -45,7 +45,7 @@ public class EmailService
     {
         if (isEmailTaken(email))
         {
-            throw EmailExceptionSupplier.emailTaken().get();
+            throw EmailExceptionSupplier.emailTaken(email).get();
         }
 
         if (isEmailEmpty(email))

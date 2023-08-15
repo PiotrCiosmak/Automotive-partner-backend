@@ -23,7 +23,7 @@ import java.util.List;
 @Table(name = "users")
 public class User extends AbstractEntity
 {
-    public User(String firstName, String lastName, String email, String password, String phoneNumber, String role, boolean enabled, boolean blocked)
+    public User(String firstName, String lastName, String email, String password, String phoneNumber, String role, boolean isEnabled, boolean isBlocked)
     {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -31,8 +31,8 @@ public class User extends AbstractEntity
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.role = role;
-        this.enabled = enabled;
-        this.blocked = blocked;
+        this.isEnabled = isEnabled;
+        this.isBlocked = isBlocked;
     }
 
     @ToString.Include
@@ -57,11 +57,11 @@ public class User extends AbstractEntity
     @Column(name = "role", nullable = false)
     private String role;
 
-    @Column(name = "enabled", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
-    private Boolean enabled = false;
+    @Column(name = "is_enabled", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean isEnabled = false;
 
-    @Column(name = "blocked", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
-    private Boolean blocked = false;
+    @Column(name = "is_blocked", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean isBlocked = false;
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private List<Availability> availabilities = new ArrayList<>();

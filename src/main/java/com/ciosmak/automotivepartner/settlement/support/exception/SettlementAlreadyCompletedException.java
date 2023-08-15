@@ -2,8 +2,8 @@ package com.ciosmak.automotivepartner.settlement.support.exception;
 
 public class SettlementAlreadyCompletedException extends RuntimeException
 {
-    public SettlementAlreadyCompletedException()
+    public SettlementAlreadyCompletedException(String firstName, String lastName, Integer month, Integer year)
     {
-        super("Ten użytkownik ma już uzupełnione rozliczenia w tym miesiącu. Możesz je tylko zaktualizować.");
+        super(String.format("Rozliczenie dla %s %s w %d-%d zostało już  uzupełnione. Możesz je tylko zaktualizować.", firstName, lastName, month, year));
     }
 }

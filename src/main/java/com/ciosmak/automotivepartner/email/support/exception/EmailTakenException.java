@@ -2,8 +2,8 @@ package com.ciosmak.automotivepartner.email.support.exception;
 
 public class EmailTakenException extends RuntimeException
 {
-    public EmailTakenException()
+    public EmailTakenException(String email)
     {
-        super("Ten adres email został już dodany. Podaj inny adres email.");
+        super(String.format("Adres email: %s został już dodany. Podaj inny adres email.", email));
     }
 }

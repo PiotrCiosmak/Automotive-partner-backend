@@ -8,13 +8,13 @@ public class CarRequest
 {
     private final String registrationNumber;
     private final Integer mileage;
-    private final Boolean blocked;
+    private final Boolean isBlocked;
 
     @JsonCreator
-    public CarRequest(String registrationNumber, Integer mileage, Boolean blocked)
+    public CarRequest(String registrationNumber, Integer mileage, Boolean isBlocked)
     {
         this.registrationNumber = registrationNumber;
         this.mileage = mileage;
-        this.blocked = blocked;
+        this.isBlocked = isBlocked;
     }
 }

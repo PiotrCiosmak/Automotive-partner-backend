@@ -14,6 +14,6 @@ public class BaseAccidentResponse
     private final Type type;
     private final String firstName;
     private final String lastName;
-    private final Boolean endOfWork;
+    private final Boolean isEndOfWork;
     private final Long shiftId;
 }

@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface SettlementRepository extends JpaRepository<Settlement, Long>
 {
-    @Query("SELECT s FROM Settlement s WHERE s.bugReported = true")
+    @Query("SELECT s FROM Settlement s WHERE s.isBugReported = true")
     List<Settlement> findAllWithBugReportedTrue();
 
     Optional<Settlement> findByUserIdAndDate(Long userId, LocalDate date);

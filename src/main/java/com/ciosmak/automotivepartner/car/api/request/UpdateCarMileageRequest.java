@@ -7,10 +7,12 @@ import lombok.Getter;
 public class UpdateCarMileageRequest
 {
     private final Integer mileage;
+    private final Long id;
 
     @JsonCreator
-    public UpdateCarMileageRequest(Integer mileage)
+    public UpdateCarMileageRequest(Integer mileage, Long id)
     {
         this.mileage = mileage;
+        this.id = id;
     }
 }

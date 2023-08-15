@@ -74,7 +74,7 @@ public class UserApi
     public ResponseEntity<UserResponse> makeDriver(@PathVariable Long id)
     {
         UserResponse userResponse = userService.makeDriver(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(userResponse);
     }
 
     @GetMapping("/find")

@@ -8,6 +8,7 @@ import com.ciosmak.automotivepartner.availability.repository.AvailabilityReposit
 import com.ciosmak.automotivepartner.availability.support.AvailabilityExceptionSupplier;
 import com.ciosmak.automotivepartner.availability.support.AvailabilityMapper;
 import com.ciosmak.automotivepartner.availability.support.Type;
+import com.ciosmak.automotivepartner.user.domain.User;
 import com.ciosmak.automotivepartner.user.repository.UserRepository;
 import com.ciosmak.automotivepartner.user.support.UserExceptionSupplier;
 import jakarta.transaction.Transactional;
@@ -33,16 +34,14 @@ public class AvailabilityService
     public List<AvailabilityResponse> submit(WeekAvailabilityRequest weekAvailabilityRequest)
     {
         Long userId = weekAvailabilityRequest.getUserId();
-        userRepository.findById(userId).orElseThrow(UserExceptionSupplier.userNotFound(userId));
+        User user = userRepository.findById(userId).orElseThrow(UserExceptionSupplier.userNotFound(userId));
 
         ArrayList<LocalDate> weekDates = getDatesOfNextWeek();
-
-        userRepository.findById(userId).orElseThrow(UserExceptionSupplier.userNotFound(userId));
 
         Optional<Availability> availabilityCandidate = availabilityRepository.findByUser_IdAndDate(userId, getFirstDayOfNextWeek());
         if (availabilityCandidate.isPresent())
         {
-            throw AvailabilityExceptionSupplier.availabilityAlreadySubmitted().get();
+            throw AvailabilityExceptionSupplier.availabilityAlreadySubmitted(user.getFirstName(), user.getLastName()).get();
         }
 
         List<AvailabilityResponse> availabilityResponses = new ArrayList<>();
@@ -60,24 +59,19 @@ public class AvailabilityService
         LocalDate firstDayOfNextWeek = getFirstDayOfNextWeek();
 
         ArrayList<LocalDate> weekDates = new ArrayList<>();
-
         for (int i = 0; i < 7; ++i)
         {
             weekDates.add(firstDayOfNextWeek.plusDays(i));
         }
-
         return weekDates;
     }
 
     public Boolean isSubmitted(Long userId)
     {
         userRepository.findById(userId).orElseThrow(UserExceptionSupplier.userNotFound(userId));
+
         Optional<Availability> availabilityCandidate = availabilityRepository.findByUser_IdAndDate(userId, getFirstDayOfNextWeek());
-        if (availabilityCandidate.isPresent())
-        {
-            return Boolean.TRUE;
-        }
-        return Boolean.FALSE;
+        return availabilityCandidate.isPresent();
     }
 
     private LocalDate getFirstDayOfNextWeek()
@@ -88,8 +82,9 @@ public class AvailabilityService
 
     public Type getType(Long userId, LocalDate date)
     {
-        userRepository.findById(userId).orElseThrow(UserExceptionSupplier.userNotFound(userId));
-        Availability availability = availabilityRepository.findByUser_IdAndDate(userId, date).orElseThrow(AvailabilityExceptionSupplier.incorrectDate());
+        User user = userRepository.findById(userId).orElseThrow(UserExceptionSupplier.userNotFound(userId));
+
+        Availability availability = availabilityRepository.findByUser_IdAndDate(userId, date).orElseThrow(AvailabilityExceptionSupplier.incorrectDate(user.getFirstName(), user.getLastName(), date));
         return availability.getType();
     }
 

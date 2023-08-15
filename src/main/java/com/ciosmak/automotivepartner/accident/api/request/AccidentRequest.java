@@ -6,15 +6,15 @@ import lombok.Getter;
 @Getter
 public class AccidentRequest
 {
-    private final Boolean guilty;
-    private final Boolean endOfWork;
+    private final Boolean isGuilty;
+    private final Boolean isEndOfWork;
     private final Long shiftId;
 
     @JsonCreator
-    public AccidentRequest(Boolean guilty, Boolean endOfWork, Long shiftId)
+    public AccidentRequest(Boolean isGuilty, Boolean isEndOfWork, Long shiftId)
     {
-        this.guilty = guilty;
-        this.endOfWork = endOfWork;
+        this.isGuilty = isGuilty;
+        this.isEndOfWork = isEndOfWork;
         this.shiftId = shiftId;
     }
 }

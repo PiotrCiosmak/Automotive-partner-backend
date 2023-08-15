@@ -30,7 +30,7 @@ public class SettlementMapper
         settlement.setTips(settlementRequest.getTips());
         settlement.setPenalties(settlementRequest.getPenalties());
         settlement.setFinalProfit(finalProfit);
-        settlement.setBugReported(bugIsReported);
+        settlement.setIsBugReported(bugIsReported);
         settlement.setUser(userRepository.findById(settlementRequest.getUserId()).orElseThrow(UserExceptionSupplier.userNotFound(settlementRequest.getUserId())));
         return settlement;
     }
@@ -42,6 +42,6 @@ public class SettlementMapper
 
     public SettlementResponse toSettlementResponse(Settlement settlement)
     {
-        return new SettlementResponse(settlement.getId(), settlement.getDate(), settlement.getNetProfit(), settlement.getFactor(), settlement.getTips(), settlement.getPenalties(), settlement.getFinalProfit(), settlement.getBugReported(), settlement.getUser().getId());
+        return new SettlementResponse(settlement.getId(), settlement.getDate(), settlement.getNetProfit(), settlement.getFactor(), settlement.getTips(), settlement.getPenalties(), settlement.getFinalProfit(), settlement.getIsBugReported(), settlement.getUser().getId());
     }
 }

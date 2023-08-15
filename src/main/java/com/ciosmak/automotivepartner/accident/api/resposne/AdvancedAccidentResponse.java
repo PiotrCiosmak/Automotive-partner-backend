@@ -15,7 +15,7 @@ public class AdvancedAccidentResponse
     private final String firstName;
     private final String lastName;
     private final String registrationNumber;
-    private final Boolean guilty;
-    private final Boolean endOfWork;
+    private final Boolean isGuilty;
+    private final Boolean isEndOfWork;
     private final Long shiftId;
 }

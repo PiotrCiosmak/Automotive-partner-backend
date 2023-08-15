@@ -41,8 +41,8 @@ public class CarExceptionSupplier
         return IncorrectRegistrationNumberException::new;
     }
 
-    public static Supplier<RegistrationNumberTakenException> registrationNumberTaken()
+    public static Supplier<RegistrationNumberTakenException> registrationNumberTaken(String registrationNumber)
     {
-        return RegistrationNumberTakenException::new;
+        return () -> new RegistrationNumberTakenException(registrationNumber);
     }
 }

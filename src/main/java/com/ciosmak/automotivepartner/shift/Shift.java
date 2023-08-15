@@ -46,8 +46,8 @@ public class Shift extends AbstractEntity
     @Column(name = "end_mileage")
     private Integer endMileage;
 
-    @Column(name = "done", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
-    private Boolean done;
+    @Column(name = "is_done", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean isDone;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "car_id")

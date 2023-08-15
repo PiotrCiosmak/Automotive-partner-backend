@@ -19,11 +19,11 @@ import java.util.List;
 @Table(name = "cars")
 public class Car extends AbstractEntity
 {
-    public Car(String registrationNumber, Integer mileage, Boolean blocked)
+    public Car(String registrationNumber, Integer mileage, Boolean isBlocked)
     {
         this.registrationNumber = registrationNumber;
         this.mileage = mileage;
-        this.blocked = blocked;
+        this.isBlocked = isBlocked;
     }
 
     @ToString.Include
@@ -34,8 +34,8 @@ public class Car extends AbstractEntity
     @Column(name = "mileage", nullable = false)
     private Integer mileage;
 
-    @Column(name = "blocked", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
-    private Boolean blocked;
+    @Column(name = "is_blocked", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean isBlocked;
 
     @OneToMany(mappedBy = "car", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Shift> shifts = new ArrayList<>();

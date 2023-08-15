@@ -2,8 +2,8 @@ package com.ciosmak.automotivepartner.settlement.support.exception;
 
 public class SettlementIncompleteException extends RuntimeException
 {
-    public SettlementIncompleteException()
+    public SettlementIncompleteException(String firstName, String lastName, Integer month, Integer year)
     {
-        super("Ten użytkownik nie ma jeszcze uzupełnionego rozliczenia w tym miesiącu. Najpierw je uzupełnij.");
+        super(String.format("Rozliczenie dla %s %s w %d-%d nie zostało jeszcze uzupełnione. Proszę, najpierw je uzupełnij.", firstName, lastName, month, year));
     }
 }

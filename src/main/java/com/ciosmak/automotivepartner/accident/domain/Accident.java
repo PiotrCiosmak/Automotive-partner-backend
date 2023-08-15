@@ -16,11 +16,11 @@ import lombok.*;
 @Table(name = "accidents")
 public class Accident extends AbstractEntity
 {
-    @Column(name = "guilty", nullable = false)
-    private Boolean guilty;
+    @Column(name = "is_guilty", nullable = false)
+    private Boolean isGuilty;
 
-    @Column(name = "end_of_work", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
-    private Boolean endOfWork;
+    @Column(name = "is_end_of_work", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean isEndOfWork;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "shift_id")

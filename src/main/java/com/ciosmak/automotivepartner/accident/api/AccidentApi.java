@@ -45,5 +45,4 @@ public class AccidentApi
         AdvancedAccidentResponse advancedAccidentResponse = accidentService.findAccident(id);
         return ResponseEntity.status(HttpStatus.OK).body(advancedAccidentResponse);
     }
-
 }

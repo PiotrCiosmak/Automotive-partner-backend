@@ -6,6 +6,7 @@ import com.ciosmak.automotivepartner.settlement.domain.Settlement;
 import com.ciosmak.automotivepartner.settlement.repository.SettlementRepository;
 import com.ciosmak.automotivepartner.settlement.support.SettlementExceptionSupplier;
 import com.ciosmak.automotivepartner.settlement.support.SettlementMapper;
+import com.ciosmak.automotivepartner.user.domain.User;
 import com.ciosmak.automotivepartner.user.repository.UserRepository;
 import com.ciosmak.automotivepartner.user.support.UserExceptionSupplier;
 import jakarta.transaction.Transactional;
@@ -28,10 +29,10 @@ public class SettlementService
 
     public SettlementResponse getInfo(Long userId, LocalDate date)
     {
-        userRepository.findById(userId).orElseThrow(UserExceptionSupplier.userNotFound(userId));
+        User user = userRepository.findById(userId).orElseThrow(UserExceptionSupplier.userNotFound(userId));
 
         LocalDate adjustedDate = adjustDate(date);
-        Settlement settlement = getExistingSettlement(userId, adjustedDate);
+        Settlement settlement = getExistingSettlement(user, adjustedDate);
 
         return settlementMapper.toSettlementResponse(settlement);
     }
@@ -41,13 +42,13 @@ public class SettlementService
     {
         Settlement settlement = settlementRepository.findById(id).orElseThrow(SettlementExceptionSupplier.settlementNotFound(id));
 
-        boolean bugIsReported = settlement.getBugReported();
+        boolean bugIsReported = settlement.getIsBugReported();
         if (bugIsReported)
         {
             throw SettlementExceptionSupplier.bugAlreadyReported().get();
         }
 
-        settlement.setBugReported(Boolean.TRUE);
+        settlement.setIsBugReported(Boolean.TRUE);
 
         return settlementMapper.toSettlementResponse(settlement);
     }
@@ -56,17 +57,17 @@ public class SettlementService
     {
         Settlement settlement = settlementRepository.findById(id).orElseThrow(SettlementExceptionSupplier.settlementNotFound(id));
 
-        return settlement.getBugReported();
+        return settlement.getIsBugReported();
     }
 
     @Transactional
     public SettlementResponse complete(SettlementRequest settlementRequest)
     {
         Long userId = settlementRequest.getUserId();
-        userRepository.findById(userId).orElseThrow(UserExceptionSupplier.userNotFound(userId));
+        User user = userRepository.findById(userId).orElseThrow(UserExceptionSupplier.userNotFound(userId));
 
         LocalDate adjustedDate = adjustDate(settlementRequest.getDate());
-        ensureSettlementNotCompleted(userId, adjustedDate);
+        ensureSettlementNotCompleted(user, adjustedDate);
 
         checkIfSettlementDataAreCorrect(settlementRequest);
 
@@ -76,12 +77,12 @@ public class SettlementService
         return settlementMapper.toSettlementResponse(settlement);
     }
 
-    private void ensureSettlementNotCompleted(Long userId, LocalDate adjustedDate)
+    private void ensureSettlementNotCompleted(User user, LocalDate date)
     {
-        Optional<Settlement> settlementCandidate = settlementRepository.findByUserIdAndDate(userId, adjustedDate);
+        Optional<Settlement> settlementCandidate = settlementRepository.findByUserIdAndDate(user.getId(), date);
         if (settlementCandidate.isPresent())
         {
-            throw SettlementExceptionSupplier.settlementAlreadyCompleted().get();
+            throw SettlementExceptionSupplier.settlementAlreadyCompleted(user.getFirstName(), user.getLastName(), date.getMonthValue(), date.getYear()).get();
         }
     }
 
@@ -89,10 +90,10 @@ public class SettlementService
     public SettlementResponse update(SettlementRequest settlementRequest)
     {
         Long userId = settlementRequest.getUserId();
-        userRepository.findById(userId).orElseThrow(UserExceptionSupplier.userNotFound(userId));
+        User user = userRepository.findById(userId).orElseThrow(UserExceptionSupplier.userNotFound(userId));
 
         LocalDate adjustedDate = adjustDate(settlementRequest.getDate());
-        Settlement settlement = getExistingSettlement(userId, adjustedDate);
+        Settlement settlement = getExistingSettlement(user, adjustedDate);
 
         checkIfSettlementDataAreCorrect(settlementRequest);
 
@@ -101,9 +102,9 @@ public class SettlementService
         return settlementMapper.toSettlementResponse(settlement);
     }
 
-    private Settlement getExistingSettlement(Long userId, LocalDate adjustedDate)
+    private Settlement getExistingSettlement(User user, LocalDate date)
     {
-        return settlementRepository.findByUserIdAndDate(userId, adjustedDate).orElseThrow(SettlementExceptionSupplier.settlementIncomplete());
+        return settlementRepository.findByUserIdAndDate(user.getId(), date).orElseThrow(SettlementExceptionSupplier.settlementIncomplete(user.getFirstName(), user.getLastName(), date.getMonthValue(), date.getYear()));
     }
 
     private LocalDate adjustDate(LocalDate date)
@@ -191,7 +192,7 @@ public class SettlementService
         settlement.setTips(tips);
         settlement.setPenalties(penalties);
         settlement.setFinalProfit(finalProfit);
-        settlement.setBugReported(Boolean.FALSE);
+        settlement.setIsBugReported(Boolean.FALSE);
     }
 
     private BigDecimal calculateFinalProfit(BigDecimal netProfit, BigDecimal factor, BigDecimal tips, BigDecimal penalties)

@@ -74,11 +74,11 @@ public class UserService
         }
         if (isEmailTaken(emailCandidate))
         {
-            throw UserExceptionSupplier.emailTaken().get();
+            throw UserExceptionSupplier.emailTaken(emailCandidate).get();
         }
         if (isEmailUnapproved(emailCandidate))
         {
-            throw UserExceptionSupplier.unapprovedEmail().get();
+            throw UserExceptionSupplier.unapprovedEmail(emailCandidate).get();
         }
 
         String passwordCandidate = userRequest.getPassword();
@@ -170,13 +170,13 @@ public class UserService
     {
         User user = userRepository.findByEmail(userLoginDataRequest.getEmail()).orElseThrow(UserExceptionSupplier.incorrectLoginData());
 
-        boolean isEnabled = user.getEnabled();
+        boolean isEnabled = user.getIsEnabled();
         if (!isEnabled)
         {
             throw UserExceptionSupplier.userDisabled().get();
         }
 
-        boolean isBlocked = user.getBlocked();
+        boolean isBlocked = user.getIsBlocked();
         if (isBlocked)
         {
             throw UserExceptionSupplier.userBlocked().get();
@@ -210,7 +210,7 @@ public class UserService
         {
             throw UserExceptionSupplier.userAlreadyBlocked().get();
         }
-        user.setBlocked(Boolean.TRUE);
+        user.setIsBlocked(Boolean.TRUE);
         return userMapper.toUserResponse(user);
     }
 
@@ -223,7 +223,7 @@ public class UserService
         {
             throw UserExceptionSupplier.userNotBlocked().get();
         }
-        user.setBlocked(Boolean.FALSE);
+        user.setIsBlocked(Boolean.FALSE);
         return userMapper.toUserResponse(user);
     }
 
@@ -271,13 +271,13 @@ public class UserService
 
     public List<UserResponse> findAllUnblocked(String filterText)
     {
-        List<User> unblockedUsers = userRepository.findAllByBlocked(Boolean.FALSE);
+        List<User> unblockedUsers = userRepository.findAllByIsBlocked(Boolean.FALSE);
         return getFilteredUsers(unblockedUsers, filterText);
     }
 
     public List<UserResponse> findAllBlocked(String filterText)
     {
-        List<User> blockedUsers = userRepository.findAllByBlocked(Boolean.TRUE);
+        List<User> blockedUsers = userRepository.findAllByIsBlocked(Boolean.TRUE);
         return getFilteredUsers(blockedUsers, filterText);
     }
 

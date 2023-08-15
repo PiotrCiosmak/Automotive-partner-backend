@@ -4,6 +4,6 @@ public class WeakPasswordException extends RuntimeException
 {
     public WeakPasswordException()
     {
-        super("Wybierz mocniejsze hasło. Spróbuj kombinacji liter, numerów i znaków specjalnych.");
+        super("Wybierz silniejsze hasło. Spróbuj kombinacji liter, cyfr i znaków specjalnych.");
     }
 }

@@ -33,7 +33,7 @@ public class CarService
 
     private void checkIfCarDataAreCorrect(CarRequest carRequest)
     {
-        String registrationNumber = carRequest.getRegistrationNumber();
+        String registrationNumber = carRequest.getRegistrationNumber().toUpperCase().replace(" ", "");
         checkIfRegistrationNumberIsCorrect(registrationNumber);
 
         Integer mileage = carRequest.getMileage();
@@ -52,7 +52,7 @@ public class CarService
         }
         if (isRegistrationNumberTaken(registrationNumber))
         {
-            throw CarExceptionSupplier.registrationNumberTaken().get();
+            throw CarExceptionSupplier.registrationNumberTaken(registrationNumber).get();
         }
     }
 
@@ -75,22 +75,7 @@ public class CarService
         String patternXV = "[A-Za-z]{3} ?[A-Za-z]\\d[1-9][A-Za-z]";
         String patternXVI = "[A-Za-z]{3} ?[A-Za-z][1-9][A-Za-z]{2}";
 
-        return !registrationNumber.matches(patternI) &&
-                !registrationNumber.matches(patternII) &&
-                !registrationNumber.matches(patternIII) &&
-                !registrationNumber.matches(patternIV) &&
-                !registrationNumber.matches(patternV) &&
-                !registrationNumber.matches(patternVI) &&
-                !registrationNumber.matches(patternVII) &&
-                !registrationNumber.matches(patternVIII) &&
-                !registrationNumber.matches(patternIX) &&
-                !registrationNumber.matches(patternX) &&
-                !registrationNumber.matches(patternXI) &&
-                !registrationNumber.matches(patternXII) &&
-                !registrationNumber.matches(patternXIII) &&
-                !registrationNumber.matches(patternXIV) &&
-                !registrationNumber.matches(patternXV) &&
-                !registrationNumber.matches(patternXVI);
+        return !registrationNumber.matches(patternI) && !registrationNumber.matches(patternII) && !registrationNumber.matches(patternIII) && !registrationNumber.matches(patternIV) && !registrationNumber.matches(patternV) && !registrationNumber.matches(patternVI) && !registrationNumber.matches(patternVII) && !registrationNumber.matches(patternVIII) && !registrationNumber.matches(patternIX) && !registrationNumber.matches(patternX) && !registrationNumber.matches(patternXI) && !registrationNumber.matches(patternXII) && !registrationNumber.matches(patternXIII) && !registrationNumber.matches(patternXIV) && !registrationNumber.matches(patternXV) && !registrationNumber.matches(patternXVI);
     }
 
     private boolean isRegistrationNumberTaken(String registrationNumber)
@@ -124,7 +109,7 @@ public class CarService
         {
             throw CarExceptionSupplier.carAlreadyBlocked().get();
         }
-        car.setBlocked(Boolean.TRUE);
+        car.setIsBlocked(Boolean.TRUE);
         return carMapper.toCarResponse(car);
     }
 
@@ -137,20 +122,22 @@ public class CarService
         {
             throw CarExceptionSupplier.carNotBlocked().get();
         }
-        car.setBlocked(Boolean.FALSE);
+        car.setIsBlocked(Boolean.FALSE);
         return carMapper.toCarResponse(car);
     }
 
-    //TODO usunać id z tego
+
     @Transactional
-    public CarResponse updateMileage(Long id, UpdateCarMileageRequest updateCarMileageRequest)
+    public CarResponse updateMileage(UpdateCarMileageRequest updateCarMileageRequest)
     {
+        Long id = updateCarMileageRequest.getId();
         Car car = carRepository.findById(id).orElseThrow(CarExceptionSupplier.carNotFound(id));
 
         Integer mileage = updateCarMileageRequest.getMileage();
         checkIfMileageIsCorrect(mileage);
 
-        car.setMileage(mileage);
+        car = carMapper.toCar(car, updateCarMileageRequest);
+
         return carMapper.toCarResponse(car);
     }
 
@@ -162,13 +149,13 @@ public class CarService
 
     public List<CarResponse> findAllUnblocked(String filterText)
     {
-        List<Car> cars = carRepository.findAllByBlocked(Boolean.FALSE);
+        List<Car> cars = carRepository.findAllByIsBlocked(Boolean.FALSE);
         return getFilteredCars(cars, filterText);
     }
 
     public List<CarResponse> findAllBlocked(String filterText)
     {
-        List<Car> cars = carRepository.findAllByBlocked(Boolean.TRUE);
+        List<Car> cars = carRepository.findAllByIsBlocked(Boolean.TRUE);
         return getFilteredCars(cars, filterText);
     }
 

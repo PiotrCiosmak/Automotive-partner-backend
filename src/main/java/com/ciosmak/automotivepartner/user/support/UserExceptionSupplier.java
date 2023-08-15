@@ -6,9 +6,9 @@ import java.util.function.Supplier;
 
 public class UserExceptionSupplier
 {
-    public static Supplier<EmailTakenException> emailTaken()
+    public static Supplier<EmailTakenException> emailTaken(String email)
     {
-        return EmailTakenException::new;
+        return () -> new EmailTakenException(email);
     }
 
     public static Supplier<EmptyEmailException> emptyEmail()
@@ -56,9 +56,9 @@ public class UserExceptionSupplier
         return TooShortPasswordException::new;
     }
 
-    public static Supplier<UnapprovedEmailException> unapprovedEmail()
+    public static Supplier<UnapprovedEmailException> unapprovedEmail(String email)
     {
-        return UnapprovedEmailException::new;
+        return () -> new UnapprovedEmailException(email);
     }
 
     public static Supplier<UserAlreadyAdminException> userAlreadyAdmin()
