@@ -4,6 +4,6 @@ public class IncorrectOptionalPenaltyAmountException extends RuntimeException
 {
     public IncorrectOptionalPenaltyAmountException()
     {
-        super(" Podaj poprawną kwotę kary lub pozostaw domyślną.");
+        super("Podaj poprawną kwotę kary lub pozostaw domyślną.");
     }
 }

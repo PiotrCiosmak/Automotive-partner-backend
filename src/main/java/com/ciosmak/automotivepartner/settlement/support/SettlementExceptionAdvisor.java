@@ -42,28 +42,10 @@ public class SettlementExceptionAdvisor
         return new ErrorMessageResponse(exception.getMessage());
     }
 
-    @ExceptionHandler(IncorrectDateException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    public ErrorMessageResponse incorrectDate(IncorrectDateException exception)
-    {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getMessage());
-    }
-
     @ExceptionHandler(IncorrectNetAmountException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorMessageResponse incorrectNetAmount(IncorrectNetAmountException exception)
-    {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getMessage());
-    }
-
-    @ExceptionHandler(IncorrectOptionalDateException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    public ErrorMessageResponse incorrectOptionalDate(IncorrectOptionalDateException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getMessage());
@@ -91,6 +73,25 @@ public class SettlementExceptionAdvisor
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorMessageResponse incorrectTipAmount(IncorrectTipAmountException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getMessage());
+    }
+
+    @ExceptionHandler(SettlementAlreadyCompletedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse settlementAlreadyCompleted(SettlementAlreadyCompletedException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getMessage());
+    }
+
+
+    @ExceptionHandler(SettlementIncompleteException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse settlementIncomplete(SettlementIncompleteException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getMessage());

@@ -21,19 +21,9 @@ public class SettlementExceptionSupplier
         return EmptyTipAmountException::new;
     }
 
-    public static Supplier<IncorrectDateException> incorrectDate()
-    {
-        return IncorrectDateException::new;
-    }
-
     public static Supplier<IncorrectNetAmountException> incorrectNetAmount()
     {
         return IncorrectNetAmountException::new;
-    }
-
-    public static Supplier<IncorrectOptionalDateException> incorrectOptionalDate()
-    {
-        return IncorrectOptionalDateException::new;
     }
 
     public static Supplier<IncorrectOptionalFactorException> incorrectOptionalFactor()
@@ -49,6 +39,16 @@ public class SettlementExceptionSupplier
     public static Supplier<IncorrectTipAmountException> incorrectTipAmount()
     {
         return IncorrectTipAmountException::new;
+    }
+
+    public static Supplier<SettlementAlreadyCompletedException> settlementAlreadyCompleted()
+    {
+        return SettlementAlreadyCompletedException::new;
+    }
+
+    public static Supplier<SettlementIncompleteException> settlementIncomplete()
+    {
+        return SettlementIncompleteException::new;
     }
 
     public static Supplier<SettlementNotFoundException> settlementNotFound(Long id)

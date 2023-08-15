@@ -45,19 +45,19 @@ public class SettlementApi
         return ResponseEntity.status(HttpStatus.OK).body(isBugReported);
     }
 
-    @PostMapping("/complete/{user_id}")
+    @PostMapping("/complete")
     @Operation(summary = "Complete")
-    public ResponseEntity<SettlementResponse> complete(@PathVariable Long user_id, @RequestBody SettlementRequest settlementRequest)
+    public ResponseEntity<SettlementResponse> complete(@RequestBody SettlementRequest settlementRequest)
     {
-        SettlementResponse settlementResponse = settlementService.complete(user_id, settlementRequest);
+        SettlementResponse settlementResponse = settlementService.complete(settlementRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(settlementResponse);
     }
 
-    @PutMapping("/update/{user_id}")
+    @PutMapping("/update")
     @Operation(summary = "Update")
-    public ResponseEntity<SettlementResponse> update(@PathVariable Long user_id, @RequestBody SettlementRequest settlementRequest)
+    public ResponseEntity<SettlementResponse> update(@RequestBody SettlementRequest settlementRequest)
     {
-        SettlementResponse settlementResponse = settlementService.update(user_id, settlementRequest);
+        SettlementResponse settlementResponse = settlementService.update(settlementRequest);
         return ResponseEntity.status(HttpStatus.OK).body(settlementResponse);
     }
 

@@ -141,6 +141,7 @@ public class CarService
         return carMapper.toCarResponse(car);
     }
 
+    //TODO usunać id z tego
     @Transactional
     public CarResponse updateMileage(Long id, UpdateCarMileageRequest updateCarMileageRequest)
     {
