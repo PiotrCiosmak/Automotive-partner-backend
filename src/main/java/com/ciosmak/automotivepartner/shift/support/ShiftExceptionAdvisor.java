@@ -20,7 +20,7 @@ public class ShiftExceptionAdvisor
     @ExceptionHandler(EmptyInvoicePhotoException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorMessageResponse EmptyInvoicePhoto(EmptyInvoicePhotoException exception)
+    public ErrorMessageResponse emptyInvoicePhoto(EmptyInvoicePhotoException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getLocalizedMessage());
