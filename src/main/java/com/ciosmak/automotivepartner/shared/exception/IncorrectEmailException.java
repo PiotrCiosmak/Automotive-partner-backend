@@ -1,4 +1,4 @@
-package com.ciosmak.automotivepartner.email.support.exception;
+package com.ciosmak.automotivepartner.shared.exception;
 
 public class IncorrectEmailException extends RuntimeException
 {

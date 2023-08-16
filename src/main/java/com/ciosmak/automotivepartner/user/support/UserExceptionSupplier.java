@@ -1,5 +1,7 @@
 package com.ciosmak.automotivepartner.user.support;
 
+import com.ciosmak.automotivepartner.shared.exception.EmptyEmailException;
+import com.ciosmak.automotivepartner.shared.exception.IncorrectEmailException;
 import com.ciosmak.automotivepartner.user.support.exception.*;
 
 import java.util.function.Supplier;

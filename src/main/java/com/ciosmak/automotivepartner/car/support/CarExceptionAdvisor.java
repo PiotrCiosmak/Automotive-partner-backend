@@ -2,6 +2,8 @@ package com.ciosmak.automotivepartner.car.support;
 
 import com.ciosmak.automotivepartner.car.support.exception.*;
 import com.ciosmak.automotivepartner.shared.api.response.ErrorMessageResponse;
+import com.ciosmak.automotivepartner.shared.exception.EmptyMileageException;
+import com.ciosmak.automotivepartner.shared.exception.IncorrectMileageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -79,7 +81,7 @@ public class CarExceptionAdvisor
     }
 
     @ExceptionHandler(RegistrationNumberTakenException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CONFLICT)
     @ResponseBody
     public ErrorMessageResponse registrationNumberTaken(RegistrationNumberTakenException exception)
     {

@@ -4,6 +4,6 @@ public class ShiftNotFoundException extends RuntimeException
 {
     public ShiftNotFoundException(Long id)
     {
-        super(String.format("Shift with %d id not found", id));
+        super(String.format("Brak zmiany o id %d.", id));
     }
 }

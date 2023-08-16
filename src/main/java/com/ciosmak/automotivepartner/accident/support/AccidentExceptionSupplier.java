@@ -1,6 +1,7 @@
 package com.ciosmak.automotivepartner.accident.support;
 
 import com.ciosmak.automotivepartner.accident.support.exception.*;
+import com.ciosmak.automotivepartner.shared.exception.IncorrectMileageException;
 
 import java.util.function.Supplier;
 

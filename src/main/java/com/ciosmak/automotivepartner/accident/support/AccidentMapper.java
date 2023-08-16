@@ -6,7 +6,7 @@ import com.ciosmak.automotivepartner.accident.api.resposne.AdvancedAccidentRespo
 import com.ciosmak.automotivepartner.accident.api.resposne.BaseAccidentResponse;
 import com.ciosmak.automotivepartner.accident.domain.Accident;
 import com.ciosmak.automotivepartner.car.domain.Car;
-import com.ciosmak.automotivepartner.shift.Shift;
+import com.ciosmak.automotivepartner.shift.domain.Shift;
 import com.ciosmak.automotivepartner.shift.repository.ShiftRepository;
 import com.ciosmak.automotivepartner.shift.support.ShiftExceptionSupplier;
 import com.ciosmak.automotivepartner.user.domain.User;

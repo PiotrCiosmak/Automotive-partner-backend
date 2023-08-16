@@ -2,6 +2,7 @@ package com.ciosmak.automotivepartner.accident.support;
 
 import com.ciosmak.automotivepartner.accident.support.exception.*;
 import com.ciosmak.automotivepartner.shared.api.response.ErrorMessageResponse;
+import com.ciosmak.automotivepartner.shared.exception.IncorrectMileageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

@@ -98,7 +98,7 @@ public class SettlementExceptionAdvisor
     }
 
     @ExceptionHandler(SettlementNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public ErrorMessageResponse SettlementNotFound(SettlementNotFoundException exception)
     {

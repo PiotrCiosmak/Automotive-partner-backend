@@ -1,8 +1,8 @@
 package com.ciosmak.automotivepartner.email.support;
 
 import com.ciosmak.automotivepartner.email.support.exception.EmailTakenException;
-import com.ciosmak.automotivepartner.email.support.exception.EmptyEmailException;
-import com.ciosmak.automotivepartner.email.support.exception.IncorrectEmailException;
+import com.ciosmak.automotivepartner.shared.exception.EmptyEmailException;
+import com.ciosmak.automotivepartner.shared.exception.IncorrectEmailException;
 
 import java.util.function.Supplier;
 

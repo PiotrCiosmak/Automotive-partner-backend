@@ -1,4 +1,4 @@
-package com.ciosmak.automotivepartner.car.support.exception;
+package com.ciosmak.automotivepartner.shared.exception;
 
 public class EmptyMileageException extends RuntimeException
 {

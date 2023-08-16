@@ -1,4 +1,4 @@
-package com.ciosmak.automotivepartner.shift;
+package com.ciosmak.automotivepartner.shift.domain;
 
 import com.ciosmak.automotivepartner.accident.domain.Accident;
 import com.ciosmak.automotivepartner.availability.support.Type;
@@ -25,6 +25,19 @@ import java.util.List;
 @Table(name = "shifts")
 public class Shift extends AbstractEntity
 {
+    public Shift(LocalDate date, Type type, Integer startMileage, BigDecimal lpg, BigDecimal petrol, Integer endMileage, Boolean isDone, Car car, User user)
+    {
+        this.date = date;
+        this.type = type;
+        this.startMileage = startMileage;
+        this.lpg = lpg;
+        this.petrol = petrol;
+        this.endMileage = endMileage;
+        this.isDone = isDone;
+        this.car = car;
+        this.user = user;
+    }
+
     @ToString.Include
     @Column(name = "date", columnDefinition = "DATE", nullable = false)
     private LocalDate date;

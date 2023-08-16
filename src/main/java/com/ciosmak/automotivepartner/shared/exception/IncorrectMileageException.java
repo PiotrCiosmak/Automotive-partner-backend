@@ -1,9 +1,9 @@
-package com.ciosmak.automotivepartner.accident.support.exception;
+package com.ciosmak.automotivepartner.shared.exception;
 
 public class IncorrectMileageException extends RuntimeException
 {
     public IncorrectMileageException()
     {
-        super("Wprowadzony przebieg jest błędny");
+        super("Podaj poprawny przebieg auta.");
     }
 }
