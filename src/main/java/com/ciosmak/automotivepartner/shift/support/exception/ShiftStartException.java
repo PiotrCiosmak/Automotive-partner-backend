@@ -6,8 +6,8 @@ import java.time.LocalDate;
 
 public class ShiftStartException extends RuntimeException
 {
-    public ShiftStartException(Long id, LocalDate date, Type type, Long carId)
+    public ShiftStartException(Long userId, LocalDate date, Type type, Long carId)
     {
-        super(String.format("Użytkownik o id %d nie został przydzielony do rozpoczęcia zmiany %s %s w aucie o id %d.", id, date, type, carId));
+        super(String.format("Użytkownik o id %d nie został przydzielony do rozpoczęcia zmiany %s %s w aucie o id %d.", userId, date, type, carId));
     }
 }

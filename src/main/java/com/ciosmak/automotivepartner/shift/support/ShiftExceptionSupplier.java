@@ -65,8 +65,8 @@ public class ShiftExceptionSupplier
         return () -> new ShiftNotFoundException(id);
     }
 
-    public static Supplier<ShiftStartException> shiftStart(Long id, LocalDate date, Type type, Long carId)
+    public static Supplier<ShiftStartException> shiftStart(Long userId, LocalDate date, Type type, Long carId)
     {
-        return () -> new ShiftStartException(id, date, type, carId);
+        return () -> new ShiftStartException(userId, date, type, carId);
     }
 }
