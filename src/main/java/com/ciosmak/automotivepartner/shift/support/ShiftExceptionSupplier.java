@@ -1,6 +1,5 @@
 package com.ciosmak.automotivepartner.shift.support;
 
-import com.ciosmak.automotivepartner.availability.support.Type;
 import com.ciosmak.automotivepartner.shared.exception.EmptyMileageException;
 import com.ciosmak.automotivepartner.shared.exception.IncorrectMileageException;
 import com.ciosmak.automotivepartner.shift.support.exception.*;
@@ -55,9 +54,19 @@ public class ShiftExceptionSupplier
         return NotEnoughPhotosOfCarFromOutsideException::new;
     }
 
-    public static Supplier<ShiftNotCompletedException> shiftNotCompleted(Long id)
+    public static Supplier<ShiftAlreadyDoneException> shiftAlreadyDone(Long id)
     {
-        return () -> new ShiftNotCompletedException(id);
+        return () -> new ShiftAlreadyDoneException(id);
+    }
+
+    public static Supplier<ShiftAlreadyStartedException> shiftAlreadyStarted(Long id)
+    {
+        return () -> new ShiftAlreadyStartedException(id);
+    }
+
+    public static Supplier<ShiftNotDoneException> shiftNotDone(Long id)
+    {
+        return () -> new ShiftNotDoneException(id);
     }
 
     public static Supplier<ShiftNotFoundException> shiftNotFound(Long id)
@@ -65,8 +74,23 @@ public class ShiftExceptionSupplier
         return () -> new ShiftNotFoundException(id);
     }
 
-    public static Supplier<ShiftStartException> shiftStart(Long userId, LocalDate date, Type type, Long carId)
+    public static Supplier<ShiftNotStartedException> shiftNotStarted(Long id)
     {
-        return () -> new ShiftStartException(userId, date, type, carId);
+        return () -> new ShiftNotStartedException(id);
+    }
+
+    public static Supplier<ShiftsAlreadyGeneratedException> shiftsAlreadyGenerated()
+    {
+        return ShiftsAlreadyGeneratedException::new;
+    }
+
+    public static Supplier<ShiftsGeneratingTooEarlyException> shiftsGeneratingTooEarly()
+    {
+        return ShiftsGeneratingTooEarlyException::new;
+    }
+
+    public static Supplier<ShiftStartException> shiftStart(Long userId, LocalDate date, Type type)
+    {
+        return () -> new ShiftStartException(userId, date, type);
     }
 }

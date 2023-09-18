@@ -1,5 +1,6 @@
 package com.ciosmak.automotivepartner.photo.domain;
 
+import com.ciosmak.automotivepartner.photo.support.PhotoType;
 import com.ciosmak.automotivepartner.shared.entity.AbstractEntity;
 import com.ciosmak.automotivepartner.shift.domain.Shift;
 import jakarta.persistence.*;
@@ -20,16 +21,9 @@ public class Photo extends AbstractEntity
     @Column(name = "url", nullable = false)
     private String url;
 
-    // "SHIFT_START"
-    // "SHIFT_END"
-    // "SHIFT_START_MILEAGE"
-    // "SHIFT_END_MILEAGE"
-    // "INVOICE"
-    // "CAR_DAMAGE"
-    // "STATEMENT"
     @ToString.Include
     @Column(name = "type", nullable = false)
-    private String type;
+    private PhotoType type;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "shift_id")

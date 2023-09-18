@@ -1,6 +1,6 @@
 package com.ciosmak.automotivepartner.statistic.domain;
 
-import com.ciosmak.automotivepartner.entity.AbstractEntity;
+import com.ciosmak.automotivepartner.shared.entity.AbstractEntity;
 import com.ciosmak.automotivepartner.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;

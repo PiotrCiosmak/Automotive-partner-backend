@@ -1,6 +1,6 @@
 package com.ciosmak.automotivepartner.email.domain;
 
-import com.ciosmak.automotivepartner.entity.AbstractEntity;
+import com.ciosmak.automotivepartner.shared.entity.AbstractEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

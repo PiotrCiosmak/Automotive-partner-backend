@@ -1,6 +1,6 @@
 package com.ciosmak.automotivepartner.accident.domain;
 
-import com.ciosmak.automotivepartner.entity.AbstractEntity;
+import com.ciosmak.automotivepartner.shared.entity.AbstractEntity;
 import com.ciosmak.automotivepartner.shift.domain.Shift;
 import jakarta.persistence.*;
 import lombok.*;

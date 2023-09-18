@@ -1,7 +1,7 @@
 package com.ciosmak.automotivepartner.availability.domain;
 
-import com.ciosmak.automotivepartner.availability.support.Type;
-import com.ciosmak.automotivepartner.entity.AbstractEntity;
+import com.ciosmak.automotivepartner.shift.support.Type;
+import com.ciosmak.automotivepartner.shared.entity.AbstractEntity;
 import com.ciosmak.automotivepartner.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;

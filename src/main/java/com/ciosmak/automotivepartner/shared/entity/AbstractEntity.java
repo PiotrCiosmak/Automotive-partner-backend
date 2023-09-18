@@ -1,4 +1,4 @@
-package com.ciosmak.automotivepartner.entity;
+package com.ciosmak.automotivepartner.shared.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

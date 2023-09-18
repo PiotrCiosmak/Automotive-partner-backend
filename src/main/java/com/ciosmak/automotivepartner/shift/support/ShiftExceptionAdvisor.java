@@ -98,10 +98,28 @@ public class ShiftExceptionAdvisor
         return new ErrorMessageResponse(exception.getLocalizedMessage());
     }
 
-    @ExceptionHandler(ShiftNotCompletedException.class)
+    @ExceptionHandler(ShiftAlreadyDoneException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorMessageResponse shiftNotCompleted(ShiftNotCompletedException exception)
+    public ErrorMessageResponse shiftAlreadyDone(ShiftAlreadyDoneException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getLocalizedMessage());
+    }
+
+    @ExceptionHandler(ShiftAlreadyStartedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse shiftAlreadyStarted(ShiftAlreadyStartedException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getLocalizedMessage());
+    }
+
+    @ExceptionHandler(ShiftNotDoneException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse shiftNotDone(ShiftNotDoneException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getLocalizedMessage());
@@ -111,6 +129,33 @@ public class ShiftExceptionAdvisor
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public ErrorMessageResponse shiftNotFound(ShiftNotFoundException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getLocalizedMessage());
+    }
+
+    @ExceptionHandler(ShiftNotStartedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse shiftNotStarted(ShiftNotStartedException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getLocalizedMessage());
+    }
+
+    @ExceptionHandler(ShiftsAlreadyGeneratedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse shiftsAlreadyGenerated(ShiftsAlreadyGeneratedException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getLocalizedMessage());
+    }
+
+    @ExceptionHandler(ShiftsGeneratingTooEarlyException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse shiftsGeneratingTooEarly(ShiftsGeneratingTooEarlyException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getLocalizedMessage());

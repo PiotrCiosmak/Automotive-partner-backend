@@ -1,6 +1,6 @@
 package com.ciosmak.automotivepartner.shift.api.response;
 
-import com.ciosmak.automotivepartner.availability.support.Type;
+import com.ciosmak.automotivepartner.shift.support.Type;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -18,6 +18,7 @@ public class ShiftResponse
     private final BigDecimal lpg;
     private final BigDecimal petrol;
     private final Integer endMileage;
+    private final Boolean isStarted;
     private final Boolean isDone;
     private final Long carId;
     private final Long userId;

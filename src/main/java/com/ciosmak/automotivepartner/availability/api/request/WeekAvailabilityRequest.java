@@ -1,6 +1,6 @@
 package com.ciosmak.automotivepartner.availability.api.request;
 
-import com.ciosmak.automotivepartner.availability.support.Type;
+import com.ciosmak.automotivepartner.shift.support.Type;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 

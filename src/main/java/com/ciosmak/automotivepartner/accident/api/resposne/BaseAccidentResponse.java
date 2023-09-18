@@ -1,6 +1,6 @@
 package com.ciosmak.automotivepartner.accident.api.resposne;
 
-import com.ciosmak.automotivepartner.availability.support.Type;
+import com.ciosmak.automotivepartner.shift.support.Type;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

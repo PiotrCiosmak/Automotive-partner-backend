@@ -3,7 +3,7 @@ package com.ciosmak.automotivepartner.availability.api;
 import com.ciosmak.automotivepartner.availability.api.request.WeekAvailabilityRequest;
 import com.ciosmak.automotivepartner.availability.api.response.AvailabilityResponse;
 import com.ciosmak.automotivepartner.availability.service.AvailabilityService;
-import com.ciosmak.automotivepartner.availability.support.Type;
+import com.ciosmak.automotivepartner.shift.support.Type;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;

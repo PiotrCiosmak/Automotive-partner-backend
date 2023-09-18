@@ -1,10 +1,10 @@
 package com.ciosmak.automotivepartner.shift.domain;
 
 import com.ciosmak.automotivepartner.accident.domain.Accident;
-import com.ciosmak.automotivepartner.availability.support.Type;
+import com.ciosmak.automotivepartner.shift.support.Type;
 import com.ciosmak.automotivepartner.car.domain.Car;
-import com.ciosmak.automotivepartner.entity.AbstractEntity;
-import com.ciosmak.automotivepartner.image.Image;
+import com.ciosmak.automotivepartner.photo.domain.Photo;
+import com.ciosmak.automotivepartner.shared.entity.AbstractEntity;
 import com.ciosmak.automotivepartner.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,7 +25,7 @@ import java.util.List;
 @Table(name = "shifts")
 public class Shift extends AbstractEntity
 {
-    public Shift(LocalDate date, Type type, Integer startMileage, BigDecimal lpg, BigDecimal petrol, Integer endMileage, Boolean isDone, Car car, User user)
+    public Shift(LocalDate date, Type type, Integer startMileage, BigDecimal lpg, BigDecimal petrol, Integer endMileage, Boolean isStarted, Boolean isDone, Car car, User user)
     {
         this.date = date;
         this.type = type;
@@ -33,6 +33,7 @@ public class Shift extends AbstractEntity
         this.lpg = lpg;
         this.petrol = petrol;
         this.endMileage = endMileage;
+        this.isStarted = isStarted;
         this.isDone = isDone;
         this.car = car;
         this.user = user;
@@ -59,6 +60,9 @@ public class Shift extends AbstractEntity
     @Column(name = "end_mileage")
     private Integer endMileage;
 
+    @Column(name = "is_started", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean isStarted;
+
     @Column(name = "is_done", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean isDone;
 
@@ -74,5 +78,5 @@ public class Shift extends AbstractEntity
     private List<Accident> accidents = new ArrayList<>();
 
     @OneToMany(mappedBy = "shift", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
-    private List<Image> images = new ArrayList<>();
+    private List<Photo> photos = new ArrayList<>();
 }
