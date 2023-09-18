@@ -44,6 +44,15 @@ public class ShiftExceptionAdvisor
         return new ErrorMessageResponse(exception.getLocalizedMessage());
     }
 
+    @ExceptionHandler(EmptyPetrolConsumptionException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse emptyPetrolConsumption(EmptyPetrolConsumptionException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getLocalizedMessage());
+    }
+
     @ExceptionHandler(EmptyMileageException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
@@ -89,10 +98,28 @@ public class ShiftExceptionAdvisor
         return new ErrorMessageResponse(exception.getLocalizedMessage());
     }
 
+    @ExceptionHandler(ShiftNotCompletedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse shiftNotCompleted(ShiftNotCompletedException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getLocalizedMessage());
+    }
+
     @ExceptionHandler(ShiftNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public ErrorMessageResponse shiftNotFound(ShiftNotFoundException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getLocalizedMessage());
+    }
+
+    @ExceptionHandler(ShiftStartException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse shiftStart(ShiftStartException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getLocalizedMessage());

@@ -1,9 +1,11 @@
 package com.ciosmak.automotivepartner.shift.support;
 
+import com.ciosmak.automotivepartner.availability.support.Type;
 import com.ciosmak.automotivepartner.shared.exception.EmptyMileageException;
 import com.ciosmak.automotivepartner.shared.exception.IncorrectMileageException;
 import com.ciosmak.automotivepartner.shift.support.exception.*;
 
+import java.time.LocalDate;
 import java.util.function.Supplier;
 
 public class ShiftExceptionSupplier
@@ -21,6 +23,11 @@ public class ShiftExceptionSupplier
     public static Supplier<EmptyMileagePhotoException> emptyMileagePhoto()
     {
         return EmptyMileagePhotoException::new;
+    }
+
+    public static Supplier<EmptyPetrolConsumptionException> emptyPetrolConsumption()
+    {
+        return EmptyPetrolConsumptionException::new;
     }
 
     public static Supplier<EmptyMileageException> emptyMileage()
@@ -48,8 +55,18 @@ public class ShiftExceptionSupplier
         return NotEnoughPhotosOfCarFromOutsideException::new;
     }
 
+    public static Supplier<ShiftNotCompletedException> shiftNotCompleted(Long id)
+    {
+        return () -> new ShiftNotCompletedException(id);
+    }
+
     public static Supplier<ShiftNotFoundException> shiftNotFound(Long id)
     {
         return () -> new ShiftNotFoundException(id);
+    }
+
+    public static Supplier<ShiftStartException> shiftStart(Long id, LocalDate date, Type type, Long carId)
+    {
+        return () -> new ShiftStartException(id, date, type, carId);
     }
 }
