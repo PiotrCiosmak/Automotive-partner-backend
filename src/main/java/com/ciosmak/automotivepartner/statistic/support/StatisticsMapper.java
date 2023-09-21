@@ -1,6 +1,8 @@
 package com.ciosmak.automotivepartner.statistic.support;
 
+import com.ciosmak.automotivepartner.shift.domain.Shift;
 import com.ciosmak.automotivepartner.statistic.api.request.StatisticsRequest;
+import com.ciosmak.automotivepartner.statistic.api.request.StatisticsUpdateRequest;
 import com.ciosmak.automotivepartner.statistic.api.response.OverallStatisticsResponse;
 import com.ciosmak.automotivepartner.statistic.api.response.StatisticsResponse;
 import com.ciosmak.automotivepartner.statistic.api.response.YearStatisticsResponse;
@@ -11,7 +13,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.Map;
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @Component
@@ -21,12 +23,12 @@ public class StatisticsMapper
 
     public Statistics toStatistics(StatisticsRequest statisticsRequest)
     {
-        return new Statistics(statisticsRequest.getDate(), statisticsRequest.getMileage(), statisticsRequest.getLpg(), statisticsRequest.getPetrol(), userRepository.findById(statisticsRequest.getUserId()).orElseThrow(UserExceptionSupplier.userNotFound(statisticsRequest.getUserId())));
+        return new Statistics(adjustDate(statisticsRequest.getDate()), statisticsRequest.getMileage(), statisticsRequest.getLpg(), statisticsRequest.getPetrol(), userRepository.findById(statisticsRequest.getUserId()).orElseThrow(UserExceptionSupplier.userNotFound(statisticsRequest.getUserId())));
     }
 
     public Statistics toStatistics(Statistics statistics, StatisticsRequest statisticsRequest)
     {
-        statistics.setDate(statisticsRequest.getDate());
+        statistics.setDate(adjustDate(statisticsRequest.getDate()));
         statistics.setMileage(statisticsRequest.getMileage());
         statistics.setLpg(statisticsRequest.getLpg());
         statistics.setPetrol(statisticsRequest.getPetrol());
@@ -34,9 +36,28 @@ public class StatisticsMapper
         return statistics;
     }
 
+    public StatisticsUpdateRequest toStatisticsUpdateRequest(Shift shift)
+    {
+        return new StatisticsUpdateRequest(shift.getEndMileage() - shift.getStartMileage(), shift.getLpg(), shift.getPetrol());
+    }
+
+    public StatisticsRequest toStatisticsRequest(Shift shift)
+    {
+        return new StatisticsRequest(adjustDate(shift.getDate()), shift.getEndMileage() - shift.getStartMileage(), shift.getLpg(), shift.getPetrol(), shift.getUser().getId());
+    }
+
+    public Statistics toStatistics(Statistics statistics, StatisticsUpdateRequest statisticsUpdateRequest)
+    {
+        statistics.setDate(adjustDate(statistics.getDate()));
+        statistics.setMileage(statistics.getMileage() + statisticsUpdateRequest.getMileage());
+        statistics.setLpg(statistics.getLpg().add(statisticsUpdateRequest.getLpg()));
+        statistics.setPetrol(statistics.getPetrol().add(statisticsUpdateRequest.getPetrol()));
+        return statistics;
+    }
+
     public StatisticsResponse toStatisticsResponse(Statistics statistics)
     {
-        return new StatisticsResponse(statistics.getId(), statistics.getDate(), statistics.getMileage(), statistics.getLpg(), statistics.getPetrol(), statistics.getUser().getId());
+        return new StatisticsResponse(statistics.getId(), adjustDate(statistics.getDate()), statistics.getMileage(), statistics.getLpg(), statistics.getPetrol(), statistics.getUser().getId());
     }
 
     public OverallStatisticsResponse toOverallStatisticsResponse(Statistics statistics)
@@ -49,8 +70,13 @@ public class StatisticsMapper
         return new OverallStatisticsResponse(0, BigDecimal.ZERO, BigDecimal.ZERO, userId);
     }
 
-    public YearStatisticsResponse toYearStatisticsResponse(Map<String, BigDecimal> yearStatistics)
+    public YearStatisticsResponse toYearStatisticsResponse(Integer mileage, BigDecimal lpg, BigDecimal petrol)
     {
-        return new YearStatisticsResponse(yearStatistics.get("mileage").intValue(), yearStatistics.get("lpg"), yearStatistics.get("petrol"));
+        return new YearStatisticsResponse(mileage, lpg, petrol);
+    }
+
+    private LocalDate adjustDate(LocalDate date)
+    {
+        return date.withDayOfMonth(1);
     }
 }
