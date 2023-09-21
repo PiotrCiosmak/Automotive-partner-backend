@@ -99,6 +99,6 @@ public class ShiftMapper
 
     public ShiftResponse toShiftResponse(Shift shift)
     {
-        return new ShiftResponse(shift.getId(), shift.getDate(), shift.getType(), shift.getStartMileage(), shift.getLpg(), shift.getPetrol(), shift.getEndMileage(), shift.getIsDone(), shift.getIsStarted(), shift.getCar().getId(), shift.getUser().getId());
+        return new ShiftResponse(shift.getId(), shift.getDate(), shift.getType(), shift.getStartMileage(), shift.getLpg(), shift.getPetrol(), shift.getEndMileage(), shift.getIsStarted(), shift.getIsDone(), shift.getCar().getId(), shift.getUser().getId());
     }
 }
