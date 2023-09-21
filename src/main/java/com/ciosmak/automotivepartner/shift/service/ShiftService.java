@@ -18,6 +18,11 @@ import com.ciosmak.automotivepartner.shift.repository.ShiftRepository;
 import com.ciosmak.automotivepartner.shift.support.ShiftExceptionSupplier;
 import com.ciosmak.automotivepartner.shift.support.ShiftMapper;
 import com.ciosmak.automotivepartner.shift.support.Type;
+import com.ciosmak.automotivepartner.statistic.api.request.StatisticsRequest;
+import com.ciosmak.automotivepartner.statistic.api.request.StatisticsUpdateRequest;
+import com.ciosmak.automotivepartner.statistic.domain.Statistics;
+import com.ciosmak.automotivepartner.statistic.repository.StatisticsRepository;
+import com.ciosmak.automotivepartner.statistic.support.StatisticsMapper;
 import com.ciosmak.automotivepartner.user.repository.UserRepository;
 import com.ciosmak.automotivepartner.user.support.UserExceptionSupplier;
 import jakarta.transaction.Transactional;
@@ -30,6 +35,7 @@ import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -38,10 +44,12 @@ public class ShiftService
 {
     private final ShiftRepository shiftRepository;
     private final ShiftMapper shiftMapper;
+    private final StatisticsMapper statisticsMapper;
     private final CarRepository carRepository;
     private final UserRepository userRepository;
     private final PhotoRepository photoRepository;
     private final AvailabilityRepository availabilityRepository;
+    private final StatisticsRepository statisticsRepository;
 
     @Transactional
     public List<ShiftResponse> generate()
@@ -77,10 +85,10 @@ public class ShiftService
             throw ShiftExceptionSupplier.shiftsAlreadyGenerated().get();
         }
 
-      /*  if (!isWeekendToday())
+        if (!isWeekendToday())
         {
             throw ShiftExceptionSupplier.shiftsGeneratingTooEarly().get();
-        }*/
+        }
     }
 
     public boolean isWeekendToday()
@@ -204,6 +212,10 @@ public class ShiftService
 
         photoRepository.saveAll(photos);
 
+        updateStatistics(shift);
+
+        updateCarMileage(shift.getCar(), shift.getEndMileage());
+
         return shiftMapper.toShiftResponse(shift);
     }
 
@@ -291,6 +303,52 @@ public class ShiftService
     private boolean isPhotoEmpty(String photo)
     {
         return photo.isEmpty();
+    }
+
+    private void updateStatistics(Shift shift)
+    {
+        StatisticsUpdateRequest statisticsUpdateRequest = getStatisticsUpdateRequest(shift);
+
+        Optional<Statistics> userMonthStatisticsCandidate = statisticsRepository.findByUserIdAndDate(shift.getUser().getId(), adjustDate(shift.getDate()));
+
+        if (userMonthStatisticsCandidate.isEmpty())
+        {
+            StatisticsRequest statisticsRequest = getStatisticsRequest(shift);
+            statisticsRepository.save(statisticsMapper.toStatistics(statisticsRequest));
+        }
+        else
+        {
+            Statistics userMonthStatistics = userMonthStatisticsCandidate.get();
+            statisticsMapper.toStatistics(userMonthStatistics, statisticsUpdateRequest);
+        }
+    }
+
+    private StatisticsUpdateRequest getStatisticsUpdateRequest(Shift shift)
+    {
+        if (!shift.getIsDone())
+        {
+            throw ShiftExceptionSupplier.shiftNotDone(shift.getId()).get();
+        }
+        return statisticsMapper.toStatisticsUpdateRequest(shift);
+    }
+
+    private LocalDate adjustDate(LocalDate date)
+    {
+        return date.withDayOfMonth(1);
+    }
+
+    private StatisticsRequest getStatisticsRequest(Shift shift)
+    {
+        if (!shift.getIsDone())
+        {
+            throw ShiftExceptionSupplier.shiftNotDone(shift.getId()).get();
+        }
+        return statisticsMapper.toStatisticsRequest(shift);
+    }
+
+    private void updateCarMileage(Car car, Integer kilometersTraveled)
+    {
+        car.setMileage(car.getMileage() + kilometersTraveled);
     }
 
     public List<ShiftResponse> findAllByDayAndType(LocalDate date, Type type)
