@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -17,6 +16,12 @@ public interface StatisticsRepository extends JpaRepository<Statistics, Long>
 
     Optional<Statistics> findByUserIdAndDate(Long userId, LocalDate date);
 
-    @Query("SELECT SUM(s.mileage) AS mileage, SUM(s.lpg) AS lpg, SUM(s.petrol) AS petrol FROM Statistics s WHERE YEAR(s.date) = :year")
-    Map<String, BigDecimal> sumValuesByYear(Integer year);
+    @Query("SELECT SUM(s.mileage) AS mileage FROM Statistics s WHERE YEAR(s.date) = :year")
+    Integer sumMileageByYear(Integer year);
+
+    @Query("SELECT SUM(s.lpg) AS mileage FROM Statistics s WHERE YEAR(s.date) = :year")
+    BigDecimal sumLpgByYear(Integer year);
+
+    @Query("SELECT SUM(s.petrol) AS mileage FROM Statistics s WHERE YEAR(s.date) = :year")
+    BigDecimal sumPetrolByYear(Integer year);
 }
