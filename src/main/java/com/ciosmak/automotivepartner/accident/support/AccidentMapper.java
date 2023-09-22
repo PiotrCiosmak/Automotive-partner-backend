@@ -2,8 +2,8 @@ package com.ciosmak.automotivepartner.accident.support;
 
 import com.ciosmak.automotivepartner.accident.api.request.AccidentRequest;
 import com.ciosmak.automotivepartner.accident.api.resposne.AccidentResponse;
-import com.ciosmak.automotivepartner.accident.api.resposne.AdvancedAccidentResponse;
 import com.ciosmak.automotivepartner.accident.api.resposne.BaseAccidentResponse;
+import com.ciosmak.automotivepartner.accident.api.resposne.ExtendedAccidentResponse;
 import com.ciosmak.automotivepartner.accident.domain.Accident;
 import com.ciosmak.automotivepartner.car.domain.Car;
 import com.ciosmak.automotivepartner.shift.domain.Shift;
@@ -40,14 +40,14 @@ public class AccidentMapper
     {
         Shift shift = accident.getShift();
         User user = shift.getUser();
-        return new BaseAccidentResponse(shift.getDate(), shift.getType(), user.getFirstName(), user.getLastName(), accident.getIsEndOfWork(), shift.getId());
+        return new BaseAccidentResponse(accident.getId(), shift.getDate(), shift.getType(), user.getFirstName(), user.getLastName(), shift.getId());
     }
 
-    public AdvancedAccidentResponse toAdvanceAccidentResponse(Accident accident)
+    public ExtendedAccidentResponse toAdvanceAccidentResponse(Accident accident)
     {
         Shift shift = accident.getShift();
         User user = shift.getUser();
         Car car = shift.getCar();
-        return new AdvancedAccidentResponse(shift.getDate(), shift.getType(), user.getFirstName(), user.getLastName(), car.getRegistrationNumber(), accident.getIsGuilty(), accident.getIsEndOfWork(), shift.getId());
+        return new ExtendedAccidentResponse(shift.getDate(), shift.getType(), user.getFirstName(), user.getLastName(), car.getRegistrationNumber(), accident.getIsGuilty(), shift.getId());
     }
 }
