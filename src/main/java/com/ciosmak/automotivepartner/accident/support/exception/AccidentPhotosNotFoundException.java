@@ -4,6 +4,6 @@ public class AccidentPhotosNotFoundException extends RuntimeException
 {
     public AccidentPhotosNotFoundException()
     {
-        super("Zdjęcią uszkodzeń nie zostały dodane");
+        super("Załącz minimum 4 zdjęcia pokazujące uszkodzenia.");
     }
 }

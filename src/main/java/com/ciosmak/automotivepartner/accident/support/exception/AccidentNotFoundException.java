@@ -4,6 +4,6 @@ public class AccidentNotFoundException extends RuntimeException
 {
     public AccidentNotFoundException(Long id)
     {
-        super(String.format("Accident with %d id not found", id));
+        super(String.format("Brak wypadku o id %d.", id));
     }
 }

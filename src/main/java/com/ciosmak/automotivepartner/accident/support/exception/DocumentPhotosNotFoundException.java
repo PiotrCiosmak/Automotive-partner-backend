@@ -4,6 +4,6 @@ public class DocumentPhotosNotFoundException extends RuntimeException
 {
     public DocumentPhotosNotFoundException()
     {
-        super("Zdjęcia dokumentów nie dostały dodane");
+        super(" Załącz minimum 1 zdjęcie dokumentów.");
     }
 }
