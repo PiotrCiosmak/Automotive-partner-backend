@@ -2,8 +2,8 @@ package com.ciosmak.automotivepartner.accident.api;
 
 import com.ciosmak.automotivepartner.accident.api.request.AccidentRequest;
 import com.ciosmak.automotivepartner.accident.api.resposne.AccidentResponse;
-import com.ciosmak.automotivepartner.accident.api.resposne.AdvancedAccidentResponse;
 import com.ciosmak.automotivepartner.accident.api.resposne.BaseAccidentResponse;
+import com.ciosmak.automotivepartner.accident.api.resposne.ExtendedAccidentResponse;
 import com.ciosmak.automotivepartner.accident.service.AccidentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,7 +23,7 @@ public class AccidentApi
     private final AccidentService accidentService;
 
     @PostMapping("/report")
-    @Operation(summary = "Report an accident")
+    @Operation(summary = "Report")
     public ResponseEntity<AccidentResponse> report(@RequestBody AccidentRequest accidentRequest)
     {
         AccidentResponse accidentResponse = accidentService.report(accidentRequest);
@@ -31,18 +31,18 @@ public class AccidentApi
     }
 
     @GetMapping("/find")
-    @Operation(summary = "Find all accidents")
-    public ResponseEntity<List<BaseAccidentResponse>> findAllAccidents()
+    @Operation(summary = "Find all")
+    public ResponseEntity<List<BaseAccidentResponse>> findAll()
     {
         List<BaseAccidentResponse> baseAccidentResponses = accidentService.findAllAccidents();
         return ResponseEntity.status(HttpStatus.OK).body(baseAccidentResponses);
     }
 
-    @GetMapping("/info/{id}")
-    @Operation(summary = "Find accident")
-    public ResponseEntity<AdvancedAccidentResponse> findAccident(@PathVariable Long id)
+    @GetMapping("/find/{id}")
+    @Operation(summary = "Find")
+    public ResponseEntity<ExtendedAccidentResponse> find(@PathVariable Long id)
     {
-        AdvancedAccidentResponse advancedAccidentResponse = accidentService.findAccident(id);
-        return ResponseEntity.status(HttpStatus.OK).body(advancedAccidentResponse);
+        ExtendedAccidentResponse extendedAccidentResponse = accidentService.findAccident(id);
+        return ResponseEntity.status(HttpStatus.OK).body(extendedAccidentResponse);
     }
 }
