@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 @AllArgsConstructor
 @Getter
-public class AdvancedAccidentResponse
+public class ExtendedAccidentResponse
 {
     private final LocalDate date;
     private final Type type;
@@ -16,6 +16,5 @@ public class AdvancedAccidentResponse
     private final String lastName;
     private final String registrationNumber;
     private final Boolean isGuilty;
-    private final Boolean isEndOfWork;
     private final Long shiftId;
 }
