@@ -116,6 +116,15 @@ public class ShiftExceptionAdvisor
         return new ErrorMessageResponse(exception.getLocalizedMessage());
     }
 
+    @ExceptionHandler(ShiftCanNotBeStartedTodayException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse shiftCanNotBeStartedToday(ShiftCanNotBeStartedTodayException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getLocalizedMessage());
+    }
+
     @ExceptionHandler(ShiftNotDoneException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody

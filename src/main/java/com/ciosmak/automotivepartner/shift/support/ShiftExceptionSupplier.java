@@ -64,6 +64,11 @@ public class ShiftExceptionSupplier
         return () -> new ShiftAlreadyStartedException(id);
     }
 
+    public static Supplier<ShiftCanNotBeStartedTodayException> shiftCanNotBeStartedToday(Long id)
+    {
+        return () -> new ShiftCanNotBeStartedTodayException(id);
+    }
+
     public static Supplier<ShiftNotDoneException> shiftNotDone(Long id)
     {
         return () -> new ShiftNotDoneException(id);

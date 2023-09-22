@@ -35,6 +35,7 @@ import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -139,6 +140,11 @@ public class ShiftService
             throw ShiftExceptionSupplier.shiftAlreadyDone(shift.getId()).get();
         }
 
+        if (!canShiftBeStartedToday(shift.getDate()))
+        {
+            throw ShiftExceptionSupplier.shiftCanNotBeStartedToday(shift.getId()).get();
+        }
+
         shift = shiftMapper.toShift(shift, startShiftRequest);
 
         checkIfStartShiftDataAreCorrect(startShiftRequest, shift.getCar());
@@ -157,6 +163,11 @@ public class ShiftService
         photoRepository.saveAll(photos);
 
         return shiftMapper.toShiftResponse(shift);
+    }
+
+    private boolean canShiftBeStartedToday(LocalDate date)
+    {
+        return Objects.equals(date, LocalDate.now());
     }
 
     private void checkIfStartShiftDataAreCorrect(StartShiftRequest startShiftRequest, Car car)
