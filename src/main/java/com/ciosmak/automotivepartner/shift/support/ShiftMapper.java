@@ -1,5 +1,7 @@
 package com.ciosmak.automotivepartner.shift.support;
 
+import com.ciosmak.automotivepartner.accident.api.request.AccidentRequest;
+import com.ciosmak.automotivepartner.accident.repository.AccidentRepository;
 import com.ciosmak.automotivepartner.car.repository.CarRepository;
 import com.ciosmak.automotivepartner.car.support.CarExceptionSupplier;
 import com.ciosmak.automotivepartner.photo.domain.Photo;
@@ -16,6 +18,7 @@ import com.ciosmak.automotivepartner.user.support.UserExceptionSupplier;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +29,7 @@ public class ShiftMapper
     private final UserRepository userRepository;
     private final CarRepository carRepository;
     private final PhotoRepository photoRepository;
+    private final AccidentRepository accidentRepository;
     private final PhotoMapper photoMapper;
 
     public Shift toShift(ShiftRequest shiftRequest)
@@ -76,6 +80,15 @@ public class ShiftMapper
         return shift;
     }
 
+    public Shift toShift(Shift shift, AccidentRequest accidentRequest)
+    {
+        shift.setEndMileage(accidentRequest.getMileage().get());
+        shift.setLpg(BigDecimal.ZERO);
+        shift.setPetrol(BigDecimal.ZERO);
+        shift.setIsDone(Boolean.TRUE);
+        return shift;
+    }
+
     public ExtendedShiftResponse toExtendedShiftResponse(Shift shift)
     {
 
@@ -93,9 +106,14 @@ public class ShiftMapper
             endShiftPhotosResponses.add(photoMapper.toPhotoResponse(endShiftPhoto));
         }
 
+        List<Photo> invoicePhotos = photoRepository.findByShiftIdAndType(shift.getId(), PhotoType.INVOICE);
+        Photo invoicePhoto = invoicePhotos.isEmpty() ? null : invoicePhotos.get(0);
+        PhotoResponse invoicePhotoResponse = invoicePhoto == null ? null : photoMapper.toPhotoResponse(invoicePhoto);
 
-        return new ExtendedShiftResponse(shift.getUser().getFirstName(), shift.getUser().getLastName(), shift.getCar().getRegistrationNumber(), shift.getStartMileage(), shift.getEndMileage(), shift.getEndMileage() - shift.getStartMileage(), shift.getLpg(), shift.getPetrol(), startShiftPhotosResponses, endShiftPhotosResponses, photoMapper.toPhotoResponse(photoRepository.findByShiftIdAndType(shift.getId(), PhotoType.INVOICE).get(0)), Boolean.FALSE);
-    }//TODO gdy bedzie accident zrobiony to zwracać czy był wypadek czy nie
+        boolean isAccidentHappened = accidentRepository.findByShiftId(shift.getId()).isPresent();
+
+        return new ExtendedShiftResponse(shift.getUser().getFirstName(), shift.getUser().getLastName(), shift.getCar().getRegistrationNumber(), shift.getStartMileage(), shift.getEndMileage(), shift.getEndMileage() - shift.getStartMileage(), shift.getLpg(), shift.getPetrol(), startShiftPhotosResponses, endShiftPhotosResponses, invoicePhotoResponse, isAccidentHappened);
+    }
 
     public ShiftResponse toShiftResponse(Shift shift)
     {
