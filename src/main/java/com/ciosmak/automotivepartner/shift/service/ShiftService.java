@@ -311,9 +311,9 @@ public class ShiftService
         }
     }
 
-    private boolean isPhotoUrlEmpty(String photo)
+    private boolean isPhotoUrlEmpty(String photoUrl)
     {
-        return photo.isEmpty();
+        return photoUrl.isEmpty();
     }
 
     private void updateStatistics(Shift shift)
