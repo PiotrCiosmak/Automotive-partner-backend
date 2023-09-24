@@ -258,9 +258,9 @@ public class ShiftService
             throw ShiftExceptionSupplier.notEnoughPhotosOfCarFromOutside().get();
         }
 
-        for (var photo : photosUrls)
+        for (var photoUrl : photosUrls)
         {
-            if (isPhotoEmpty(photo))
+            if (isPhotoUrlEmpty(photoUrl))
             {
                 throw ShiftExceptionSupplier.notEnoughPhotosOfCarFromOutside().get();
             }
@@ -297,7 +297,7 @@ public class ShiftService
 
     private void checkIfMileagePhotoUrlIsCorrect(String photoUrl)
     {
-        if (isPhotoEmpty(photoUrl))
+        if (isPhotoUrlEmpty(photoUrl))
         {
             throw ShiftExceptionSupplier.emptyMileagePhoto().get();
         }
@@ -305,13 +305,13 @@ public class ShiftService
 
     private void checkIfInvoicePhotoUrlIsCorrect(String photoUrl)
     {
-        if (isPhotoEmpty(photoUrl))
+        if (isPhotoUrlEmpty(photoUrl))
         {
             throw ShiftExceptionSupplier.emptyInvoicePhoto().get();
         }
     }
 
-    private boolean isPhotoEmpty(String photo)
+    private boolean isPhotoUrlEmpty(String photo)
     {
         return photo.isEmpty();
     }
