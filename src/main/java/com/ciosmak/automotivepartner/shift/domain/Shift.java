@@ -1,10 +1,10 @@
 package com.ciosmak.automotivepartner.shift.domain;
 
 import com.ciosmak.automotivepartner.accident.domain.Accident;
-import com.ciosmak.automotivepartner.shift.support.Type;
 import com.ciosmak.automotivepartner.car.domain.Car;
 import com.ciosmak.automotivepartner.photo.domain.Photo;
 import com.ciosmak.automotivepartner.shared.entity.AbstractEntity;
+import com.ciosmak.automotivepartner.shift.support.Type;
 import com.ciosmak.automotivepartner.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -75,8 +75,10 @@ public class Shift extends AbstractEntity
     private User user;
 
     @OneToMany(mappedBy = "shift", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @Builder.Default
     private List<Accident> accidents = new ArrayList<>();
 
     @OneToMany(mappedBy = "shift", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @Builder.Default
     private List<Photo> photos = new ArrayList<>();
 }

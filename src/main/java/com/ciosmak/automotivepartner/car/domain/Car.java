@@ -38,5 +38,6 @@ public class Car extends AbstractEntity
     private Boolean isBlocked;
 
     @OneToMany(mappedBy = "car", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @Builder.Default
     private List<Shift> shifts = new ArrayList<>();
 }
