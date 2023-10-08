@@ -57,21 +57,27 @@ public class User extends AbstractEntity
     @Column(name = "role", nullable = false)
     private String role;
 
+    @Builder.Default
     @Column(name = "is_enabled", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean isEnabled = false;
 
+    @Builder.Default
     @Column(name = "is_blocked", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean isBlocked = false;
 
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private List<Availability> availabilities = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private List<Settlement> settlements = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private List<Statistics> statistics = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private List<Shift> shifts = new ArrayList<>();
 }
