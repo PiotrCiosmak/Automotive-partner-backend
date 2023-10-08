@@ -22,6 +22,7 @@ public class Photo extends AbstractEntity
     private String url;
 
     @ToString.Include
+    @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
     private PhotoType type;
 
