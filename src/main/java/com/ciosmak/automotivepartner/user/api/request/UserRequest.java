@@ -1,5 +1,6 @@
 package com.ciosmak.automotivepartner.user.api.request;
 
+import com.ciosmak.automotivepartner.user.support.UserRole;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 
@@ -11,12 +12,12 @@ public class UserRequest
     private final String email;
     private final String password;
     private final String phoneNumber;
-    private final String role;
+    private final UserRole role;
     private final Boolean isEnabled;
     private final Boolean isBlocked;
 
     @JsonCreator
-    public UserRequest(String firstName, String lastName, String email, String password, String phoneNumber, String role, boolean isEnabled, boolean isBlocked)
+    public UserRequest(String firstName, String lastName, String email, String password, String phoneNumber, UserRole role, boolean isEnabled, boolean isBlocked)
     {
         this.firstName = firstName;
         this.lastName = lastName;

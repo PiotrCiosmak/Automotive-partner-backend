@@ -5,11 +5,17 @@ import com.ciosmak.automotivepartner.settlement.domain.Settlement;
 import com.ciosmak.automotivepartner.shared.entity.AbstractEntity;
 import com.ciosmak.automotivepartner.shift.domain.Shift;
 import com.ciosmak.automotivepartner.statistic.domain.Statistics;
+import com.ciosmak.automotivepartner.user.support.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.NaturalId;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -21,9 +27,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User extends AbstractEntity
+public class User extends AbstractEntity implements UserDetails
 {
-    public User(String firstName, String lastName, String email, String password, String phoneNumber, String role, boolean isEnabled, boolean isBlocked)
+    public User(String firstName, String lastName, String email, String password, String phoneNumber, UserRole role, boolean isEnabled, boolean isBlocked)
     {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -54,8 +60,9 @@ public class User extends AbstractEntity
     @Column(name = "phone_number", length = 13, nullable = false)
     private String phoneNumber;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private String role;
+    private UserRole role;
 
     @Column(name = "is_enabled", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
     @Builder.Default
@@ -80,4 +87,48 @@ public class User extends AbstractEntity
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @Builder.Default
     private List<Shift> shifts = new ArrayList<>();
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities()
+    {
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.name());
+        return Collections.singletonList(authority);
+    }
+
+
+    @Override
+    public String getPassword()
+    {
+        return password;
+    }
+
+    @Override
+    public String getUsername()
+    {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired()
+    {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked()
+    {
+        return !isBlocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired()
+    {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled()
+    {
+        return isEnabled;
+    }
 }

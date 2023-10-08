@@ -10,6 +10,7 @@ import com.ciosmak.automotivepartner.user.domain.User;
 import com.ciosmak.automotivepartner.user.repository.UserRepository;
 import com.ciosmak.automotivepartner.user.support.UserExceptionSupplier;
 import com.ciosmak.automotivepartner.user.support.UserMapper;
+import com.ciosmak.automotivepartner.user.support.UserRole;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -231,36 +232,36 @@ public class UserService
     public UserResponse makeAdmin(Long id)
     {
         User user = userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
-        String userRole = userRepository.getRole(id);
-        if (isAdmin(userRole))
+        UserRole role = userRepository.getRole(id);
+        if (isAdmin(role))
         {
             throw UserExceptionSupplier.userAlreadyAdmin().get();
         }
-        user.setRole("admin");
+        user.setRole(UserRole.ADMIN);
         return userMapper.toUserResponse(user);
     }
 
-    private boolean isAdmin(String role)
+    private boolean isAdmin(UserRole role)
     {
-        return role.equals("admin");
+        return role.equals(UserRole.ADMIN);
     }
 
     @Transactional
     public UserResponse makeDriver(Long id)
     {
         User user = userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
-        String userRole = userRepository.getRole(id);
-        if (isDriver(userRole))
+        UserRole role = userRepository.getRole(id);
+        if (isDriver(role))
         {
             throw UserExceptionSupplier.userAlreadyDriver().get();
         }
-        user.setRole("driver");
+        user.setRole(UserRole.DRIVER);
         return userMapper.toUserResponse(user);
     }
 
-    private boolean isDriver(String role)
+    private boolean isDriver(UserRole role)
     {
-        return role.equals("driver");
+        return role.equals(UserRole.DRIVER);
     }
 
     public List<UserResponse> findAll(String filterText)
@@ -283,13 +284,13 @@ public class UserService
 
     public List<UserResponse> findAllAdmins(String filterText)
     {
-        List<User> adminUsers = userRepository.findAllByRole("admin");
+        List<User> adminUsers = userRepository.findAllByRole(UserRole.ADMIN);
         return getFilteredUsers(adminUsers, filterText);
     }
 
     public List<UserResponse> findAllDrivers(String filterText)
     {
-        List<User> driverUsers = userRepository.findAllByRole("driver");
+        List<User> driverUsers = userRepository.findAllByRole(UserRole.DRIVER);
         return getFilteredUsers(driverUsers, filterText);
     }
 
