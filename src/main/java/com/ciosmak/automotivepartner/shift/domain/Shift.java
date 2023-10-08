@@ -44,6 +44,7 @@ public class Shift extends AbstractEntity
     private LocalDate date;
 
     @ToString.Include
+    @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
     private Type type;
 
