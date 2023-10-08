@@ -4,7 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 /docs/~$endpoints.xlsx
-/src/main/java/trash/
+/src/trash/
 
 ### STS ###
 .apt_generated
