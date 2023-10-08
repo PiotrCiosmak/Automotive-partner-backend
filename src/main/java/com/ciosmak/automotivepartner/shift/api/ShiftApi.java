@@ -1,12 +1,12 @@
 package com.ciosmak.automotivepartner.shift.api;
 
-import com.ciosmak.automotivepartner.shift.support.Type;
 import com.ciosmak.automotivepartner.shift.api.request.EndShiftRequest;
 import com.ciosmak.automotivepartner.shift.api.request.StartShiftRequest;
 import com.ciosmak.automotivepartner.shift.api.request.UpdateFuelRequest;
 import com.ciosmak.automotivepartner.shift.api.response.ExtendedShiftResponse;
 import com.ciosmak.automotivepartner.shift.api.response.ShiftResponse;
 import com.ciosmak.automotivepartner.shift.service.ShiftService;
+import com.ciosmak.automotivepartner.shift.support.Type;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
