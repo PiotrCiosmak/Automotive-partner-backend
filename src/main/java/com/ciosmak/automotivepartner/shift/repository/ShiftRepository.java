@@ -1,7 +1,7 @@
 package com.ciosmak.automotivepartner.shift.repository;
 
-import com.ciosmak.automotivepartner.shift.support.Type;
 import com.ciosmak.automotivepartner.shift.domain.Shift;
+import com.ciosmak.automotivepartner.shift.support.Type;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
