@@ -19,7 +19,7 @@ The website/mobile-app for this taxi corporation provides a comprehensive platfo
 
 ## Technologies Used
 
-- Java 20
+- Java 21
 - Spring framework 6
 - Spring Boot 3.1.0
 - PostgreSQL
