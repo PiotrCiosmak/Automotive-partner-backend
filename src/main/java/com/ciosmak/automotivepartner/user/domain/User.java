@@ -5,6 +5,7 @@ import com.ciosmak.automotivepartner.settlement.domain.Settlement;
 import com.ciosmak.automotivepartner.shared.entity.AbstractEntity;
 import com.ciosmak.automotivepartner.shift.domain.Shift;
 import com.ciosmak.automotivepartner.statistic.domain.Statistics;
+import com.ciosmak.automotivepartner.user.support.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.NaturalId;
@@ -28,7 +29,7 @@ import java.util.List;
 @Table(name = "users")
 public class User extends AbstractEntity implements UserDetails
 {
-    public User(String firstName, String lastName, String email, String password, String phoneNumber, String role, boolean isEnabled, boolean isBlocked)
+    public User(String firstName, String lastName, String email, String password, String phoneNumber, Role role, boolean isEnabled, boolean isBlocked)
     {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -60,7 +61,7 @@ public class User extends AbstractEntity implements UserDetails
     private String phoneNumber;
 
     @Column(name = "role", nullable = false)
-    private String role;
+    private Role role;
 
     @Builder.Default
     @Column(name = "is_enabled", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
@@ -89,7 +90,7 @@ public class User extends AbstractEntity implements UserDetails
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities()
     {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.toString());
         return Collections.singleton(authority);
     }
 

@@ -1,6 +1,7 @@
 package com.ciosmak.automotivepartner.user.repository;
 
 import com.ciosmak.automotivepartner.user.domain.User;
+import com.ciosmak.automotivepartner.user.support.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,11 +17,11 @@ public interface UserRepository extends JpaRepository<User, Long>
 
     List<User> findAllByIsBlocked(Boolean isBlocked);
 
-    List<User> findAllByRole(String role);
+    List<User> findAllByRole(Role role);
 
     @Query("SELECT u.isBlocked FROM User u WHERE u.id = :id")
     boolean isBlocked(@Param("id") Long id);
 
     @Query("SELECT u.role FROM User u WHERE u.id = :id")
-    String getRole(@Param("id") Long id);
+    Role getRole(@Param("id") Long id);
 }

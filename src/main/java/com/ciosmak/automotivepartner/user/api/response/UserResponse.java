@@ -1,5 +1,6 @@
 package com.ciosmak.automotivepartner.user.api.response;
 
+import com.ciosmak.automotivepartner.user.support.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,7 +14,7 @@ public class UserResponse
     private final String email;
     private final String password;
     private final String phoneNumber;
-    private final String role;
+    private final Role role;
     private final Boolean isEnabled;
     private final Boolean isBlocked;
 }

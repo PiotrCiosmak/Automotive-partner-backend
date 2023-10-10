@@ -9,6 +9,7 @@ import com.ciosmak.automotivepartner.user.api.request.UserRequest;
 import com.ciosmak.automotivepartner.user.api.response.UserResponse;
 import com.ciosmak.automotivepartner.user.domain.User;
 import com.ciosmak.automotivepartner.user.repository.UserRepository;
+import com.ciosmak.automotivepartner.user.support.Role;
 import com.ciosmak.automotivepartner.user.support.UserExceptionSupplier;
 import com.ciosmak.automotivepartner.user.support.UserMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -257,36 +258,36 @@ public class UserService implements UserDetailsService
     public UserResponse makeAdmin(Long id)
     {
         User user = userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
-        String userRole = userRepository.getRole(id);
+        Role userRole = userRepository.getRole(id);
         if (isAdmin(userRole))
         {
             throw UserExceptionSupplier.userAlreadyAdmin().get();
         }
-        user.setRole("admin");
+        user.setRole(Role.ADMIN);
         return userMapper.toUserResponse(user);
     }
 
-    private boolean isAdmin(String role)
+    private boolean isAdmin(Role role)
     {
-        return role.equals("admin");
+        return role.equals(Role.ADMIN);
     }
 
     @Transactional
     public UserResponse makeDriver(Long id)
     {
         User user = userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
-        String userRole = userRepository.getRole(id);
+        Role userRole = userRepository.getRole(id);
         if (isDriver(userRole))
         {
             throw UserExceptionSupplier.userAlreadyDriver().get();
         }
-        user.setRole("driver");
+        user.setRole(Role.DRIVER);
         return userMapper.toUserResponse(user);
     }
 
-    private boolean isDriver(String role)
+    private boolean isDriver(Role role)
     {
-        return role.equals("driver");
+        return role.equals(Role.DRIVER);
     }
 
     public List<UserResponse> findAll(String filterText)
@@ -309,13 +310,13 @@ public class UserService implements UserDetailsService
 
     public List<UserResponse> findAllAdmins(String filterText)
     {
-        List<User> adminUsers = userRepository.findAllByRole("admin");
+        List<User> adminUsers = userRepository.findAllByRole(Role.ADMIN);
         return getFilteredUsers(adminUsers, filterText);
     }
 
     public List<UserResponse> findAllDrivers(String filterText)
     {
-        List<User> driverUsers = userRepository.findAllByRole("driver");
+        List<User> driverUsers = userRepository.findAllByRole(Role.DRIVER);
         return getFilteredUsers(driverUsers, filterText);
     }
 
