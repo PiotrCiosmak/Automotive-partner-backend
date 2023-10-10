@@ -41,12 +41,12 @@ public class VerificationTokenService
             return "Link wygasł.";
         }
 
-        userRepository.save(userMapper.toEnabledUser(user));
-
         if (isUserEnabled(verificationToken))
         {
             return "To konto zostało już zweryfikowane, możesz się zalogować.";
         }
+
+        userRepository.save(userMapper.toEnabledUser(user));
 
         return "Adres email został zweryfikowany poprawnie. Już możesz się zalogowac na swoje konto.";
 
