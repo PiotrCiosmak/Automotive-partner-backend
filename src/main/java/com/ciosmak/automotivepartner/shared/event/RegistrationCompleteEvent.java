@@ -1,4 +1,4 @@
-package com.ciosmak.automotivepartner.user.support.event;
+package com.ciosmak.automotivepartner.shared.event;
 
 import com.ciosmak.automotivepartner.user.domain.User;
 import lombok.Getter;
