@@ -10,8 +10,14 @@ import com.ciosmak.automotivepartner.user.domain.User;
 import com.ciosmak.automotivepartner.user.repository.UserRepository;
 import com.ciosmak.automotivepartner.user.support.UserExceptionSupplier;
 import com.ciosmak.automotivepartner.user.support.UserMapper;
+import com.ciosmak.automotivepartner.user.support.event.RegistrationCompleteEvent;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,15 +27,17 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
-public class UserService
+public class UserService implements UserDetailsService
 {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final EmailRepository emailRepository;
     private final EmailService emailService;
+    private final ApplicationEventPublisher publisher;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public UserResponse register(UserRequest userRequest)
+    public UserResponse register(UserRequest userRequest, final HttpServletRequest request)
     {
         checkIfUserDataAreCorrect(userRequest);
 
@@ -37,6 +45,8 @@ public class UserService
 
         EmailRequest emailRequest = new EmailRequest(userRequest.getEmail());
         emailService.delete(emailRequest);
+
+        publisher.publishEvent(new RegistrationCompleteEvent(user, applicationUrl(request)));
 
         return userMapper.toUserResponse(user);
     }
@@ -166,9 +176,20 @@ public class UserService
         return !(hasLetter && hasDigit && hasSpecialChar);
     }
 
+    public String applicationUrl(HttpServletRequest request)
+    {
+        return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+    }
+
     public UserResponse login(UserLoginDataRequest userLoginDataRequest)
     {
         User user = userRepository.findByEmail(userLoginDataRequest.getEmail()).orElseThrow(UserExceptionSupplier.incorrectLoginData());
+
+        boolean isPasswordCorrect = isPasswordCorrect(userLoginDataRequest.getPassword(), user);
+        if (!isPasswordCorrect)
+        {
+            throw UserExceptionSupplier.incorrectLoginData().get();
+        }
 
         boolean isEnabled = user.getIsEnabled();
         if (!isEnabled)
@@ -183,6 +204,11 @@ public class UserService
         }
 
         return userMapper.toUserResponse(user);
+    }
+
+    private boolean isPasswordCorrect(String password, User user)
+    {
+        return passwordEncoder.matches(password, user.getPassword());
     }
 
     public String restartPassword(String emailRequest)
@@ -313,5 +339,11 @@ public class UserService
     {
         userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
         //TODO logout
+    }
+
+    @Override
+    public User loadUserByUsername(String email) throws UsernameNotFoundException
+    {
+        return userRepository.findByEmail(email).orElseThrow(UserExceptionSupplier.incorrectEmail());
     }
 }

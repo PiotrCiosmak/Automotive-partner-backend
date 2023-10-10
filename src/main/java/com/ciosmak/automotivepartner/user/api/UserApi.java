@@ -6,6 +6,7 @@ import com.ciosmak.automotivepartner.user.api.response.UserResponse;
 import com.ciosmak.automotivepartner.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +24,9 @@ public class UserApi
 
     @PostMapping("/register")
     @Operation(summary = "Register")
-    public ResponseEntity<UserResponse> register(@RequestBody UserRequest userRequest)
+    public ResponseEntity<UserResponse> register(@RequestBody UserRequest userRequest, final HttpServletRequest request)
     {
-        UserResponse userResponse = userService.register(userRequest);
+        UserResponse userResponse = userService.register(userRequest, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
 
