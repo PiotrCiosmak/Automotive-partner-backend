@@ -8,8 +8,13 @@ import com.ciosmak.automotivepartner.statistic.domain.Statistics;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.NaturalId;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -21,7 +26,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User extends AbstractEntity
+public class User extends AbstractEntity implements UserDetails
 {
     public User(String firstName, String lastName, String email, String password, String phoneNumber, String role, boolean isEnabled, boolean isBlocked)
     {
@@ -80,4 +85,47 @@ public class User extends AbstractEntity
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private List<Shift> shifts = new ArrayList<>();
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities()
+    {
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
+        return Collections.singleton(authority);
+    }
+
+    @Override
+    public String getPassword()
+    {
+        return password;
+    }
+
+    @Override
+    public String getUsername()
+    {
+        return getEmail();
+    }
+
+    @Override
+    public boolean isAccountNonExpired()
+    {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked()
+    {
+        return !isBlocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired()
+    {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled()
+    {
+        return isEnabled;
+    }
 }
