@@ -161,6 +161,15 @@ public class UserExceptionAdvisor
         return new ErrorMessageResponse(exception.getMessage());
     }
 
+    @ExceptionHandler(UserDisabledException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse userDisable(UserDisabledException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getMessage());
+    }
+
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
