@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication()
 @OpenAPIDefinition(
         info = @Info(
                 title = "Automotive Partner",
@@ -17,6 +16,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
                 )
         )
 )
+@SpringBootApplication()
+//TODO doczytać czy musze sam konfigurowac czy nie@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 public class AutomotivePartnerApplication
 {
 
