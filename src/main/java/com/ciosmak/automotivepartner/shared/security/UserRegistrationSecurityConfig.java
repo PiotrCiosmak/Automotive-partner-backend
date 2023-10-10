@@ -1,4 +1,4 @@
-package com.ciosmak.automotivepartner.security;
+package com.ciosmak.automotivepartner.shared.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +28,7 @@ public class UserRegistrationSecurityConfig
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("swagger-ui/html", "/api/users/**", "/api/cars/**", "/swagger-ui/**", "/v3/api-docs/**", "/api/emails/add")
+                .requestMatchers("/api/tokens/verification/verify_email", "swagger-ui/html", "/api/users/**", "/api/cars/**", "/swagger-ui/**", "/v3/api-docs/**", "/api/emails/add")
                 .permitAll()
                 .and()
                 .authorizeHttpRequests()
