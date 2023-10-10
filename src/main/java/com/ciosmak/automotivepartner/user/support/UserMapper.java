@@ -3,26 +3,31 @@ package com.ciosmak.automotivepartner.user.support;
 import com.ciosmak.automotivepartner.user.api.request.UserRequest;
 import com.ciosmak.automotivepartner.user.api.response.UserResponse;
 import com.ciosmak.automotivepartner.user.domain.User;
+import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+@AllArgsConstructor
 @Component
 public class UserMapper
 {
+    private final PasswordEncoder passwordEncoder;
+
     public User toUser(UserRequest userRequest)
     {
-        return new User(userRequest.getFirstName(), userRequest.getLastName(), userRequest.getEmail(), userRequest.getPassword(), userRequest.getPhoneNumber(), userRequest.getRole(), userRequest.getIsEnabled(), userRequest.getIsBlocked());
+        return new User(userRequest.getFirstName(), userRequest.getLastName(), userRequest.getEmail(), passwordEncoder.encode(userRequest.getPassword()), userRequest.getPhoneNumber(), userRequest.getRole(), userRequest.getIsEnabled(), userRequest.getIsBlocked());
     }
 
     public User toUser(User user, UserRequest userRequest)
     {
         user.setFirstName(userRequest.getFirstName());
-        user.setLastName(user.getLastName());
-        user.setEmail(user.getEmail());
-        user.setPassword(user.getPassword());
-        user.setPhoneNumber(user.getPhoneNumber());
-        user.setRole(user.getRole());
-        user.setIsEnabled(user.getIsEnabled());
-        user.setIsBlocked(user.getIsBlocked());
+        user.setLastName(userRequest.getLastName());
+        user.setEmail(userRequest.getEmail());
+        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        user.setPhoneNumber(userRequest.getPhoneNumber());
+        user.setRole(userRequest.getRole());
+        user.setIsEnabled(userRequest.getIsEnabled());
+        user.setIsBlocked(userRequest.getIsBlocked());
         return user;
     }
 
