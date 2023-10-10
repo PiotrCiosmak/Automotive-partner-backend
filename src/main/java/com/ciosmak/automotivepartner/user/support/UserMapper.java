@@ -31,6 +31,12 @@ public class UserMapper
         return user;
     }
 
+    public User toEnabledUser(User user)
+    {
+        user.setIsEnabled(true);
+        return user;
+    }
+
     public UserResponse toUserResponse(User user)
     {
         return new UserResponse(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPassword(), user.getPhoneNumber(), user.getRole(), user.getIsEnabled(), user.getIsBlocked());
