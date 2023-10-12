@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @ToString(onlyExplicitlyIncluded = true)
 
 @Entity
-@Table(name = "tokens")
+@Table(name = "verification-tokens")
 public class VerificationToken extends AbstractEntity
 {
     @ToString.Include
