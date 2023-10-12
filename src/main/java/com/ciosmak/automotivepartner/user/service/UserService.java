@@ -4,6 +4,7 @@ import com.ciosmak.automotivepartner.email.api.request.EmailRequest;
 import com.ciosmak.automotivepartner.email.repository.EmailRepository;
 import com.ciosmak.automotivepartner.email.service.EmailService;
 import com.ciosmak.automotivepartner.shared.event.RegistrationCompleteEvent;
+import com.ciosmak.automotivepartner.shared.utils.Url;
 import com.ciosmak.automotivepartner.user.api.request.UserLoginDataRequest;
 import com.ciosmak.automotivepartner.user.api.request.UserRequest;
 import com.ciosmak.automotivepartner.user.api.response.UserResponse;
@@ -47,7 +48,7 @@ public class UserService implements UserDetailsService
         EmailRequest emailRequest = new EmailRequest(userRequest.getEmail());
         emailService.delete(emailRequest);
 
-        publisher.publishEvent(new RegistrationCompleteEvent(user, applicationUrl(request)));
+        publisher.publishEvent(new RegistrationCompleteEvent(user, Url.applicationUrl(request)));
 
         return userMapper.toUserResponse(user);
     }
@@ -175,11 +176,6 @@ public class UserService implements UserDetailsService
         }
 
         return !(hasLetter && hasDigit && hasSpecialChar);
-    }
-
-    public String applicationUrl(HttpServletRequest request)
-    {
-        return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
     }
 
     public UserResponse login(UserLoginDataRequest userLoginDataRequest)

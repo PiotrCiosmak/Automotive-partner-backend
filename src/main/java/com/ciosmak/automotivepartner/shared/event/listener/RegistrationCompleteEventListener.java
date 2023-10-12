@@ -1,6 +1,7 @@
 package com.ciosmak.automotivepartner.shared.event.listener;
 
 import com.ciosmak.automotivepartner.shared.event.RegistrationCompleteEvent;
+import com.ciosmak.automotivepartner.shared.utils.TokenExpirationTime;
 import com.ciosmak.automotivepartner.token.verification.api.request.VerificationTokenRequest;
 import com.ciosmak.automotivepartner.token.verification.api.response.VerificationTokenResponse;
 import com.ciosmak.automotivepartner.token.verification.service.VerificationTokenService;
@@ -15,7 +16,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Slf4j
@@ -49,16 +49,9 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
 
     private VerificationTokenRequest generateNewVerificationToken(User user)
     {
-        return new VerificationTokenRequest(UUID.randomUUID().toString(), generateTokenExpirationTime(), user.getId());
+        return new VerificationTokenRequest(UUID.randomUUID().toString(), TokenExpirationTime.generateTokenExpirationTime(), user.getId());
     }
 
-    private LocalDateTime generateTokenExpirationTime()
-    {
-        int default_expiration_time = 15;
-
-        LocalDateTime now = LocalDateTime.now();
-        return now.plusMinutes(default_expiration_time);
-    }
 
     private void sendVerificationEmail(String url, User user) throws MessagingException, UnsupportedEncodingException
     {
