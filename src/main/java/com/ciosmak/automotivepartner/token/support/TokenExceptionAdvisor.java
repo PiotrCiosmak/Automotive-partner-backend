@@ -1,7 +1,7 @@
-package com.ciosmak.automotivepartner.token.verification.support;
+package com.ciosmak.automotivepartner.token.support;
 
 import com.ciosmak.automotivepartner.shared.api.response.ErrorMessageResponse;
-import com.ciosmak.automotivepartner.token.verification.support.exception.InvalidVerificationTokenException;
+import com.ciosmak.automotivepartner.token.support.exception.InvalidTokenException;
 import com.ciosmak.automotivepartner.user.support.UserExceptionAdvisor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
 
-public class VerificationTokenExceptionAdvisor
+public class TokenExceptionAdvisor
 {
     private static final Logger LOG = LoggerFactory.getLogger(UserExceptionAdvisor.class);
 
-    @ExceptionHandler(InvalidVerificationTokenException.class)
+    @ExceptionHandler(InvalidTokenException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorMessageResponse invalidVerificationToken(InvalidVerificationTokenException exception)
+    public ErrorMessageResponse invalidToken(InvalidTokenException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getMessage());

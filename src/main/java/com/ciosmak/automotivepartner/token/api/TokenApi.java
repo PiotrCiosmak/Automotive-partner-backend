@@ -1,6 +1,6 @@
-package com.ciosmak.automotivepartner.token.verification.api;
+package com.ciosmak.automotivepartner.token.api;
 
-import com.ciosmak.automotivepartner.token.verification.service.VerificationTokenService;
+import com.ciosmak.automotivepartner.token.service.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -14,16 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "tokens")
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/tokens/verification")
-public class VerificationTokenApi
+@RequestMapping("/api/tokens")
+public class TokenApi
 {
-    private final VerificationTokenService verificationTokenService;
+    private final TokenService tokenService;
 
     @GetMapping("/verify_email")
     @Operation(summary = "Verify email")
     public ResponseEntity<String> verifyEmail(@RequestParam String token)
     {
-        String message = verificationTokenService.verifyEmail(token);
+        String message = tokenService.verifyEmail(token);
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 }

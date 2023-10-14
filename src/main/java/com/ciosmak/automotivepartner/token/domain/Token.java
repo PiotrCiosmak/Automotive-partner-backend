@@ -1,6 +1,7 @@
-package com.ciosmak.automotivepartner.token.verification.domain;
+package com.ciosmak.automotivepartner.token.domain;
 
 import com.ciosmak.automotivepartner.shared.entity.AbstractEntity;
+import com.ciosmak.automotivepartner.token.support.TokenType;
 import com.ciosmak.automotivepartner.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,12 +16,15 @@ import java.time.LocalDateTime;
 @ToString(onlyExplicitlyIncluded = true)
 
 @Entity
-@Table(name = "verification-tokens")
-public class VerificationToken extends AbstractEntity
+@Table(name = "tokens")
+public class Token extends AbstractEntity
 {
     @ToString.Include
     @Column(name = "token", nullable = false)
     private String token;
+
+    @Column(name = "type", nullable = false)
+    private TokenType type;
 
     @Column(name = "expiration_time", columnDefinition = "TIMESTAMP ", nullable = false)
     private LocalDateTime expirationTime;
