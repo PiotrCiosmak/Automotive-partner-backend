@@ -45,7 +45,7 @@ public class CarApi
         return ResponseEntity.status(HttpStatus.OK).body(carResponse);
     }
 
-    @PutMapping("/update_mileage/{id}")
+    @PutMapping("/update-mileage/{id}")
     @Operation(summary = "Update mileage")
     public ResponseEntity<CarResponse> updateMileage(@RequestBody UpdateCarMileageRequest updateCarMileageRequest)
     {
