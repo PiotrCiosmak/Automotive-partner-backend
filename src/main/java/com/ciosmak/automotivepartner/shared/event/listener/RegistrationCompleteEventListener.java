@@ -1,10 +1,10 @@
 package com.ciosmak.automotivepartner.shared.event.listener;
 
 import com.ciosmak.automotivepartner.shared.event.RegistrationCompleteEvent;
-import com.ciosmak.automotivepartner.shared.utils.TokenExpirationTime;
-import com.ciosmak.automotivepartner.token.verification.api.request.VerificationTokenRequest;
-import com.ciosmak.automotivepartner.token.verification.api.response.VerificationTokenResponse;
-import com.ciosmak.automotivepartner.token.verification.service.VerificationTokenService;
+import com.ciosmak.automotivepartner.token.api.request.TokenRequest;
+import com.ciosmak.automotivepartner.token.api.response.TokenResponse;
+import com.ciosmak.automotivepartner.token.service.TokenService;
+import com.ciosmak.automotivepartner.token.support.TokenUtils;
 import com.ciosmak.automotivepartner.user.domain.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -16,14 +16,13 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
-import java.util.UUID;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class RegistrationCompleteEventListener implements ApplicationListener<RegistrationCompleteEvent>
 {
-    private final VerificationTokenService verificationTokenService;
+    private final TokenService tokenService;
     private final JavaMailSender mailSender;
 
     @Override
@@ -31,10 +30,10 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
     {
         User user = event.getUser();
 
-        VerificationTokenRequest verificationTokenRequest = generateNewVerificationToken(user);
-        VerificationTokenResponse verificationTokenResponse = verificationTokenService.save(verificationTokenRequest);
+        TokenRequest tokenRequest = TokenUtils.generateNewVerificationToken(user);
+        TokenResponse tokenResponse = tokenService.save(tokenRequest);
 
-        String url = event.getApplicationUrl() + "/api/tokens/verification/verify_email?token=" + verificationTokenResponse.getToken();
+        String url = event.getApplicationUrl() + "/api/tokens/verify-email?token=" + tokenResponse.getToken();
 
         //TODO zmienić te błedy na moje własne
         try
@@ -47,12 +46,6 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
         }
     }
 
-    private VerificationTokenRequest generateNewVerificationToken(User user)
-    {
-        return new VerificationTokenRequest(UUID.randomUUID().toString(), TokenExpirationTime.generateTokenExpirationTime(), user.getId());
-    }
-
-
     private void sendVerificationEmail(String url, User user) throws MessagingException, UnsupportedEncodingException
     {
         String subject = "Weryfikacja adresu email";
@@ -61,7 +54,28 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
                 "<p>Dziękujemy za rejestrację w naszym serwisie.</p>" +
                 "<p>Proszę kliknąć poniższy link, aby ukończyć proces rejestracji.</p>" +
                 "<a href=\"" + url + "\">Zweryfikuj swój adres e-mail, aby aktywować swoje konto.</a>" +
-                "<p>Dziękujemy<br>AutomotivePartner";
+                "<p>Dziękujemy!<br>AutomotivePartner";
+        emailMessage(subject, senderName, mailContent, user);
+    }
+
+    public void sendPasswordResetEmail(String url, User user) throws MessagingException, UnsupportedEncodingException
+    {
+        String subject = "Zmiana hasła";
+        String senderName = "AutomotivePartner";
+        String mailContent = "<p> Cześć " + user.getFirstName() + ", </p>" +
+                "<p>Otrzymaliśmy Twoją prośbę o zmianę hasła.<p>" + "" +
+                "<p>Proszę kliknij poniższy link, aby zmienić hasło.</p>" +
+                "<a href=\"" + url + "\">Zmień hasło</a>" +
+                "<p>Jeśli prośba o zmianę hasła nie została zgłoszona przez Ciebie, możesz bezpiecznie zignorować tę wiadomość e-mail. Ktoś inny mógł przez pomyłkę wpisać Twój adres e-mail.</p>" +
+                "<p>Dziękujemy!<br>AutomotivePartner";
+
+        emailMessage(subject, senderName, mailContent, user);
+    }
+
+    private void emailMessage(String subject, String senderName,
+                              String mailContent, User user)
+            throws MessagingException, UnsupportedEncodingException
+    {
         MimeMessage message = mailSender.createMimeMessage();
         var messageHelper = new MimeMessageHelper(message);
         messageHelper.setFrom("automotive.partner.biz@gmail.com", senderName);
