@@ -2,7 +2,7 @@ package com.ciosmak.automotivepartner.shared.utils;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-public class Url
+public class UrlUtils
 {
     public static String applicationUrl(HttpServletRequest request)
     {

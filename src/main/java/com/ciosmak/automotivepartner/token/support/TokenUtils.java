@@ -1,7 +1,6 @@
-package com.ciosmak.automotivepartner.shared.utils.token;
+package com.ciosmak.automotivepartner.token.support;
 
 import com.ciosmak.automotivepartner.token.api.request.TokenRequest;
-import com.ciosmak.automotivepartner.token.support.TokenType;
 import com.ciosmak.automotivepartner.user.domain.User;
 
 import java.time.LocalDateTime;
@@ -9,7 +8,6 @@ import java.util.UUID;
 
 public class TokenUtils
 {
-
     private static final int DEFAULT_EXPIRATION_TIME = 10;
 
     public static TokenRequest generateNewVerificationToken(User user)
