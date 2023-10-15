@@ -1,6 +1,7 @@
 package com.ciosmak.automotivepartner.user.support;
 
 import com.ciosmak.automotivepartner.user.api.request.UserRequest;
+import com.ciosmak.automotivepartner.user.api.request.UserRestartPasswordRequest;
 import com.ciosmak.automotivepartner.user.api.response.UserResponse;
 import com.ciosmak.automotivepartner.user.domain.User;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,12 @@ public class UserMapper
         user.setRole(userRequest.getRole());
         user.setIsEnabled(userRequest.getIsEnabled());
         user.setIsBlocked(userRequest.getIsBlocked());
+        return user;
+    }
+
+    public User toUser(User user, UserRestartPasswordRequest userRestartPasswordRequest)
+    {
+        user.setPassword(passwordEncoder.encode(userRestartPasswordRequest.getPassword()));
         return user;
     }
 
