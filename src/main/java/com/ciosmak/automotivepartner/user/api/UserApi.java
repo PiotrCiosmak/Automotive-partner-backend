@@ -2,6 +2,7 @@ package com.ciosmak.automotivepartner.user.api;
 
 import com.ciosmak.automotivepartner.user.api.request.UserLoginDataRequest;
 import com.ciosmak.automotivepartner.user.api.request.UserRequest;
+import com.ciosmak.automotivepartner.user.api.request.UserRestartPasswordRequest;
 import com.ciosmak.automotivepartner.user.api.response.UserResponse;
 import com.ciosmak.automotivepartner.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,11 +39,19 @@ public class UserApi
         return ResponseEntity.status(HttpStatus.OK).body(userResponse);
     }
 
-    @PutMapping("/restart_password")
-    @Operation(summary = "Restart password")
-    public ResponseEntity<String> restartPassword(@RequestBody String emailRequest)
+    @PostMapping("/forgot-password")
+    @Operation(summary = "Forgot password")
+    public ResponseEntity<String> forgotPassword(@RequestBody String emailRequest, final HttpServletRequest request)
     {
-        String message = userService.restartPassword(emailRequest);
+        String message = userService.forgotPassword(emailRequest, request);
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
+
+    @PutMapping("/restart-password")
+    @Operation(summary = "Restart password")
+    public ResponseEntity<String> restartPassword(@RequestBody UserRestartPasswordRequest userRestartPasswordRequest)
+    {
+        String message = userService.restartPassword(userRestartPasswordRequest);
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
@@ -62,7 +71,7 @@ public class UserApi
         return ResponseEntity.status(HttpStatus.OK).body(userResponse);
     }
 
-    @PutMapping("/make_admin/{id}")
+    @PutMapping("/make-admin/{id}")
     @Operation(summary = "Make admin")
     public ResponseEntity<UserResponse> makeAdmin(@PathVariable Long id)
     {
@@ -70,7 +79,7 @@ public class UserApi
         return ResponseEntity.status(HttpStatus.OK).body(userResponse);
     }
 
-    @PutMapping("/make_driver/{id}")
+    @PutMapping("/make-driver/{id}")
     @Operation(summary = "Make driver")
     public ResponseEntity<UserResponse> makeDriver(@PathVariable Long id)
     {
@@ -126,11 +135,12 @@ public class UserApi
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PostMapping("/logout/{id}")
+    //TODO
+    /*@PostMapping("/logout/{id}")
     @Operation(summary = "Logout")
     public ResponseEntity<Void> logout(@PathVariable Long id)
     {
         userService.logout(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
+    }*/
 }
