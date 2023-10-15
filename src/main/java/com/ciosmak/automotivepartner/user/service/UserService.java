@@ -4,15 +4,25 @@ import com.ciosmak.automotivepartner.email.api.request.EmailRequest;
 import com.ciosmak.automotivepartner.email.repository.EmailRepository;
 import com.ciosmak.automotivepartner.email.service.EmailService;
 import com.ciosmak.automotivepartner.shared.event.RegistrationCompleteEvent;
-import com.ciosmak.automotivepartner.shared.utils.Url;
+import com.ciosmak.automotivepartner.shared.event.listener.RegistrationCompleteEventListener;
+import com.ciosmak.automotivepartner.shared.utils.UrlUtils;
+import com.ciosmak.automotivepartner.token.api.request.TokenRequest;
+import com.ciosmak.automotivepartner.token.domain.Token;
+import com.ciosmak.automotivepartner.token.repository.TokenRepository;
+import com.ciosmak.automotivepartner.token.service.TokenService;
+import com.ciosmak.automotivepartner.token.support.TokenExceptionSupplier;
+import com.ciosmak.automotivepartner.token.support.TokenType;
+import com.ciosmak.automotivepartner.token.support.TokenUtils;
 import com.ciosmak.automotivepartner.user.api.request.UserLoginDataRequest;
 import com.ciosmak.automotivepartner.user.api.request.UserRequest;
+import com.ciosmak.automotivepartner.user.api.request.UserRestartPasswordRequest;
 import com.ciosmak.automotivepartner.user.api.response.UserResponse;
 import com.ciosmak.automotivepartner.user.domain.User;
 import com.ciosmak.automotivepartner.user.repository.UserRepository;
 import com.ciosmak.automotivepartner.user.support.Role;
 import com.ciosmak.automotivepartner.user.support.UserExceptionSupplier;
 import com.ciosmak.automotivepartner.user.support.UserMapper;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -22,7 +32,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -32,11 +45,14 @@ import java.util.stream.Collectors;
 public class UserService implements UserDetailsService
 {
     private final UserRepository userRepository;
+    private final TokenRepository tokenRepository;
     private final UserMapper userMapper;
     private final EmailRepository emailRepository;
     private final EmailService emailService;
+    private final TokenService tokenService;
     private final ApplicationEventPublisher publisher;
     private final PasswordEncoder passwordEncoder;
+    private final RegistrationCompleteEventListener registrationCompleteEventListener;
 
     @Transactional
     public UserResponse register(UserRequest userRequest, final HttpServletRequest request)
@@ -48,7 +64,7 @@ public class UserService implements UserDetailsService
         EmailRequest emailRequest = new EmailRequest(userRequest.getEmail());
         emailService.delete(emailRequest);
 
-        publisher.publishEvent(new RegistrationCompleteEvent(user, Url.applicationUrl(request)));
+        publisher.publishEvent(new RegistrationCompleteEvent(user, UrlUtils.applicationUrl(request)));
 
         return userMapper.toUserResponse(user);
     }
@@ -94,15 +110,20 @@ public class UserService implements UserDetailsService
         }
 
         String passwordCandidate = userRequest.getPassword();
-        if (passwordCandidate.isEmpty())
+        checkIfPasswordIsCorrect(passwordCandidate);
+    }
+
+    private void checkIfPasswordIsCorrect(String password)
+    {
+        if (password.isEmpty())
         {
             throw UserExceptionSupplier.emptyPassword().get();
         }
-        if (isPasswordTooShort(passwordCandidate))
+        if (isPasswordTooShort(password))
         {
             throw UserExceptionSupplier.tooShortPassword().get();
         }
-        if (isPasswordWeak(passwordCandidate))
+        if (isPasswordWeak(password))
         {
             throw UserExceptionSupplier.weakPassword().get();
         }
@@ -208,20 +229,68 @@ public class UserService implements UserDetailsService
         return passwordEncoder.matches(password, user.getPassword());
     }
 
-    public String restartPassword(String emailRequest)
+    public String forgotPassword(String emailRequest, final HttpServletRequest request)
     {
         if (emailRequest.isEmpty())
         {
             throw UserExceptionSupplier.emptyEmail().get();
         }
 
-        if (userRepository.findByEmail(emailRequest).isEmpty())
-        {
-            throw UserExceptionSupplier.incorrectEmail().get();
-        }
-        //TODO wywyłanie maila z linkiem do resetu hasła
+        User user = userRepository.findByEmail(emailRequest).orElseThrow(UserExceptionSupplier.incorrectEmail());
 
+        //TODO zmienić na swoje błedy
+        checkIfTokenExists(user);
+        TokenRequest passwordResetTokenRequest = TokenUtils.generateNewPasswordResetToken(user);
+        tokenService.save(passwordResetTokenRequest);
+
+        String url = UrlUtils.applicationUrl(request) + "/api/users/reset-password?token=" + passwordResetTokenRequest.getToken();
+        try
+        {
+            registrationCompleteEventListener.sendPasswordResetEmail(url, user);
+        }
+        catch (MessagingException | UnsupportedEncodingException e)
+        {
+            throw new RuntimeException(e);
+        }
         return "Link do ustawienia nowego hasła został wysłany na podany adres email.";
+    }
+
+    private void checkIfTokenExists(User user)
+    {
+        checkIfValidTokenExists(user);
+        deleteInvalidTokenIfExists(user);
+    }
+
+    private void checkIfValidTokenExists(User user)
+    {
+        Optional<Token> token = tokenRepository.findByUserAndTypeAndExpirationTimeAfter(user, TokenType.PASSWORD_RESET, LocalDateTime.now());
+        if (token.isPresent())
+        {
+            throw TokenExceptionSupplier.notExpiredToken().get();
+        }
+    }
+
+    private void deleteInvalidTokenIfExists(User user)
+    {
+        Optional<Token> token = tokenRepository.findByUserAndTypeAndExpirationTimeBefore(user, TokenType.PASSWORD_RESET, LocalDateTime.now());
+        token.ifPresent(tokenRepository::delete);
+    }
+
+    @Transactional
+    public String restartPassword(UserRestartPasswordRequest userRestartPasswordRequest)
+    {
+        String passwordResetToken = userRestartPasswordRequest.getToken();
+        String password = userRestartPasswordRequest.getPassword();
+        checkIfPasswordIsCorrect(password);
+        boolean isValid = tokenService.isPasswordResetTokenValid(passwordResetToken);
+        if (!isValid)
+        {
+            throw TokenExceptionSupplier.invalidToken().get();
+        }
+        Token token = tokenRepository.findByTokenAndType(passwordResetToken, TokenType.PASSWORD_RESET).orElseThrow(TokenExceptionSupplier.invalidToken());
+        User user = token.getUser();
+        userMapper.toUser(user, userRestartPasswordRequest);
+        return "Hasło zostało zmienione";
     }
 
     @Transactional
@@ -332,11 +401,11 @@ public class UserService implements UserDetailsService
         userRepository.deleteById(user.getId());
     }
 
-    public void logout(Long id)
+    //TODO
+/*    public void logout(Long id)
     {
         userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
-        //TODO logout
-    }
+    }*/
 
     @Override
     public User loadUserByUsername(String email) throws UsernameNotFoundException
