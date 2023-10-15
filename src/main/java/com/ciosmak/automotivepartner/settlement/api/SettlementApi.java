@@ -29,8 +29,8 @@ public class SettlementApi
         return ResponseEntity.status(HttpStatus.OK).body(settlementResponse);
     }
 
-    @PutMapping("/report/{id}")
-    @Operation(summary = "Report")
+    @PutMapping("/report-bug/{id}")
+    @Operation(summary = "Report bug")
     public ResponseEntity<SettlementResponse> reportBug(@PathVariable Long id)
     {
         SettlementResponse settlementResponse = settlementService.reportBug(id);
