@@ -1,8 +1,8 @@
 package com.ciosmak.automotivepartner.user.api;
 
+import com.ciosmak.automotivepartner.user.api.request.UserChangePasswordRequest;
 import com.ciosmak.automotivepartner.user.api.request.UserLoginDataRequest;
 import com.ciosmak.automotivepartner.user.api.request.UserRequest;
-import com.ciosmak.automotivepartner.user.api.request.UserRestartPasswordRequest;
 import com.ciosmak.automotivepartner.user.api.response.UserResponse;
 import com.ciosmak.automotivepartner.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,11 +47,11 @@ public class UserApi
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
-    @PutMapping("/restart-password")
-    @Operation(summary = "Restart password")
-    public ResponseEntity<String> restartPassword(@RequestBody UserRestartPasswordRequest userRestartPasswordRequest)
+    @PutMapping("/change-password")
+    @Operation(summary = "Change password")
+    public ResponseEntity<String> changePassword(@RequestBody UserChangePasswordRequest userChangePasswordRequest)
     {
-        String message = userService.restartPassword(userRestartPasswordRequest);
+        String message = userService.changePassword(userChangePasswordRequest);
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 

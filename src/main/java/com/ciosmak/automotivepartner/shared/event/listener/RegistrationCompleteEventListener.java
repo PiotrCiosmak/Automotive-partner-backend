@@ -58,7 +58,7 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
         emailMessage(subject, senderName, mailContent, user);
     }
 
-    public void sendPasswordResetEmail(String url, User user) throws MessagingException, UnsupportedEncodingException
+    public void sendChangePasswordEmail(String url, User user) throws MessagingException, UnsupportedEncodingException
     {
         String subject = "Zmiana hasła";
         String senderName = "AutomotivePartner";

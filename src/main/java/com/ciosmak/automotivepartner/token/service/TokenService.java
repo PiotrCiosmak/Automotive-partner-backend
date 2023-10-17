@@ -59,13 +59,13 @@ public class TokenService
         return "Adres email został zweryfikowany poprawnie. Już możesz się zalogowac na swoje konto.";
     }
 
-    public boolean isPasswordResetTokenValid(String token)
+    public boolean isChangePasswordTokenValid(String token)
     {
-        Token passwordResetToken = tokenRepository.findByTokenAndType(token, TokenType.PASSWORD_RESET).orElseThrow(TokenExceptionSupplier.invalidToken());
+        Token changePasswordToken = tokenRepository.findByTokenAndType(token, TokenType.CHANGE_PASSWORD).orElseThrow(TokenExceptionSupplier.invalidToken());
 
-        if (!isValid(passwordResetToken))
+        if (!isValid(changePasswordToken))
         {
-            tokenRepository.delete(passwordResetToken);
+            tokenRepository.delete(changePasswordToken);
             return false;
         }
         return true;

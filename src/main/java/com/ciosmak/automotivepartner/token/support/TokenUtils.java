@@ -15,9 +15,9 @@ public class TokenUtils
         return new TokenRequest(UUID.randomUUID().toString(), TokenType.VERIFICATION, generateTokenExpirationTime(), user.getId());
     }
 
-    public static TokenRequest generateNewPasswordResetToken(User user)
+    public static TokenRequest generateNewChangePasswordToken(User user)
     {
-        return new TokenRequest(UUID.randomUUID().toString(), TokenType.PASSWORD_RESET, generateTokenExpirationTime(), user.getId());
+        return new TokenRequest(UUID.randomUUID().toString(), TokenType.CHANGE_PASSWORD, generateTokenExpirationTime(), user.getId());
     }
 
     public static LocalDateTime generateTokenExpirationTime()

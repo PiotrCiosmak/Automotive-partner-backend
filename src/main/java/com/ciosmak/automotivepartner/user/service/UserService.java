@@ -13,9 +13,9 @@ import com.ciosmak.automotivepartner.token.service.TokenService;
 import com.ciosmak.automotivepartner.token.support.TokenExceptionSupplier;
 import com.ciosmak.automotivepartner.token.support.TokenType;
 import com.ciosmak.automotivepartner.token.support.TokenUtils;
+import com.ciosmak.automotivepartner.user.api.request.UserChangePasswordRequest;
 import com.ciosmak.automotivepartner.user.api.request.UserLoginDataRequest;
 import com.ciosmak.automotivepartner.user.api.request.UserRequest;
-import com.ciosmak.automotivepartner.user.api.request.UserRestartPasswordRequest;
 import com.ciosmak.automotivepartner.user.api.response.UserResponse;
 import com.ciosmak.automotivepartner.user.domain.User;
 import com.ciosmak.automotivepartner.user.repository.UserRepository;
@@ -240,13 +240,13 @@ public class UserService implements UserDetailsService
 
         //TODO zmienić na swoje błedy
         checkIfTokenExists(user);
-        TokenRequest passwordResetTokenRequest = TokenUtils.generateNewPasswordResetToken(user);
-        tokenService.save(passwordResetTokenRequest);
+        TokenRequest changePasswordTokenRequest = TokenUtils.generateNewChangePasswordToken(user);
+        tokenService.save(changePasswordTokenRequest);
 
-        String url = UrlUtils.applicationUrl(request) + "/api/users/reset-password?token=" + passwordResetTokenRequest.getToken();
+        String url = UrlUtils.applicationUrl(request) + "/api/users/change-password?token=" + changePasswordTokenRequest.getToken();
         try
         {
-            registrationCompleteEventListener.sendPasswordResetEmail(url, user);
+            registrationCompleteEventListener.sendChangePasswordEmail(url, user);
         }
         catch (MessagingException | UnsupportedEncodingException e)
         {
@@ -263,7 +263,7 @@ public class UserService implements UserDetailsService
 
     private void checkIfValidTokenExists(User user)
     {
-        Optional<Token> token = tokenRepository.findByUserAndTypeAndExpirationTimeAfter(user, TokenType.PASSWORD_RESET, LocalDateTime.now());
+        Optional<Token> token = tokenRepository.findByUserAndTypeAndExpirationTimeAfter(user, TokenType.CHANGE_PASSWORD, LocalDateTime.now());
         if (token.isPresent())
         {
             throw TokenExceptionSupplier.notExpiredToken().get();
@@ -272,24 +272,24 @@ public class UserService implements UserDetailsService
 
     private void deleteInvalidTokenIfExists(User user)
     {
-        Optional<Token> token = tokenRepository.findByUserAndTypeAndExpirationTimeBefore(user, TokenType.PASSWORD_RESET, LocalDateTime.now());
+        Optional<Token> token = tokenRepository.findByUserAndTypeAndExpirationTimeBefore(user, TokenType.CHANGE_PASSWORD, LocalDateTime.now());
         token.ifPresent(tokenRepository::delete);
     }
 
     @Transactional
-    public String restartPassword(UserRestartPasswordRequest userRestartPasswordRequest)
+    public String changePassword(UserChangePasswordRequest userChangePasswordRequest)
     {
-        String passwordResetToken = userRestartPasswordRequest.getToken();
-        String password = userRestartPasswordRequest.getPassword();
+        String changePasswordToken = userChangePasswordRequest.getToken();
+        String password = userChangePasswordRequest.getPassword();
         checkIfPasswordIsCorrect(password);
-        boolean isValid = tokenService.isPasswordResetTokenValid(passwordResetToken);
+        boolean isValid = tokenService.isChangePasswordTokenValid(changePasswordToken);
         if (!isValid)
         {
             throw TokenExceptionSupplier.invalidToken().get();
         }
-        Token token = tokenRepository.findByTokenAndType(passwordResetToken, TokenType.PASSWORD_RESET).orElseThrow(TokenExceptionSupplier.invalidToken());
+        Token token = tokenRepository.findByTokenAndType(changePasswordToken, TokenType.CHANGE_PASSWORD).orElseThrow(TokenExceptionSupplier.invalidToken());
         User user = token.getUser();
-        userMapper.toUser(user, userRestartPasswordRequest);
+        userMapper.toUser(user, userChangePasswordRequest);
         return "Hasło zostało zmienione";
     }
 

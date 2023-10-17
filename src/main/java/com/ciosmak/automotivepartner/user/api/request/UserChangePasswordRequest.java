@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 
 @Getter
-public class UserRestartPasswordRequest
+public class UserChangePasswordRequest
 {
     private final String token;
     private final String password;
 
     @JsonCreator
-    public UserRestartPasswordRequest(String token, String password)
+    public UserChangePasswordRequest(String token, String password)
     {
         this.token = token;
         this.password = password;

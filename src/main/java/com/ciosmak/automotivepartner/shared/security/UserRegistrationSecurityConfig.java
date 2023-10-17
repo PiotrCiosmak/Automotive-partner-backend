@@ -34,7 +34,7 @@ public class UserRegistrationSecurityConfig
                         "/api/users/register/**",
                         "/api/users/login/**",
                         "/api/users/forgot-password/**",
-                        "/api/users/restart-password/**",
+                        "/api/users/change-password/**",
                         "/swagger-ui/**",
                         "/v3/api-docs/**")//TODO usunać swagger i v3 podczas releasu apki
                 .anonymous()
