@@ -1,7 +1,7 @@
 package com.ciosmak.automotivepartner.shift.repository;
 
-import com.ciosmak.automotivepartner.shift.support.Type;
 import com.ciosmak.automotivepartner.shift.domain.Shift;
+import com.ciosmak.automotivepartner.shift.support.Type;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,4 +17,6 @@ public interface ShiftRepository extends JpaRepository<Shift, Long>
     Optional<Shift> findByUser_IdAndDateAndType(Long userId, LocalDate date, Type type);
 
     List<Shift> findAllByDateAndType(LocalDate date, Type type);
+
+    List<Shift> findAllByCarId(Long carId);
 }

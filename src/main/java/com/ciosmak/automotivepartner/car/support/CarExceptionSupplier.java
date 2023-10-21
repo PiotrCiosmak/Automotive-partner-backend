@@ -13,6 +13,11 @@ public class CarExceptionSupplier
         return CarAlreadyBlockedException::new;
     }
 
+    public static Supplier<CarAssignedToShiftException> carAssignedToShift()
+    {
+        return CarAssignedToShiftException::new;
+    }
+
     public static Supplier<CarNotBlockedException> carNotBlocked()
     {
         return CarNotBlockedException::new;

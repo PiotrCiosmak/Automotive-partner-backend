@@ -7,6 +7,8 @@ import com.ciosmak.automotivepartner.car.domain.Car;
 import com.ciosmak.automotivepartner.car.repository.CarRepository;
 import com.ciosmak.automotivepartner.car.support.CarExceptionSupplier;
 import com.ciosmak.automotivepartner.car.support.CarMapper;
+import com.ciosmak.automotivepartner.shift.domain.Shift;
+import com.ciosmak.automotivepartner.shift.repository.ShiftRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ public class CarService
 {
     private final CarRepository carRepository;
     private final CarMapper carMapper;
+    private final ShiftRepository shiftRepository;
 
     @Transactional
     public CarResponse add(CarRequest carRequest)
@@ -172,6 +175,15 @@ public class CarService
     public void delete(Long id)
     {
         Car car = carRepository.findById(id).orElseThrow(CarExceptionSupplier.carNotFound(id));
+        checkIfCarIsNotAssignedToAnyShifty(shiftRepository.findAllByCarId(car.getId()));
         carRepository.deleteById(car.getId());
+    }
+
+    private void checkIfCarIsNotAssignedToAnyShifty(List<Shift> shifts)
+    {
+        if (!shifts.isEmpty())
+        {
+            throw CarExceptionSupplier.carAssignedToShift().get();
+        }
     }
 }

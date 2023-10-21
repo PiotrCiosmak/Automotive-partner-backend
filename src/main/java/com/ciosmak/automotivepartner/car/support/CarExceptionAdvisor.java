@@ -26,6 +26,15 @@ public class CarExceptionAdvisor
         return new ErrorMessageResponse(exception.getLocalizedMessage());
     }
 
+    @ExceptionHandler(CarAssignedToShiftException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse carAssignedToShift(CarAssignedToShiftException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getLocalizedMessage());
+    }
+
     @ExceptionHandler(CarNotBlockedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
