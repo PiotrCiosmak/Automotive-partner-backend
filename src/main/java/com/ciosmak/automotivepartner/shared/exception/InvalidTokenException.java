@@ -1,4 +1,4 @@
-package com.ciosmak.automotivepartner.token.support.exception;
+package com.ciosmak.automotivepartner.shared.exception;
 
 public class InvalidTokenException extends RuntimeException
 {

@@ -5,6 +5,7 @@ import com.ciosmak.automotivepartner.settlement.domain.Settlement;
 import com.ciosmak.automotivepartner.shared.entity.AbstractEntity;
 import com.ciosmak.automotivepartner.shift.domain.Shift;
 import com.ciosmak.automotivepartner.statistic.domain.Statistics;
+import com.ciosmak.automotivepartner.token.domain.Token;
 import com.ciosmak.automotivepartner.user.support.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -86,6 +87,10 @@ public class User extends AbstractEntity implements UserDetails
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private List<Shift> shifts = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    private List<Token> tokens = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities()

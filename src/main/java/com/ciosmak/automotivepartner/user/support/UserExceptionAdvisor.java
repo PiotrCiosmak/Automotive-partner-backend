@@ -3,6 +3,7 @@ package com.ciosmak.automotivepartner.user.support;
 import com.ciosmak.automotivepartner.shared.api.response.ErrorMessageResponse;
 import com.ciosmak.automotivepartner.shared.exception.EmptyEmailException;
 import com.ciosmak.automotivepartner.shared.exception.IncorrectEmailException;
+import com.ciosmak.automotivepartner.shared.exception.InvalidTokenException;
 import com.ciosmak.automotivepartner.user.support.exception.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,10 +81,10 @@ public class UserExceptionAdvisor
         return new ErrorMessageResponse(exception.getMessage());
     }
 
-    @ExceptionHandler(IncorrectLoginDataException.class)
+    @ExceptionHandler(IncorrectPasswordException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorMessageResponse incorrectLoginData(IncorrectLoginDataException exception)
+    public ErrorMessageResponse incorrectPassword(IncorrectPasswordException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getMessage());
@@ -183,6 +184,15 @@ public class UserExceptionAdvisor
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorMessageResponse weakPassword(WeakPasswordException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getMessage());
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse invalidToken(InvalidTokenException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getMessage());

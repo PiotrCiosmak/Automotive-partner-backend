@@ -87,7 +87,7 @@ public class UserRegistrationSecurityConfig
                 .hasAnyAuthority("ADMIN")
                 .and()
                 .formLogin()
-                .loginPage("/api/users/login")//TODO OKREŚLA STRONE LOGOWANIA
+                //.loginPage("/api/users/login")//TODO OKREŚLA STRONE LOGOWANIA
                 .defaultSuccessUrl("/")
                 .permitAll()
                 .and()

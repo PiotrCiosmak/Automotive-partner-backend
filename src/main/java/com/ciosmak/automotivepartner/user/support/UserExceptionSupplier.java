@@ -2,6 +2,7 @@ package com.ciosmak.automotivepartner.user.support;
 
 import com.ciosmak.automotivepartner.shared.exception.EmptyEmailException;
 import com.ciosmak.automotivepartner.shared.exception.IncorrectEmailException;
+import com.ciosmak.automotivepartner.shared.exception.InvalidTokenException;
 import com.ciosmak.automotivepartner.user.support.exception.*;
 
 import java.util.function.Supplier;
@@ -43,9 +44,9 @@ public class UserExceptionSupplier
         return IncorrectEmailException::new;
     }
 
-    public static Supplier<IncorrectLoginDataException> incorrectLoginData()
+    public static Supplier<IncorrectPasswordException> incorrectPassword()
     {
-        return IncorrectLoginDataException::new;
+        return IncorrectPasswordException::new;
     }
 
     public static Supplier<IncorrectPhoneNumberException> incorrectPhoneNumber()
@@ -101,5 +102,10 @@ public class UserExceptionSupplier
     public static Supplier<WeakPasswordException> weakPassword()
     {
         return WeakPasswordException::new;
+    }
+
+    public static Supplier<InvalidTokenException> invalidToken()
+    {
+        return InvalidTokenException::new;
     }
 }

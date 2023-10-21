@@ -89,8 +89,8 @@ public class AccidentService
 
         if (accidentRequest.getIsEndOfWork())
         {
-            accidentRequest.getMileagePhotoUrl().orElseThrow(ShiftExceptionSupplier.emptyMileagePhoto());
-            Integer mileage = accidentRequest.getMileage().orElseThrow(ShiftExceptionSupplier.emptyMileagePhoto());
+            accidentRequest.getMileagePhotoUrl().orElseThrow(AccidentExceptionSupplier.emptyMileagePhoto());
+            Integer mileage = accidentRequest.getMileage().orElseThrow(AccidentExceptionSupplier.emptyMileage());
             checkIfMileageIsCorrect(startMileage, mileage);
         }
     }
@@ -147,17 +147,17 @@ public class AccidentService
     {
         if (oldMileage == null || newMileage == null)
         {
-            throw ShiftExceptionSupplier.emptyMileage().get();
+            throw AccidentExceptionSupplier.emptyMileage().get();
         }
 
         if (isMileageIncorrect(oldMileage) || isMileageIncorrect(newMileage))
         {
-            throw ShiftExceptionSupplier.incorrectMileage().get();
+            throw AccidentExceptionSupplier.incorrectMileage().get();
         }
 
         if (oldMileage > newMileage)
         {
-            throw ShiftExceptionSupplier.incorrectMileage().get();
+            throw AccidentExceptionSupplier.incorrectMileage().get();
         }
     }
 

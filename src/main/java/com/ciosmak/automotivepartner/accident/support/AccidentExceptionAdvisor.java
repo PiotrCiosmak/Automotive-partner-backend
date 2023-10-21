@@ -4,6 +4,9 @@ import com.ciosmak.automotivepartner.accident.support.exception.AccidentNotFound
 import com.ciosmak.automotivepartner.accident.support.exception.AccidentPhotosNotFoundException;
 import com.ciosmak.automotivepartner.accident.support.exception.DocumentPhotosNotFoundException;
 import com.ciosmak.automotivepartner.shared.api.response.ErrorMessageResponse;
+import com.ciosmak.automotivepartner.shared.exception.EmptyMileageException;
+import com.ciosmak.automotivepartner.shared.exception.EmptyMileagePhotoException;
+import com.ciosmak.automotivepartner.shared.exception.IncorrectMileageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -39,6 +42,33 @@ public class AccidentExceptionAdvisor
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public ErrorMessageResponse documentPhotosNotFound(DocumentPhotosNotFoundException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getLocalizedMessage());
+    }
+
+    @ExceptionHandler(EmptyMileagePhotoException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse emptyMileagePhoto(EmptyMileagePhotoException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getLocalizedMessage());
+    }
+
+    @ExceptionHandler(EmptyMileageException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse emptyMileage(EmptyMileageException exception)
+    {
+        LOG.error(exception.getMessage(), exception);
+        return new ErrorMessageResponse(exception.getLocalizedMessage());
+    }
+
+    @ExceptionHandler(IncorrectMileageException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse incorrectMileage(IncorrectMileageException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getLocalizedMessage());

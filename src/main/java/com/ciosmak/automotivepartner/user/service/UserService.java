@@ -201,12 +201,12 @@ public class UserService implements UserDetailsService
 
     public UserResponse login(UserLoginDataRequest userLoginDataRequest)
     {
-        User user = userRepository.findByEmail(userLoginDataRequest.getEmail()).orElseThrow(UserExceptionSupplier.incorrectLoginData());
+        User user = userRepository.findByEmail(userLoginDataRequest.getEmail()).orElseThrow(UserExceptionSupplier.incorrectEmail());
 
         boolean isPasswordCorrect = isPasswordCorrect(userLoginDataRequest.getPassword(), user);
         if (!isPasswordCorrect)
         {
-            throw UserExceptionSupplier.incorrectLoginData().get();
+            throw UserExceptionSupplier.incorrectPassword().get();
         }
 
         boolean isEnabled = user.getIsEnabled();
@@ -266,7 +266,7 @@ public class UserService implements UserDetailsService
         Optional<Token> token = tokenRepository.findByUserAndTypeAndExpirationTimeAfter(user, TokenType.CHANGE_PASSWORD, LocalDateTime.now());
         if (token.isPresent())
         {
-            throw TokenExceptionSupplier.notExpiredToken().get();
+            throw TokenExceptionSupplier.notExpiredChangePasswordToken().get();
         }
     }
 
@@ -280,14 +280,14 @@ public class UserService implements UserDetailsService
     public String changePassword(UserChangePasswordRequest userChangePasswordRequest)
     {
         String changePasswordToken = userChangePasswordRequest.getToken();
-        String password = userChangePasswordRequest.getPassword();
-        checkIfPasswordIsCorrect(password);
         boolean isValid = tokenService.isChangePasswordTokenValid(changePasswordToken);
         if (!isValid)
         {
-            throw TokenExceptionSupplier.invalidToken().get();
+            throw TokenExceptionSupplier.expiredChangePasswordToken().get();
         }
-        Token token = tokenRepository.findByTokenAndType(changePasswordToken, TokenType.CHANGE_PASSWORD).orElseThrow(TokenExceptionSupplier.invalidToken());
+        String password = userChangePasswordRequest.getPassword();
+        checkIfPasswordIsCorrect(password);
+        Token token = tokenRepository.findByTokenAndType(changePasswordToken, TokenType.CHANGE_PASSWORD).orElseThrow(UserExceptionSupplier.invalidToken());
         User user = token.getUser();
         userMapper.toUser(user, userChangePasswordRequest);
         return "Hasło zostało zmienione";

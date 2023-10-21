@@ -1,4 +1,4 @@
-package com.ciosmak.automotivepartner.shift.support.exception;
+package com.ciosmak.automotivepartner.shared.exception;
 
 public class EmptyMileagePhotoException extends RuntimeException
 {

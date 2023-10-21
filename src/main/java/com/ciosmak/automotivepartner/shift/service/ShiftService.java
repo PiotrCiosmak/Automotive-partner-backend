@@ -130,14 +130,14 @@ public class ShiftService
         userRepository.findById(startShiftRequest.getUserId()).orElseThrow(UserExceptionSupplier.userNotFound(startShiftRequest.getUserId()));
         Shift shift = shiftRepository.findByUser_IdAndDateAndType(startShiftRequest.getUserId(), startShiftRequest.getDate(), startShiftRequest.getType()).orElseThrow(ShiftExceptionSupplier.shiftStart(startShiftRequest.getUserId(), startShiftRequest.getDate(), startShiftRequest.getType()));
 
-        if (shift.getIsStarted())
-        {
-            throw ShiftExceptionSupplier.shiftAlreadyStarted(shift.getId()).get();
-        }
-
         if (shift.getIsDone())
         {
             throw ShiftExceptionSupplier.shiftAlreadyDone(shift.getId()).get();
+        }
+
+        if (shift.getIsStarted())
+        {
+            throw ShiftExceptionSupplier.shiftAlreadyStarted(shift.getId()).get();
         }
 
         if (!canShiftBeStartedToday(shift.getDate()))

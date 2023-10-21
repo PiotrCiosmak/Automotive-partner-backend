@@ -64,10 +64,6 @@ public class EmailService
         return emailRepository.findByEmail(email).isPresent();
     }
 
-    private Boolean isEmailEmpty(String email)
-    {
-        return email.isEmpty();
-    }
 
     private Boolean isEmailIncorrect(String email)
     {
@@ -89,7 +85,19 @@ public class EmailService
     @Transactional
     public void delete(EmailRequest emailRequest)
     {
-        Email email = emailRepository.findByEmail(emailRequest.getEmail()).orElseThrow(EmailExceptionSupplier.incorrectEmail());
+        String emailCandidate = emailRequest.getEmail();
+
+        if (isEmailEmpty(emailCandidate))
+        {
+            throw EmailExceptionSupplier.emptyEmail().get();
+        }
+
+        Email email = emailRepository.findByEmail(emailCandidate).orElseThrow(EmailExceptionSupplier.incorrectEmail());
         emailRepository.delete(email);
+    }
+
+    private Boolean isEmailEmpty(String email)
+    {
+        return email.isEmpty();
     }
 }

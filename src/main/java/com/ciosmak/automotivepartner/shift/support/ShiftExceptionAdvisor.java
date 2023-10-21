@@ -2,6 +2,7 @@ package com.ciosmak.automotivepartner.shift.support;
 
 import com.ciosmak.automotivepartner.shared.api.response.ErrorMessageResponse;
 import com.ciosmak.automotivepartner.shared.exception.EmptyMileageException;
+import com.ciosmak.automotivepartner.shared.exception.EmptyMileagePhotoException;
 import com.ciosmak.automotivepartner.shared.exception.IncorrectMileageException;
 import com.ciosmak.automotivepartner.shift.support.exception.*;
 import org.slf4j.Logger;

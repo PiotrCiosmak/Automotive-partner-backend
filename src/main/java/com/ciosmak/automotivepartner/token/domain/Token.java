@@ -29,7 +29,7 @@ public class Token extends AbstractEntity
     @Column(name = "expiration_time", columnDefinition = "TIMESTAMP ", nullable = false)
     private LocalDateTime expirationTime;
 
-    @OneToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "user_id")
     private User user;
 }
