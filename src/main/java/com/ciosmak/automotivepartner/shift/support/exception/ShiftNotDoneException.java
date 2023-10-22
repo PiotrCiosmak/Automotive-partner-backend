@@ -2,8 +2,10 @@ package com.ciosmak.automotivepartner.shift.support.exception;
 
 public class ShiftNotDoneException extends RuntimeException
 {
+    public Object[] properties;
+
     public ShiftNotDoneException(Long id)
     {
-        super(String.format("Zmiana od id %d nie została jeszcze zakończona.", id));
+        properties = new Object[]{id};
     }
 }

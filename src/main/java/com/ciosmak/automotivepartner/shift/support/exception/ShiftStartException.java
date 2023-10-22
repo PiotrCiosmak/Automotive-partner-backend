@@ -6,8 +6,10 @@ import java.time.LocalDate;
 
 public class ShiftStartException extends RuntimeException
 {
+    public Object[] properties;
+
     public ShiftStartException(Long userId, LocalDate date, Type type)
     {
-        super(String.format("Użytkownik o id %d nie został przydzielony do rozpoczęcia zmiany %s %s.", userId, date, type));
+        properties = new Object[]{userId, date, type};
     }
 }

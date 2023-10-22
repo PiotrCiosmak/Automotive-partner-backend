@@ -1,4 +1,4 @@
-package com.ciosmak.automotivepartner.user.support.exception;
+package com.ciosmak.automotivepartner.shared.exception;
 
 public class EmailTakenException extends RuntimeException
 {

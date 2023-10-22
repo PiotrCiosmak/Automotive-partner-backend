@@ -2,8 +2,10 @@ package com.ciosmak.automotivepartner.user.support.exception;
 
 public class UserNotFoundException extends RuntimeException
 {
+    public Object[] properties;
+
     public UserNotFoundException(Long id)
     {
-        super(String.format("Brak użytkownika o id %d.", id));
+        properties = new Object[]{id};
     }
 }

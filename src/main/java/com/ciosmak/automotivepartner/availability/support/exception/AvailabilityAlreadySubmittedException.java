@@ -2,8 +2,10 @@ package com.ciosmak.automotivepartner.availability.support.exception;
 
 public class AvailabilityAlreadySubmittedException extends RuntimeException
 {
-    public AvailabilityAlreadySubmittedException(String firsName, String LastName)
+    public Object[] properties;
+
+    public AvailabilityAlreadySubmittedException(String firstName, String lastName)
     {
-        super(String.format("Dyspozycyjność na następny tydzień została już złożona przez %s %s.", firsName, LastName));
+        properties = new Object[]{firstName, lastName};
     }
 }
