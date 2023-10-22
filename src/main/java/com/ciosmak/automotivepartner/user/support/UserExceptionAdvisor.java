@@ -28,6 +28,16 @@ public class UserExceptionAdvisor
     @ExceptionHandler(EmailTakenException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     @ResponseBody
+    public ErrorMessageResponse changePasswordLinkSend(ChangePasswordLinkSendException exception)
+    {
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
+    }
+
+    @ExceptionHandler(EmailTakenException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseBody
     public ErrorMessageResponse emailTaken(EmailTakenException exception)
     {
         String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());

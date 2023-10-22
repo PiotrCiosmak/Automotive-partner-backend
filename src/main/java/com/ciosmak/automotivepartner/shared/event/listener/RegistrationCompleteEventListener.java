@@ -6,6 +6,7 @@ import com.ciosmak.automotivepartner.token.api.response.TokenResponse;
 import com.ciosmak.automotivepartner.token.service.TokenService;
 import com.ciosmak.automotivepartner.token.support.TokenUtils;
 import com.ciosmak.automotivepartner.user.domain.User;
+import com.ciosmak.automotivepartner.user.support.UserExceptionSupplier;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -38,18 +39,10 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
 
         String url = event.getApplicationUrl() + "/api/tokens/verify-email?token=" + tokenResponse.getToken();
 
-        //TODO zmienić te błedy na moje własne
-        try
-        {
-            sendVerificationEmail(url, user);
-        }
-        catch (MessagingException | UnsupportedEncodingException e)
-        {
-            throw new RuntimeException(e);
-        }
+        sendVerificationEmail(url, user);
     }
 
-    private void sendVerificationEmail(String url, User user) throws MessagingException, UnsupportedEncodingException
+    private void sendVerificationEmail(String url, User user)
     {
         String subject = messageSource.getMessage("VerificationEmailSubject", null, LocaleContextHolder.getLocale());
         String senderName = messageSource.getMessage("EmailSenderName", null, LocaleContextHolder.getLocale());
@@ -58,7 +51,7 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
         emailMessage(subject, senderName, mailContent, user);
     }
 
-    public void sendChangePasswordEmail(String url, User user) throws MessagingException, UnsupportedEncodingException
+    public void sendChangePasswordEmail(String url, User user)
     {
         String subject = messageSource.getMessage("ChangePasswordEmailSubject", null, LocaleContextHolder.getLocale());
         String senderName = messageSource.getMessage("EmailSenderName", null, LocaleContextHolder.getLocale());
@@ -69,14 +62,21 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
 
     private void emailMessage(String subject, String senderName,
                               String mailContent, User user)
-            throws MessagingException, UnsupportedEncodingException
     {
         MimeMessage message = mailSender.createMimeMessage();
         var messageHelper = new MimeMessageHelper(message);
-        messageHelper.setFrom(messageSource.getMessage("Email", null, LocaleContextHolder.getLocale()), senderName);
-        messageHelper.setTo(user.getEmail());
-        messageHelper.setSubject(subject);
-        messageHelper.setText(mailContent, true);
+        try
+        {
+            messageHelper.setFrom(messageSource.getMessage("Email", null, LocaleContextHolder.getLocale()), senderName);
+            messageHelper.setTo(user.getEmail());
+            messageHelper.setSubject(subject);
+            messageHelper.setText(mailContent, true);
+        }
+        catch (MessagingException | UnsupportedEncodingException e)
+        {
+            throw UserExceptionSupplier.changePasswordLinkSend().get();
+        }
+
         mailSender.send(message);
     }
 }

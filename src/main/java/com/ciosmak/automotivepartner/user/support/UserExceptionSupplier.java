@@ -9,6 +9,11 @@ import java.util.function.Supplier;
 
 public class UserExceptionSupplier
 {
+    public static Supplier<ChangePasswordLinkSendException> changePasswordLinkSend()
+    {
+        return ChangePasswordLinkSendException::new;
+    }
+
     public static Supplier<EmailTakenException> emailTaken(String email)
     {
         return () -> new EmailTakenException(email);

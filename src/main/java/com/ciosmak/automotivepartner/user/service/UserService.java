@@ -22,17 +22,14 @@ import com.ciosmak.automotivepartner.user.repository.UserRepository;
 import com.ciosmak.automotivepartner.user.support.Role;
 import com.ciosmak.automotivepartner.user.support.UserExceptionSupplier;
 import com.ciosmak.automotivepartner.user.support.UserMapper;
-import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -238,7 +235,6 @@ public class UserService implements UserDetailsService
 
         User user = userRepository.findByEmail(emailRequest).orElseThrow(UserExceptionSupplier.incorrectEmail());
 
-        //TODO zmienić na swoje błedy
         checkIfTokenExists(user);
         checkIfUserIsEnabled(user);
 
@@ -247,14 +243,7 @@ public class UserService implements UserDetailsService
 
 
         String url = Utils.applicationUrl(request) + "/api/users/change-password?token=" + changePasswordTokenRequest.getToken();
-        try
-        {
-            registrationCompleteEventListener.sendChangePasswordEmail(url, user);
-        }
-        catch (MessagingException | UnsupportedEncodingException e)
-        {
-            throw new RuntimeException(e);
-        }
+        registrationCompleteEventListener.sendChangePasswordEmail(url, user);
         return "Link do ustawienia nowego hasła został wysłany na podany adres email.";
     }
 
@@ -419,7 +408,7 @@ public class UserService implements UserDetailsService
     }*/
 
     @Override
-    public User loadUserByUsername(String email) throws UsernameNotFoundException
+    public User loadUserByUsername(String email)
     {
         return userRepository.findByEmail(email).orElseThrow(UserExceptionSupplier.incorrectEmail());
     }
