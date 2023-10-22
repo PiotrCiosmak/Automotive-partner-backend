@@ -135,6 +135,16 @@ public class UserExceptionAdvisor
         return new ErrorMessageResponse(errorMessage);
     }
 
+    @ExceptionHandler(UnverifiedAccountForgotPasswordException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse unverifiedAccountForgotPassword(UnverifiedAccountForgotPasswordException exception)
+    {
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
+    }
+
     @ExceptionHandler(UserAlreadyAdminException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody

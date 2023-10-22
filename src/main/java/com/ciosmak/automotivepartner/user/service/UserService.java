@@ -240,8 +240,11 @@ public class UserService implements UserDetailsService
 
         //TODO zmienić na swoje błedy
         checkIfTokenExists(user);
+        checkIfUserIsEnabled(user);
+
         TokenRequest changePasswordTokenRequest = TokenUtils.generateNewChangePasswordToken(user);
         tokenService.save(changePasswordTokenRequest);
+
 
         String url = Utils.applicationUrl(request) + "/api/users/change-password?token=" + changePasswordTokenRequest.getToken();
         try
@@ -274,6 +277,14 @@ public class UserService implements UserDetailsService
     {
         Optional<Token> token = tokenRepository.findByUserAndTypeAndExpirationTimeBefore(user, TokenType.CHANGE_PASSWORD, LocalDateTime.now());
         token.ifPresent(tokenRepository::delete);
+    }
+
+    private void checkIfUserIsEnabled(User user)
+    {
+        if (!user.getIsEnabled())
+        {
+            throw UserExceptionSupplier.unverifiedAccountForgotPassword().get();
+        }
     }
 
     @Transactional

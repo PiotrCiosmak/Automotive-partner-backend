@@ -64,6 +64,11 @@ public class UserExceptionSupplier
         return () -> new UnapprovedEmailException(email);
     }
 
+    public static Supplier<UnverifiedAccountForgotPasswordException> unverifiedAccountForgotPassword()
+    {
+        return UnverifiedAccountForgotPasswordException::new;
+    }
+
     public static Supplier<UserAlreadyAdminException> userAlreadyAdmin()
     {
         return UserAlreadyAdminException::new;
