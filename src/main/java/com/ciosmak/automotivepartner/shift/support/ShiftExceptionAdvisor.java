@@ -5,26 +5,34 @@ import com.ciosmak.automotivepartner.shared.exception.EmptyMileageException;
 import com.ciosmak.automotivepartner.shared.exception.EmptyMileagePhotoException;
 import com.ciosmak.automotivepartner.shared.exception.IncorrectMileageException;
 import com.ciosmak.automotivepartner.shift.support.exception.*;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import static com.ciosmak.automotivepartner.shared.utils.Utils.getClassName;
+
 @ControllerAdvice
+@AllArgsConstructor
 public class ShiftExceptionAdvisor
 {
     private static final Logger LOG = LoggerFactory.getLogger(ShiftExceptionAdvisor.class);
+    private final MessageSource messageSource;
 
     @ExceptionHandler(EmptyInvoicePhotoException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorMessageResponse emptyInvoicePhoto(EmptyInvoicePhotoException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getLocalizedMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(EmptyLpgConsumptionException.class)
@@ -32,8 +40,9 @@ public class ShiftExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse emptyLpgConsumption(EmptyLpgConsumptionException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getLocalizedMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(EmptyMileagePhotoException.class)
@@ -41,8 +50,9 @@ public class ShiftExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse emptyMileagePhoto(EmptyMileagePhotoException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getLocalizedMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(EmptyPetrolConsumptionException.class)
@@ -50,8 +60,9 @@ public class ShiftExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse emptyPetrolConsumption(EmptyPetrolConsumptionException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getLocalizedMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(EmptyMileageException.class)
@@ -59,8 +70,9 @@ public class ShiftExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse emptyMileage(EmptyMileageException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getLocalizedMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(IncorrectMileageException.class)
@@ -68,8 +80,9 @@ public class ShiftExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse incorrectMileage(IncorrectMileageException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getLocalizedMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(IncorrectLpgConsumptionException.class)
@@ -77,8 +90,9 @@ public class ShiftExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse incorrectLpgConsumption(IncorrectLpgConsumptionException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getLocalizedMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(IncorrectPetrolConsumptionException.class)
@@ -86,8 +100,9 @@ public class ShiftExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse incorrectPetrolConsumption(IncorrectPetrolConsumptionException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getLocalizedMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(NotEnoughPhotosOfCarFromOutsideException.class)
@@ -95,8 +110,9 @@ public class ShiftExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse notEnoughPhotosOfCarFromOutside(NotEnoughPhotosOfCarFromOutsideException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getLocalizedMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(ShiftAlreadyDoneException.class)
@@ -104,8 +120,9 @@ public class ShiftExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse shiftAlreadyDone(ShiftAlreadyDoneException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getLocalizedMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(ShiftAlreadyStartedException.class)
@@ -113,8 +130,9 @@ public class ShiftExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse shiftAlreadyStarted(ShiftAlreadyStartedException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getLocalizedMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(ShiftCanNotBeStartedTodayException.class)
@@ -122,8 +140,9 @@ public class ShiftExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse shiftCanNotBeStartedToday(ShiftCanNotBeStartedTodayException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getLocalizedMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(ShiftNotDoneException.class)
@@ -131,8 +150,9 @@ public class ShiftExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse shiftNotDone(ShiftNotDoneException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getLocalizedMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(ShiftNotFoundException.class)
@@ -140,8 +160,9 @@ public class ShiftExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse shiftNotFound(ShiftNotFoundException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getLocalizedMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(ShiftNotStartedException.class)
@@ -149,8 +170,9 @@ public class ShiftExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse shiftNotStarted(ShiftNotStartedException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getLocalizedMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(ShiftsAlreadyGeneratedException.class)
@@ -158,8 +180,9 @@ public class ShiftExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse shiftsAlreadyGenerated(ShiftsAlreadyGeneratedException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getLocalizedMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(ShiftsGeneratingTooEarlyException.class)
@@ -167,8 +190,9 @@ public class ShiftExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse shiftsGeneratingTooEarly(ShiftsGeneratingTooEarlyException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getLocalizedMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(ShiftStartException.class)
@@ -176,7 +200,8 @@ public class ShiftExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse shiftStart(ShiftStartException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getLocalizedMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 }

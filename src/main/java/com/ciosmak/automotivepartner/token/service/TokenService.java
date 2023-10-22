@@ -1,7 +1,7 @@
 package com.ciosmak.automotivepartner.token.service;
 
 import com.ciosmak.automotivepartner.shared.event.RegistrationCompleteEvent;
-import com.ciosmak.automotivepartner.shared.utils.UrlUtils;
+import com.ciosmak.automotivepartner.shared.utils.Utils;
 import com.ciosmak.automotivepartner.token.api.request.TokenRequest;
 import com.ciosmak.automotivepartner.token.api.response.TokenResponse;
 import com.ciosmak.automotivepartner.token.domain.Token;
@@ -45,7 +45,7 @@ public class TokenService
         if (!isValid(verificationToken))
         {
             tokenRepository.delete(verificationToken);
-            publisher.publishEvent(new RegistrationCompleteEvent(user, UrlUtils.applicationUrl(request)));
+            publisher.publishEvent(new RegistrationCompleteEvent(user, Utils.applicationUrl(request)));
             return "Ten link już wygasł. Nowy link aktywacyjny został wysłany na twój adres email.";
         }
 

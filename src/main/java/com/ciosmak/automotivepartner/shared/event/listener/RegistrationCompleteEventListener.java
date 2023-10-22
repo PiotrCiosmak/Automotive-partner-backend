@@ -11,6 +11,8 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
@@ -24,6 +26,7 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
 {
     private final TokenService tokenService;
     private final JavaMailSender mailSender;
+    private final MessageSource messageSource;
 
     @Override
     public void onApplicationEvent(RegistrationCompleteEvent event)
@@ -48,26 +51,18 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
 
     private void sendVerificationEmail(String url, User user) throws MessagingException, UnsupportedEncodingException
     {
-        String subject = "Weryfikacja adresu email";
-        String senderName = "AutomotivePartner";
-        String mailContent = "<p> Cześć " + user.getFirstName() + ", </p>" +
-                "<p>Dziękujemy za rejestrację w naszym serwisie.</p>" +
-                "<p>Proszę kliknąć poniższy link, aby ukończyć proces rejestracji.</p>" +
-                "<a href=\"" + url + "\">Zweryfikuj swój adres e-mail, aby aktywować swoje konto.</a>" +
-                "<p>Dziękujemy!<br>AutomotivePartner";
+        String subject = messageSource.getMessage("VerificationEmailSubject", null, LocaleContextHolder.getLocale());
+        String senderName = messageSource.getMessage("EmailSenderName", null, LocaleContextHolder.getLocale());
+        String mailContent = messageSource.getMessage("VerificationEmailContent", new Object[]{user.getFirstName(), url}, LocaleContextHolder.getLocale());
+
         emailMessage(subject, senderName, mailContent, user);
     }
 
     public void sendChangePasswordEmail(String url, User user) throws MessagingException, UnsupportedEncodingException
     {
-        String subject = "Zmiana hasła";
-        String senderName = "AutomotivePartner";
-        String mailContent = "<p> Cześć " + user.getFirstName() + ", </p>" +
-                "<p>Otrzymaliśmy Twoją prośbę o zmianę hasła.<p>" + "" +
-                "<p>Proszę kliknij poniższy link, aby zmienić hasło.</p>" +
-                "<a href=\"" + url + "\">Zmień hasło</a>" +
-                "<p>Jeśli prośba o zmianę hasła nie została zgłoszona przez Ciebie, możesz bezpiecznie zignorować tę wiadomość e-mail. Ktoś inny mógł przez pomyłkę wpisać Twój adres e-mail.</p>" +
-                "<p>Dziękujemy!<br>AutomotivePartner";
+        String subject = messageSource.getMessage("ChangePasswordEmailSubject", null, LocaleContextHolder.getLocale());
+        String senderName = messageSource.getMessage("EmailSenderName", null, LocaleContextHolder.getLocale());
+        String mailContent = messageSource.getMessage("ChangePasswordEmailContent", new Object[]{user.getFirstName(), url}, LocaleContextHolder.getLocale());
 
         emailMessage(subject, senderName, mailContent, user);
     }
@@ -78,7 +73,7 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
     {
         MimeMessage message = mailSender.createMimeMessage();
         var messageHelper = new MimeMessageHelper(message);
-        messageHelper.setFrom("automotive.partner.biz@gmail.com", senderName);
+        messageHelper.setFrom(messageSource.getMessage("Email", null, LocaleContextHolder.getLocale()), senderName);
         messageHelper.setTo(user.getEmail());
         messageHelper.setSubject(subject);
         messageHelper.setText(mailContent, true);

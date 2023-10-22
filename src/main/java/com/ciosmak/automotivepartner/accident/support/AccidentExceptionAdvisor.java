@@ -7,26 +7,34 @@ import com.ciosmak.automotivepartner.shared.api.response.ErrorMessageResponse;
 import com.ciosmak.automotivepartner.shared.exception.EmptyMileageException;
 import com.ciosmak.automotivepartner.shared.exception.EmptyMileagePhotoException;
 import com.ciosmak.automotivepartner.shared.exception.IncorrectMileageException;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import static com.ciosmak.automotivepartner.shared.utils.Utils.getClassName;
+
 @ControllerAdvice
+@AllArgsConstructor
 public class AccidentExceptionAdvisor
 {
     private static final Logger LOG = LoggerFactory.getLogger(AccidentExceptionAdvisor.class);
+    private final MessageSource messageSource;
 
     @ExceptionHandler(AccidentNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public ErrorMessageResponse accidentNotFound(AccidentNotFoundException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getLocalizedMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(AccidentPhotosNotFoundException.class)
@@ -34,8 +42,9 @@ public class AccidentExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse accidentPhotosNotFound(AccidentPhotosNotFoundException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getLocalizedMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(DocumentPhotosNotFoundException.class)
@@ -43,8 +52,9 @@ public class AccidentExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse documentPhotosNotFound(DocumentPhotosNotFoundException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getLocalizedMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(EmptyMileagePhotoException.class)
@@ -52,8 +62,9 @@ public class AccidentExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse emptyMileagePhoto(EmptyMileagePhotoException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getLocalizedMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(EmptyMileageException.class)
@@ -61,8 +72,9 @@ public class AccidentExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse emptyMileage(EmptyMileageException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getLocalizedMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(IncorrectMileageException.class)
@@ -70,7 +82,8 @@ public class AccidentExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse incorrectMileage(IncorrectMileageException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getLocalizedMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 }

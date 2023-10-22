@@ -5,7 +5,7 @@ import com.ciosmak.automotivepartner.email.repository.EmailRepository;
 import com.ciosmak.automotivepartner.email.service.EmailService;
 import com.ciosmak.automotivepartner.shared.event.RegistrationCompleteEvent;
 import com.ciosmak.automotivepartner.shared.event.listener.RegistrationCompleteEventListener;
-import com.ciosmak.automotivepartner.shared.utils.UrlUtils;
+import com.ciosmak.automotivepartner.shared.utils.Utils;
 import com.ciosmak.automotivepartner.token.api.request.TokenRequest;
 import com.ciosmak.automotivepartner.token.domain.Token;
 import com.ciosmak.automotivepartner.token.repository.TokenRepository;
@@ -64,7 +64,7 @@ public class UserService implements UserDetailsService
         EmailRequest emailRequest = new EmailRequest(userRequest.getEmail());
         emailService.delete(emailRequest);
 
-        publisher.publishEvent(new RegistrationCompleteEvent(user, UrlUtils.applicationUrl(request)));
+        publisher.publishEvent(new RegistrationCompleteEvent(user, Utils.applicationUrl(request)));
 
         return userMapper.toUserResponse(user);
     }
@@ -243,7 +243,7 @@ public class UserService implements UserDetailsService
         TokenRequest changePasswordTokenRequest = TokenUtils.generateNewChangePasswordToken(user);
         tokenService.save(changePasswordTokenRequest);
 
-        String url = UrlUtils.applicationUrl(request) + "/api/users/change-password?token=" + changePasswordTokenRequest.getToken();
+        String url = Utils.applicationUrl(request) + "/api/users/change-password?token=" + changePasswordTokenRequest.getToken();
         try
         {
             registrationCompleteEventListener.sendChangePasswordEmail(url, user);

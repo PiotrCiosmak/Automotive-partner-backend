@@ -2,7 +2,7 @@ package com.ciosmak.automotivepartner.shared.utils;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-public class UrlUtils
+public class Utils
 {
     public static String applicationUrl(HttpServletRequest request)
     {
@@ -10,5 +10,16 @@ public class UrlUtils
         return appUrl.replace(request.getServletPath(), "");
         //TODO nie wiem która wersja
         //return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+    }
+
+    public static String getClassName(RuntimeException exception)
+    {
+        String text = exception.getClass().toString();
+        String[] parts = text.split("\\.");
+        if (parts.length > 0)
+        {
+            return parts[parts.length - 1];
+        }
+        return "";
     }
 }

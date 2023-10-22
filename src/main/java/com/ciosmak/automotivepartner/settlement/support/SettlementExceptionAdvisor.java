@@ -2,26 +2,34 @@ package com.ciosmak.automotivepartner.settlement.support;
 
 import com.ciosmak.automotivepartner.settlement.support.exception.*;
 import com.ciosmak.automotivepartner.shared.api.response.ErrorMessageResponse;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import static com.ciosmak.automotivepartner.shared.utils.Utils.getClassName;
+
 @ControllerAdvice
+@AllArgsConstructor
 public class SettlementExceptionAdvisor
 {
     private static final Logger LOG = LoggerFactory.getLogger(SettlementExceptionSupplier.class);
+    private final MessageSource messageSource;
 
     @ExceptionHandler(BugAlreadyReportedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorMessageResponse bugAlreadyReported(BugAlreadyReportedException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(EmptyNetAmountException.class)
@@ -29,8 +37,9 @@ public class SettlementExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse emptyNetAmount(EmptyNetAmountException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(EmptyTipAmountException.class)
@@ -38,8 +47,9 @@ public class SettlementExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse emptyTipAmount(EmptyTipAmountException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(IncorrectNetAmountException.class)
@@ -47,8 +57,9 @@ public class SettlementExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse incorrectNetAmount(IncorrectNetAmountException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(IncorrectOptionalFactorException.class)
@@ -56,8 +67,9 @@ public class SettlementExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse incorrectOptionalFactor(IncorrectOptionalFactorException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(IncorrectOptionalPenaltyAmountException.class)
@@ -65,8 +77,9 @@ public class SettlementExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse incorrectOptionalPenaltyAmount(IncorrectOptionalPenaltyAmountException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(IncorrectTipAmountException.class)
@@ -74,8 +87,9 @@ public class SettlementExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse incorrectTipAmount(IncorrectTipAmountException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(SettlementAlreadyCompletedException.class)
@@ -83,8 +97,9 @@ public class SettlementExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse settlementAlreadyCompleted(SettlementAlreadyCompletedException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
 
@@ -93,8 +108,9 @@ public class SettlementExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse settlementIncomplete(SettlementIncompleteException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 
     @ExceptionHandler(SettlementNotFoundException.class)
@@ -102,7 +118,8 @@ public class SettlementExceptionAdvisor
     @ResponseBody
     public ErrorMessageResponse SettlementNotFound(SettlementNotFoundException exception)
     {
-        LOG.error(exception.getMessage(), exception);
-        return new ErrorMessageResponse(exception.getMessage());
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
     }
 }
