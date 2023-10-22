@@ -1,7 +1,7 @@
 package com.ciosmak.automotivepartner.email.support;
 
-import com.ciosmak.automotivepartner.email.support.exception.EmailTakenException;
 import com.ciosmak.automotivepartner.shared.api.response.ErrorMessageResponse;
+import com.ciosmak.automotivepartner.shared.exception.EmailTakenException;
 import com.ciosmak.automotivepartner.shared.exception.EmptyEmailException;
 import com.ciosmak.automotivepartner.shared.exception.IncorrectEmailException;
 import org.slf4j.Logger;

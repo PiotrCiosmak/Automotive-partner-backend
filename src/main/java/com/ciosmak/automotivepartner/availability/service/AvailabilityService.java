@@ -84,7 +84,7 @@ public class AvailabilityService
     {
         User user = userRepository.findById(userId).orElseThrow(UserExceptionSupplier.userNotFound(userId));
 
-        Availability availability = availabilityRepository.findByUser_IdAndDate(userId, date).orElseThrow(AvailabilityExceptionSupplier.incorrectDate(user.getFirstName(), user.getLastName(), date));
+        Availability availability = availabilityRepository.findByUser_IdAndDate(userId, date).orElseThrow(AvailabilityExceptionSupplier.incorrectAvailabilityDate(user.getFirstName(), user.getLastName(), date));
         return availability.getType();
     }
 

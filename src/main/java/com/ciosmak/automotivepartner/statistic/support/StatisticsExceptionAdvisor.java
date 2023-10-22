@@ -1,7 +1,7 @@
 package com.ciosmak.automotivepartner.statistic.support;
 
 import com.ciosmak.automotivepartner.shared.api.response.ErrorMessageResponse;
-import com.ciosmak.automotivepartner.statistic.support.exception.IncorrectDateException;
+import com.ciosmak.automotivepartner.statistic.support.exception.IncorrectStatisticsDateException;
 import com.ciosmak.automotivepartner.statistic.support.exception.IncorrectYearException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +16,10 @@ public class StatisticsExceptionAdvisor
 {
     private static final Logger LOG = LoggerFactory.getLogger(StatisticsExceptionAdvisor.class);
 
-    @ExceptionHandler(IncorrectDateException.class)
+    @ExceptionHandler(IncorrectStatisticsDateException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorMessageResponse incorrectDate(IncorrectDateException exception)
+    public ErrorMessageResponse incorrectStatisticsDate(IncorrectStatisticsDateException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getLocalizedMessage());

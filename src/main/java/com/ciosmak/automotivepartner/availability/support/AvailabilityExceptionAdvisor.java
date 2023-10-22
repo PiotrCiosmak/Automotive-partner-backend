@@ -1,7 +1,7 @@
 package com.ciosmak.automotivepartner.availability.support;
 
 import com.ciosmak.automotivepartner.availability.support.exception.AvailabilityAlreadySubmittedException;
-import com.ciosmak.automotivepartner.availability.support.exception.IncorrectDateException;
+import com.ciosmak.automotivepartner.availability.support.exception.IncorrectAvailabilityDateException;
 import com.ciosmak.automotivepartner.shared.api.response.ErrorMessageResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +25,10 @@ public class AvailabilityExceptionAdvisor
         return new ErrorMessageResponse(exception.getLocalizedMessage());
     }
 
-    @ExceptionHandler(IncorrectDateException.class)
+    @ExceptionHandler(IncorrectAvailabilityDateException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorMessageResponse IncorrectDate(IncorrectDateException exception)
+    public ErrorMessageResponse incorrectAvailabilityDate(IncorrectAvailabilityDateException exception)
     {
         LOG.error(exception.getMessage(), exception);
         return new ErrorMessageResponse(exception.getLocalizedMessage());

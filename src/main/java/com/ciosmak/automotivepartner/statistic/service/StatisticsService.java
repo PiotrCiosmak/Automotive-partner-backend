@@ -43,7 +43,7 @@ public class StatisticsService
         LocalDate adjustedDate = adjustDate(date);
         User user = userRepository.findById(userId).orElseThrow(UserExceptionSupplier.userNotFound(userId));
 
-        Statistics statistics = statisticsRepository.findByUserIdAndDate(userId, adjustedDate).orElseThrow(StatisticsExceptionSupplier.incorrectDate(user.getFirstName(), user.getLastName(), date.getMonthValue(), date.getYear()));
+        Statistics statistics = statisticsRepository.findByUserIdAndDate(userId, adjustedDate).orElseThrow(StatisticsExceptionSupplier.incorrectStatisticsDate(user.getFirstName(), user.getLastName(), date.getMonthValue(), date.getYear()));
 
         return statisticsMapper.toStatisticsResponse(statistics);
     }
@@ -52,7 +52,7 @@ public class StatisticsService
     {
         return date.withDayOfMonth(1);
     }
-    
+
     public YearStatisticsResponse findInSelectedYear(Year year)
     {
         Integer yearMileage = statisticsRepository.sumMileageByYear(year.getValue());
