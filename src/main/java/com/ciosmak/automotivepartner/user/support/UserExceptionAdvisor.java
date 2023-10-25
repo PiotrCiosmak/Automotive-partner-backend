@@ -25,7 +25,7 @@ public class UserExceptionAdvisor
     private static final Logger LOG = LoggerFactory.getLogger(UserExceptionAdvisor.class);
     private final MessageSource messageSource;
 
-    @ExceptionHandler(EmailTakenException.class)
+    @ExceptionHandler(ChangePasswordLinkSendException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     @ResponseBody
     public ErrorMessageResponse changePasswordLinkSend(ChangePasswordLinkSendException exception)
