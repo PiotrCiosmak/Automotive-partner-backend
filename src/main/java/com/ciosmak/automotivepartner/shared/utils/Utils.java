@@ -8,8 +8,6 @@ public class Utils
     {
         String appUrl = request.getRequestURL().toString();
         return appUrl.replace(request.getServletPath(), "");
-        //TODO nie wiem która wersja
-        //return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
     }
 
     public static String getClassName(RuntimeException exception)

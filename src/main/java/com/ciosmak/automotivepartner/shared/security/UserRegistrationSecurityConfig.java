@@ -29,7 +29,6 @@ public class UserRegistrationSecurityConfig
                 .disable()
                 .authorizeHttpRequests()
                 .requestMatchers(
-                        "/api/**",//TODO dopóki nie zrobie endpontów z formularzami
                         "/api/tokens/verify-email/**",
                         "/api/users/register/**",
                         "/api/users/login/**",

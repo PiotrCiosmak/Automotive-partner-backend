@@ -26,6 +26,6 @@ public class Photo extends AbstractEntity
     private PhotoType type;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "shift_id")
+    @JoinColumn(name = "shift_id", nullable = false)
     private Shift shift;
 }

@@ -30,6 +30,6 @@ public class Token extends AbstractEntity
     private LocalDateTime expirationTime;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }

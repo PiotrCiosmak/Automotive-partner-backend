@@ -43,6 +43,6 @@ public class Settlement extends AbstractEntity
     private Boolean isBugReported;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }
