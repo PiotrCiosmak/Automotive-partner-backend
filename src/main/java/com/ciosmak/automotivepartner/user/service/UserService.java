@@ -26,6 +26,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -50,6 +52,7 @@ public class UserService implements UserDetailsService
     private final ApplicationEventPublisher publisher;
     private final PasswordEncoder passwordEncoder;
     private final RegistrationCompleteEventListener registrationCompleteEventListener;
+    private final MessageSource messageSource;
 
     @Transactional
     public UserResponse register(UserRequest userRequest, final HttpServletRequest request)
@@ -244,7 +247,8 @@ public class UserService implements UserDetailsService
 
         String url = Utils.applicationUrl(request) + "/api/users/change-password?token=" + changePasswordTokenRequest.getToken();
         registrationCompleteEventListener.sendChangePasswordEmail(url, user);
-        return "Link do ustawienia nowego hasła został wysłany na podany adres email.";//TODO to mes.propies
+        return messageSource.getMessage("ChangePasswordLinkAlreadySent", null, LocaleContextHolder.getLocale());
+
     }
 
     private void checkIfTokenExists(User user)
@@ -290,7 +294,7 @@ public class UserService implements UserDetailsService
         Token token = tokenRepository.findByTokenAndType(changePasswordToken, TokenType.CHANGE_PASSWORD).orElseThrow(UserExceptionSupplier.invalidToken());
         User user = token.getUser();
         userMapper.toUser(user, userChangePasswordRequest);
-        return "Hasło zostało zmienione";//TODO do mess.properwsies
+        return messageSource.getMessage("PasswordChangesSuccessfully", null, LocaleContextHolder.getLocale());
     }
 
     @Transactional

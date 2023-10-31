@@ -15,6 +15,8 @@ import com.ciosmak.automotivepartner.user.support.UserMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,7 +30,7 @@ public class TokenService
     private final TokenMapper tokenMapper;
     private final UserMapper userMapper;
     private final ApplicationEventPublisher publisher;
-
+    private final MessageSource messageSource;
 
     public TokenResponse save(TokenRequest tokenRequest)
     {
@@ -46,17 +48,17 @@ public class TokenService
         {
             tokenRepository.delete(verificationToken);
             publisher.publishEvent(new RegistrationCompleteEvent(user, Utils.applicationUrl(request)));
-            return "Ten link już wygasł. Nowy link aktywacyjny został wysłany na twój adres email.";
+            return messageSource.getMessage("VerificationLinkExpired", null, LocaleContextHolder.getLocale());
         }
 
         if (isUserEnabled(verificationToken))
         {
-            return "To konto zostało już zweryfikowane, możesz się zalogować.";
+            return messageSource.getMessage("VerificationAlreadySucceed", null, LocaleContextHolder.getLocale());
         }
 
         userRepository.save(userMapper.toEnabledUser(user));
 
-        return "Adres email został zweryfikowany poprawnie. Już możesz się zalogowac na swoje konto.";
+        return messageSource.getMessage("VerificationSucceed", null, LocaleContextHolder.getLocale());
     }
 
     public boolean isChangePasswordTokenValid(String token)
