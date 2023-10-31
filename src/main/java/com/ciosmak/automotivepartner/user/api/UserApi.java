@@ -79,6 +79,14 @@ public class UserApi
         return ResponseEntity.status(HttpStatus.OK).body(userResponse);
     }
 
+    @PutMapping("/make-super-admin/{id}")
+    @Operation(summary = "Make super admin")
+    public ResponseEntity<UserResponse> makeSuperAdmin(@PathVariable Long id)
+    {
+        UserResponse userResponse = userService.makeSuperAdmin(id);
+        return ResponseEntity.status(HttpStatus.OK).body(userResponse);
+    }
+
     @PutMapping("/make-driver/{id}")
     @Operation(summary = "Make driver")
     public ResponseEntity<UserResponse> makeDriver(@PathVariable Long id)
@@ -116,6 +124,14 @@ public class UserApi
     public ResponseEntity<List<UserResponse>> findAllAdmins(@RequestParam(required = false, defaultValue = "") String filterText)
     {
         List<UserResponse> userResponses = userService.findAllAdmins(filterText);
+        return ResponseEntity.status(HttpStatus.OK).body(userResponses);
+    }
+
+    @GetMapping("/find/super-admins")
+    @Operation(summary = "Find all super admins")
+    public ResponseEntity<List<UserResponse>> findAllSuperAdmins(@RequestParam(required = false, defaultValue = "") String filterText)
+    {
+        List<UserResponse> userResponses = userService.findAllSuperAdmins(filterText);
         return ResponseEntity.status(HttpStatus.OK).body(userResponses);
     }
 

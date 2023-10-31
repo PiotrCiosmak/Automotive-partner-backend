@@ -59,6 +59,26 @@ public class UserExceptionSupplier
         return IncorrectPhoneNumberException::new;
     }
 
+    public static Supplier<SuperAdminDeleteException> superAdminDelete()
+    {
+        return SuperAdminDeleteException::new;
+    }
+
+    public static Supplier<SuperAdminDegradedToAdminException> superAdminDegradedToAdmin()
+    {
+        return SuperAdminDegradedToAdminException::new;
+    }
+
+    public static Supplier<SuperAdminDegradedToDriverException> superAdminDegradedToDriver()
+    {
+        return SuperAdminDegradedToDriverException::new;
+    }
+
+    public static Supplier<SuperAdminBlockedException> superAdminBlocked()
+    {
+        return SuperAdminBlockedException::new;
+    }
+
     public static Supplier<TooShortPasswordException> tooShortPassword()
     {
         return TooShortPasswordException::new;
@@ -97,6 +117,11 @@ public class UserExceptionSupplier
     public static Supplier<UserAlreadyDriverException> userAlreadyDriver()
     {
         return UserAlreadyDriverException::new;
+    }
+
+    public static Supplier<UserAlreadySuperAdminException> userAlreadySuperAdmin()
+    {
+        return UserAlreadySuperAdminException::new;
     }
 
     public static Supplier<UserNotBlockedException> userNotBlocked()

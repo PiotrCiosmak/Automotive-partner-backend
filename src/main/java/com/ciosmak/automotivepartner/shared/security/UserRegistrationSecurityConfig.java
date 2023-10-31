@@ -29,6 +29,7 @@ public class UserRegistrationSecurityConfig
                 .disable()
                 .authorizeHttpRequests()
                 .requestMatchers(
+                        "/api/**",//TOOD USUNAĆ podczas realasu, albo po dodaniu formualrzy
                         "/api/tokens/verify-email/**",
                         "/api/users/register/**",
                         "/api/users/login/**",
@@ -63,12 +64,12 @@ public class UserRegistrationSecurityConfig
                 .requestMatchers(
                         "/api/users/block/{id}",
                         "/api/users/unblock/{id}",
-                        "/api/users/make-admin/{id}",
                         "/api/users/make-driver/{id}",
                         "/api/users/find",
                         "/api/users/find/unblocked",
                         "/api/users/find/blocked",
                         "/api/users/find/admins",
+                        "/api/users/find/super-admins",
                         "/api/users/find/drivers",
                         "/api/users/delete/{id}",
                         "/api/emails/**",
@@ -84,6 +85,34 @@ public class UserRegistrationSecurityConfig
                         "/api/settlements/find",
                         "/api/statistics/find/{year}")
                 .hasAnyAuthority("ADMIN")
+                .and()
+                .authorizeHttpRequests()
+                .requestMatchers(
+                        "/api/users/block/{id}",
+                        "/api/users/unblock/{id}",
+                        "/api/users/make-admin/{id}",
+                        "/api/users/make-super-admin/{id}",
+                        "/api/users/make-driver/{id}",
+                        "/api/users/find",
+                        "/api/users/find/unblocked",
+                        "/api/users/find/blocked",
+                        "/api/users/find/admins",
+                        "/api/users/find/super-admins",
+                        "/api/users/find/drivers",
+                        "/api/users/delete/{id}",
+                        "/api/emails/**",
+                        "/api/shifts/find",
+                        "/api/shifts/info/{id}",
+                        "/api/shifts/update-fuel",
+                        "/api/cars/**",
+                        "/api/accident/find",
+                        "/api/accidents/find/{id}",
+                        "/api/availability/quantity",
+                        "/api/settlements/complete",
+                        "/api/settlements/update",
+                        "/api/settlements/find",
+                        "/api/statistics/find/{year}")
+                .hasAnyAuthority("SUPER_ADMIN")
                 .and()
                 .formLogin()
                 //.loginPage("/api/users/login")//TODO OKREŚLA STRONE LOGOWANIA

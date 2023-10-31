@@ -125,6 +125,46 @@ public class UserExceptionAdvisor
         return new ErrorMessageResponse(errorMessage);
     }
 
+    @ExceptionHandler(SuperAdminBlockedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse superAdminBlocked(SuperAdminBlockedException exception)
+    {
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
+    }
+
+    @ExceptionHandler(SuperAdminDeleteException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse superAdminDelete(SuperAdminDeleteException exception)
+    {
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
+    }
+
+    @ExceptionHandler(SuperAdminDegradedToAdminException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse superAdminDegradedToAdmin(SuperAdminDegradedToAdminException exception)
+    {
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
+    }
+
+    @ExceptionHandler(SuperAdminDegradedToDriverException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse superAdminDegradedToDriver(SuperAdminDegradedToDriverException exception)
+    {
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
+    }
+
     @ExceptionHandler(TooShortPasswordException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
@@ -189,6 +229,16 @@ public class UserExceptionAdvisor
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorMessageResponse userAlreadyDriver(UserAlreadyDriverException exception)
+    {
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
+    }
+
+    @ExceptionHandler(UserAlreadySuperAdminException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse userAlreadySuperAdmin(UserAlreadySuperAdminException exception)
     {
         String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
         LOG.error(errorMessage);

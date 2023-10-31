@@ -2,5 +2,5 @@ package com.ciosmak.automotivepartner.user.support;
 
 public enum Role
 {
-    DRIVER, ADMIN
+    DRIVER, ADMIN, SUPER_ADMIN
 }

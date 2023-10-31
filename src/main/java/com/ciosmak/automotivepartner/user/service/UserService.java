@@ -244,7 +244,7 @@ public class UserService implements UserDetailsService
 
         String url = Utils.applicationUrl(request) + "/api/users/change-password?token=" + changePasswordTokenRequest.getToken();
         registrationCompleteEventListener.sendChangePasswordEmail(url, user);
-        return "Link do ustawienia nowego hasła został wysłany na podany adres email.";
+        return "Link do ustawienia nowego hasła został wysłany na podany adres email.";//TODO to mes.propies
     }
 
     private void checkIfTokenExists(User user)
@@ -290,7 +290,7 @@ public class UserService implements UserDetailsService
         Token token = tokenRepository.findByTokenAndType(changePasswordToken, TokenType.CHANGE_PASSWORD).orElseThrow(UserExceptionSupplier.invalidToken());
         User user = token.getUser();
         userMapper.toUser(user, userChangePasswordRequest);
-        return "Hasło zostało zmienione";
+        return "Hasło zostało zmienione";//TODO do mess.properwsies
     }
 
     @Transactional
@@ -301,6 +301,11 @@ public class UserService implements UserDetailsService
         if (userIsBlocked)
         {
             throw UserExceptionSupplier.userAlreadyBlocked().get();
+        }
+        Role userRole = userRepository.getRole(id);
+        if (isSuperAdmin(userRole))
+        {
+            throw UserExceptionSupplier.superAdminBlocked().get();
         }
         user.setIsBlocked(Boolean.TRUE);
         return userMapper.toUserResponse(user);
@@ -328,6 +333,10 @@ public class UserService implements UserDetailsService
         {
             throw UserExceptionSupplier.userAlreadyAdmin().get();
         }
+        if (isSuperAdmin(userRole))
+        {
+            throw UserExceptionSupplier.superAdminDegradedToAdmin().get();
+        }
         user.setRole(Role.ADMIN);
         return userMapper.toUserResponse(user);
     }
@@ -338,6 +347,19 @@ public class UserService implements UserDetailsService
     }
 
     @Transactional
+    public UserResponse makeSuperAdmin(Long id)
+    {
+        User user = userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
+        Role userRole = userRepository.getRole(id);
+        if (isSuperAdmin(userRole))
+        {
+            throw UserExceptionSupplier.userAlreadySuperAdmin().get();
+        }
+        user.setRole(Role.SUPER_ADMIN);
+        return userMapper.toUserResponse(user);
+    }
+
+    @Transactional
     public UserResponse makeDriver(Long id)
     {
         User user = userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
@@ -345,6 +367,10 @@ public class UserService implements UserDetailsService
         if (isDriver(userRole))
         {
             throw UserExceptionSupplier.userAlreadyDriver().get();
+        }
+        if (isSuperAdmin(userRole))
+        {
+            throw UserExceptionSupplier.superAdminDegradedToDriver().get();
         }
         user.setRole(Role.DRIVER);
         return userMapper.toUserResponse(user);
@@ -379,6 +405,12 @@ public class UserService implements UserDetailsService
         return getFilteredUsers(adminUsers, filterText);
     }
 
+    public List<UserResponse> findAllSuperAdmins(String filterText)
+    {
+        List<User> superAdminUsers = userRepository.findAllByRole(Role.SUPER_ADMIN);
+        return getFilteredUsers(superAdminUsers, filterText);
+    }
+
     public List<UserResponse> findAllDrivers(String filterText)
     {
         List<User> driverUsers = userRepository.findAllByRole(Role.DRIVER);
@@ -398,7 +430,17 @@ public class UserService implements UserDetailsService
     public void delete(Long id)
     {
         User user = userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
+        Role userRole = user.getRole();
+        if (isSuperAdmin(userRole))
+        {
+            throw UserExceptionSupplier.superAdminDelete().get();
+        }
         userRepository.deleteById(user.getId());
+    }
+
+    private boolean isSuperAdmin(Role role)
+    {
+        return role.equals(Role.SUPER_ADMIN);
     }
 
     //TODO
