@@ -1,5 +1,6 @@
 package com.ciosmak.automotivepartner.shift.service;
 
+import com.ciosmak.automotivepartner.accident.repository.AccidentRepository;
 import com.ciosmak.automotivepartner.availability.domain.Availability;
 import com.ciosmak.automotivepartner.availability.repository.AvailabilityRepository;
 import com.ciosmak.automotivepartner.car.domain.Car;
@@ -7,6 +8,7 @@ import com.ciosmak.automotivepartner.car.repository.CarRepository;
 import com.ciosmak.automotivepartner.photo.domain.Photo;
 import com.ciosmak.automotivepartner.photo.repository.PhotoRepository;
 import com.ciosmak.automotivepartner.photo.support.PhotoType;
+import com.ciosmak.automotivepartner.settlement.repository.SettlementRepository;
 import com.ciosmak.automotivepartner.shift.api.request.EndShiftRequest;
 import com.ciosmak.automotivepartner.shift.api.request.GenerateShiftRequest;
 import com.ciosmak.automotivepartner.shift.api.request.StartShiftRequest;
@@ -23,6 +25,7 @@ import com.ciosmak.automotivepartner.statistic.api.request.StatisticsUpdateReque
 import com.ciosmak.automotivepartner.statistic.domain.Statistics;
 import com.ciosmak.automotivepartner.statistic.repository.StatisticsRepository;
 import com.ciosmak.automotivepartner.statistic.support.StatisticsMapper;
+import com.ciosmak.automotivepartner.user.domain.User;
 import com.ciosmak.automotivepartner.user.repository.UserRepository;
 import com.ciosmak.automotivepartner.user.support.UserExceptionSupplier;
 import jakarta.transaction.Transactional;
@@ -30,13 +33,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -51,6 +52,8 @@ public class ShiftService
     private final PhotoRepository photoRepository;
     private final AvailabilityRepository availabilityRepository;
     private final StatisticsRepository statisticsRepository;
+    private final AccidentRepository accidentRepository;
+    private final SettlementRepository settlementRepository;
 
     @Transactional
     public List<ShiftResponse> generate()
@@ -115,13 +118,113 @@ public class ShiftService
     private void generateShiftsForDate(LocalDate date, Type type, List<Shift> shifts)
     {
         List<Availability> availabilities = availabilityRepository.findAllByDateAndType(date, type);
+        removeAvailabilityOfBlockedUsers(availabilities);
+
         List<Car> cars = carRepository.findAllByIsBlocked(Boolean.FALSE);
+
+        Map<Long, BigDecimal> userIdToAccidentRatio = calculateAccidentRadios(availabilities);
+        Map<Long, BigDecimal> userIdToPerformanceRatio = calculatePerformanceRatios(availabilities);
+        List<Long> userIdToFinalScore = calculateFinalScores(userIdToAccidentRatio, userIdToPerformanceRatio);
+
         int shiftsToGenerate = Math.min(availabilities.size(), cars.size());
         for (int i = 0; i < shiftsToGenerate; ++i)
         {
-            GenerateShiftRequest generateShiftRequest = new GenerateShiftRequest(date, type, cars.get(i).getId(), availabilities.get(i).getUser().getId());
+            GenerateShiftRequest generateShiftRequest = new GenerateShiftRequest(date, type, cars.get(i).getId(), userIdToFinalScore.get(i));
             shifts.add(shiftRepository.save(shiftMapper.toShift(generateShiftRequest)));
         }
+    }
+
+    private void removeAvailabilityOfBlockedUsers(List<Availability> availabilities)
+    {
+        for (var availability : availabilities)
+        {
+            User user = availability.getUser();
+            if (user.getIsBlocked())
+            {
+                availabilities.remove(availability);
+            }
+        }
+    }
+
+    private Map<Long, BigDecimal> calculateAccidentRadios(List<Availability> availabilities)
+    {
+        Map<Long, BigDecimal> userIdToAccidentRatio = new HashMap<>();
+        for (var availability : availabilities)
+        {
+            Long userId = availability.getUser().getId();
+
+            Integer numberOfAccidentsCausedByDriver = accidentRepository.countGuiltyAccidentsByUserId(userId);
+            Integer numberOfEndedShifts = shiftRepository.countByUser_IdAndIsDoneTrue(userId);
+            BigDecimal accidentRadio;
+            if (numberOfEndedShifts == 0)
+            {
+                accidentRadio = BigDecimal.ZERO;
+            }
+            else
+            {
+                accidentRadio = BigDecimal.valueOf(numberOfAccidentsCausedByDriver * 1.0 / numberOfEndedShifts);
+            }
+            userIdToAccidentRatio.put(userId, accidentRadio);
+        }
+        return userIdToAccidentRatio;
+    }
+
+    private Map<Long, BigDecimal> calculatePerformanceRatios(List<Availability> availabilities)
+    {
+        Map<Long, BigDecimal> userIdToPerformanceRatio = new HashMap<>();
+
+        LocalDate previousMonthDate = calculatePreviousMonthDate();
+
+        for (var availability : availabilities)
+        {
+            Long userId = availability.getUser().getId();
+            BigDecimal lastMonthLpg = shiftRepository.getTotalLpgByUserAndYearAndMonth(previousMonthDate.getYear(), previousMonthDate.getMonthValue(), userId).orElse(BigDecimal.ZERO);
+            BigDecimal lastMonthNetProfit = settlementRepository.findNetProfitByYearMonthAndUserId(previousMonthDate.getYear(), previousMonthDate.getMonthValue(), userId).orElse(BigDecimal.ZERO);
+            BigDecimal performanceRatio;
+            if (lastMonthLpg.equals(BigDecimal.ZERO))
+            {
+                performanceRatio = BigDecimal.ZERO;
+            }
+            else
+            {
+                performanceRatio = lastMonthLpg.divide(lastMonthNetProfit, RoundingMode.CEILING);
+            }
+            userIdToPerformanceRatio.put(userId, performanceRatio);
+        }
+        return userIdToPerformanceRatio;
+    }
+
+    public LocalDate calculatePreviousMonthDate()
+    {
+        LocalDate currentDate = LocalDate.now();
+        LocalDate previousMonthDate = currentDate.minusMonths(1);
+        previousMonthDate = previousMonthDate.withDayOfMonth(1);
+        return previousMonthDate;
+    }
+
+    private List<Long> calculateFinalScores(Map<Long, BigDecimal> userIdToAccidentRatio, Map<Long, BigDecimal> userIdToPerformanceRatio)
+    {
+        Map<Long, BigDecimal> userIdToFinalScore = new HashMap<>();
+
+        for (Long userId : userIdToAccidentRatio.keySet())
+        {
+            BigDecimal accidentRatio = userIdToAccidentRatio.get(userId);
+            BigDecimal accidentRatioWithWeight = accidentRatio.multiply(BigDecimal.ONE);
+
+            BigDecimal performanceRatio = userIdToPerformanceRatio.get(userId);
+            BigDecimal performanceRatioWithWeight = performanceRatio.multiply(BigDecimal.TEN);
+
+            BigDecimal finalScore = accidentRatioWithWeight.add(performanceRatioWithWeight);
+            userIdToFinalScore.put(userId, finalScore);
+        }
+
+        Map<Long, BigDecimal> sortedUserIdToSum = userIdToFinalScore.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (e1, e2) -> e1, LinkedHashMap::new));
+
+        return new ArrayList<>(sortedUserIdToSum.keySet());
     }
 
     @Transactional
@@ -357,9 +460,9 @@ public class ShiftService
         return statisticsMapper.toStatisticsRequest(shift);
     }
 
-    private void updateCarMileage(Car car, Integer kilometersTraveled)
+    private void updateCarMileage(Car car, Integer endMileage)
     {
-        car.setMileage(car.getMileage() + kilometersTraveled);
+        car.setMileage(endMileage);
     }
 
     public List<ShiftResponse> findAllByDayAndType(LocalDate date, Type type)

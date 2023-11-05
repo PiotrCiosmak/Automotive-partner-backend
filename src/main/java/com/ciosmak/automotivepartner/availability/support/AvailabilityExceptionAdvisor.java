@@ -2,6 +2,7 @@ package com.ciosmak.automotivepartner.availability.support;
 
 import com.ciosmak.automotivepartner.availability.support.exception.AvailabilityAlreadySubmittedException;
 import com.ciosmak.automotivepartner.availability.support.exception.IncorrectAvailabilityDateException;
+import com.ciosmak.automotivepartner.availability.support.exception.IncorrectAvailabilityTypesException;
 import com.ciosmak.automotivepartner.shared.api.response.ErrorMessageResponse;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -37,6 +38,16 @@ public class AvailabilityExceptionAdvisor
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorMessageResponse incorrectAvailabilityDate(IncorrectAvailabilityDateException exception)
+    {
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
+    }
+
+    @ExceptionHandler(IncorrectAvailabilityTypesException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse incorrectAvailabilityTypes(IncorrectAvailabilityTypesException exception)
     {
         String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
         LOG.error(errorMessage);

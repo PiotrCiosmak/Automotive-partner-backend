@@ -45,10 +45,14 @@ public class AvailabilityService
         }
 
         List<AvailabilityResponse> availabilityResponses = new ArrayList<>();
+
+        Optional<Availability> availabilityCandidateForPreviousDay = availabilityRepository.findByUser_IdAndDate(userId, weekDates.get(0).minusDays(1));
         for (int i = 0; i < 7; ++i)
         {
             AvailabilityRequest availabilityRequest = new AvailabilityRequest(weekAvailabilityRequest.getTypes().get(i), weekDates.get(i), weekAvailabilityRequest.getUserId());
+            availabilityCandidateForPreviousDay.ifPresent(availability -> checkIfAvailabilityTypesAreCorrect(availabilityRequest.getType(), availability.getType()));
             Availability availability = availabilityRepository.save(availabilityMapper.toAvailability(availabilityRequest));
+            availabilityCandidateForPreviousDay = availabilityRepository.findByUser_IdAndDate(userId, weekDates.get(i));
             availabilityResponses.add(availabilityMapper.toAvailabilityResponse(availability));
         }
         return availabilityResponses;
@@ -64,6 +68,14 @@ public class AvailabilityService
             weekDates.add(firstDayOfNextWeek.plusDays(i));
         }
         return weekDates;
+    }
+
+    private void checkIfAvailabilityTypesAreCorrect(Type previousType, Type nextType)
+    {
+        if ((previousType == Type.DAY && nextType == Type.NIGHT) || (previousType == Type.NIGHT && nextType == Type.DAY))
+        {
+            throw AvailabilityExceptionSupplier.incorrectAvailabilityTypes().get();
+        }
     }
 
     public Boolean isSubmitted(Long userId)

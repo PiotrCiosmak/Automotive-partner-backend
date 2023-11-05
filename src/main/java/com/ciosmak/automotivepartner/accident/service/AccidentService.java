@@ -8,6 +8,7 @@ import com.ciosmak.automotivepartner.accident.domain.Accident;
 import com.ciosmak.automotivepartner.accident.repository.AccidentRepository;
 import com.ciosmak.automotivepartner.accident.support.AccidentExceptionSupplier;
 import com.ciosmak.automotivepartner.accident.support.AccidentMapper;
+import com.ciosmak.automotivepartner.car.domain.Car;
 import com.ciosmak.automotivepartner.photo.domain.Photo;
 import com.ciosmak.automotivepartner.photo.repository.PhotoRepository;
 import com.ciosmak.automotivepartner.photo.support.PhotoType;
@@ -58,6 +59,7 @@ public class AccidentService
         {
             shift = shiftMapper.toShift(shift, accidentRequest);
             photos.add(new Photo(accidentRequest.getMileagePhotoUrl().get(), PhotoType.SHIFT_END_MILEAGE, shift));
+            updateCarMileage(shift.getCar(), shift.getEndMileage());
         }
 
         photoRepository.saveAll(photos);
@@ -137,7 +139,6 @@ public class AccidentService
         return !photosUrls.isEmpty();
     }
 
-
     private boolean isPhotoUrlEmpty(String photoUrl)
     {
         return photoUrl.isEmpty();
@@ -166,6 +167,10 @@ public class AccidentService
         return mileage < 0;
     }
 
+    private void updateCarMileage(Car car, Integer endMileage)
+    {
+        car.setMileage(endMileage);
+    }
 
     public List<BaseAccidentResponse> findAllAccidents()
     {
