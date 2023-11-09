@@ -204,4 +204,14 @@ public class ShiftExceptionAdvisor
         LOG.error(errorMessage);
         return new ErrorMessageResponse(errorMessage);
     }
+
+    @ExceptionHandler(UnavailableCarException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse unavailableCar(UnavailableCarException exception)
+    {
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
+    }
 }

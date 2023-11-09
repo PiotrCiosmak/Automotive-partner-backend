@@ -99,4 +99,9 @@ public class ShiftExceptionSupplier
     {
         return () -> new ShiftStartException(userId, date, type);
     }
+
+    public static Supplier<UnavailableCarException> unavailableCar(Long id)
+    {
+        return () -> new UnavailableCarException(id);
+    }
 }
