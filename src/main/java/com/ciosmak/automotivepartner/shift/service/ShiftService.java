@@ -89,10 +89,11 @@ public class ShiftService
             throw ShiftExceptionSupplier.shiftsAlreadyGenerated().get();
         }
 
-        if (!isWeekendToday())
+        //todo remove
+      /*  if (!isWeekendToday())
         {
             throw ShiftExceptionSupplier.shiftsGeneratingTooEarly().get();
-        }
+        }*/
     }
 
     public boolean isWeekendToday()
@@ -243,9 +244,15 @@ public class ShiftService
             throw ShiftExceptionSupplier.shiftAlreadyStarted(shift.getId()).get();
         }
 
-        if (!canShiftBeStartedToday(shift.getDate()))
+        //todo remove
+/*        if (!canShiftBeStartedToday(shift.getDate()))
         {
             throw ShiftExceptionSupplier.shiftCanNotBeStartedToday(shift.getId()).get();
+        }*/
+
+        if (!shift.getIsCarAvailable())
+        {
+            throw ShiftExceptionSupplier.unavailableCar(shift.getCar().getId()).get();
         }
 
         shift = shiftMapper.toShift(shift, startShiftRequest);
@@ -538,5 +545,11 @@ public class ShiftService
     private boolean isFuelIncorrect(BigDecimal fuel)
     {
         return fuel.compareTo(BigDecimal.ZERO) <= 0;
+    }
+
+    public List<ShiftResponse> findAllWithUnavailableCarSinceDate(LocalDate date)
+    {
+        List<Shift> shifts = shiftRepository.findByIsCarAvailableFalseAndDateGreaterThanEqual(date);
+        return shifts.stream().map(shiftMapper::toShiftResponse).collect(Collectors.toList());
     }
 }

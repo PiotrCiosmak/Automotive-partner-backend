@@ -80,4 +80,12 @@ public class ShiftApi
         ShiftResponse shiftResponse = shiftService.updateFuel(updateFuelRequest);
         return ResponseEntity.status(HttpStatus.OK).body(shiftResponse);
     }
+
+    @GetMapping("/find/car-unavailable")
+    @Operation(summary = "Find all with unavailable car since date")
+    public ResponseEntity<List<ShiftResponse>> findAllWithUnavailableCarSinceDate(@RequestParam LocalDate date)
+    {
+        List<ShiftResponse> shiftResponse = shiftService.findAllWithUnavailableCarSinceDate(date);
+        return ResponseEntity.status(HttpStatus.OK).body(shiftResponse);
+    }
 }

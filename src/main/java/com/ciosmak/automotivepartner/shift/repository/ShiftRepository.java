@@ -26,4 +26,12 @@ public interface ShiftRepository extends JpaRepository<Shift, Long>
 
     @Query("SELECT SUM(s.lpg) FROM Shift s WHERE YEAR(s.date) = :year AND MONTH(s.date) = :month AND s.user.id = :userId")
     Optional<BigDecimal> getTotalLpgByUserAndYearAndMonth(Integer year, Integer month, Long userId);
+
+    List<Shift> findByIsCarAvailableFalseAndDateGreaterThanEqual(LocalDate date);
+
+    @Query("SELECT s FROM Shift s WHERE s.isStarted = false AND s.isDone = false AND s.date >= CURRENT_DATE AND s.car.id = :carId")
+    List<Shift> findUnstartedAndUndoneShifts(Long carId);
+
+    @Query("SELECT s FROM Shift s WHERE s.isCarAvailable = false AND s.date >= CURRENT_DATE")
+    List<Shift> findShiftsForCarAndFutureDate(Long carId);
 }
