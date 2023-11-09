@@ -113,6 +113,22 @@ public class CarService
             throw CarExceptionSupplier.carAlreadyBlocked().get();
         }
         car.setIsBlocked(Boolean.TRUE);
+
+        List<Shift> shifts = shiftRepository.findUnstartedAndUndoneShifts(car.getId());
+        for (var shift : shifts)
+        {
+            List<Car> availableCars = carRepository.findAvailableCarsForShift(shift.getDate(), shift.getType());
+            if (availableCars.isEmpty())
+            {
+                shift.setIsCarAvailable(Boolean.FALSE);
+            }
+            else
+            {
+                Car availableCar = availableCars.get(0);
+                shift.setCar(availableCar);
+            }
+        }
+
         return carMapper.toCarResponse(car);
     }
 
@@ -126,6 +142,24 @@ public class CarService
             throw CarExceptionSupplier.carNotBlocked().get();
         }
         car.setIsBlocked(Boolean.FALSE);
+
+        List<Shift> shifts = shiftRepository.findShiftsForCarAndFutureDate(car.getId());
+        for (var shift : shifts)
+        {
+            List<Car> availableCars = carRepository.findAvailableCarsForShift(shift.getDate(), shift.getType());
+            if (availableCars.isEmpty())
+            {
+                shift.setIsCarAvailable(Boolean.TRUE);
+            }
+            else
+            {
+                shift.setCar(availableCars.get(0));
+                shift.setIsCarAvailable(Boolean.TRUE);
+            }
+        }
+
+        //W widoku kalendarza dla kierowcy i admina pokazać jak wyświetla się ze auto jest nie dostepne na ten moment
+
         return carMapper.toCarResponse(car);
     }
 
