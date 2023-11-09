@@ -25,7 +25,7 @@ import java.util.List;
 @Table(name = "shifts")
 public class Shift extends AbstractEntity
 {
-    public Shift(LocalDate date, Type type, Integer startMileage, BigDecimal lpg, BigDecimal petrol, Integer endMileage, Boolean isStarted, Boolean isDone, Car car, User user)
+    public Shift(LocalDate date, Type type, Integer startMileage, BigDecimal lpg, BigDecimal petrol, Integer endMileage, Boolean isStarted, Boolean isDone, Boolean isCarAvailable, Car car, User user)
     {
         this.date = date;
         this.type = type;
@@ -35,6 +35,7 @@ public class Shift extends AbstractEntity
         this.endMileage = endMileage;
         this.isStarted = isStarted;
         this.isDone = isDone;
+        this.isCarAvailable = isCarAvailable;
         this.car = car;
         this.user = user;
     }
@@ -65,6 +66,9 @@ public class Shift extends AbstractEntity
 
     @Column(name = "is_done", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean isDone;
+
+    @Column(name = "is_car_available", nullable = false, columnDefinition = "BOOLEAN DEFAULT true")
+    private Boolean isCarAvailable;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "car_id", nullable = false)

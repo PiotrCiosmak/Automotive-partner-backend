@@ -20,6 +20,7 @@ public class ShiftResponse
     private final Integer endMileage;
     private final Boolean isStarted;
     private final Boolean isDone;
+    private final Boolean isCarAvailable;
     private final Long carId;
     private final Long userId;
 }

@@ -34,12 +34,12 @@ public class ShiftMapper
 
     public Shift toShift(ShiftRequest shiftRequest)
     {
-        return new Shift(shiftRequest.getDate(), shiftRequest.getType(), shiftRequest.getStartMileage(), shiftRequest.getLpg(), shiftRequest.getPetrol(), shiftRequest.getEndMileage(), shiftRequest.getIsStarted(), shiftRequest.getIsDone(), carRepository.findById(shiftRequest.getCarId()).orElseThrow(CarExceptionSupplier.carNotFound(shiftRequest.getCarId())), userRepository.findById(shiftRequest.getUserId()).orElseThrow(UserExceptionSupplier.userNotFound(shiftRequest.getUserId())));
+        return new Shift(shiftRequest.getDate(), shiftRequest.getType(), shiftRequest.getStartMileage(), shiftRequest.getLpg(), shiftRequest.getPetrol(), shiftRequest.getEndMileage(), shiftRequest.getIsStarted(), shiftRequest.getIsDone(), shiftRequest.getIsCarAvailable(), carRepository.findById(shiftRequest.getCarId()).orElseThrow(CarExceptionSupplier.carNotFound(shiftRequest.getCarId())), userRepository.findById(shiftRequest.getUserId()).orElseThrow(UserExceptionSupplier.userNotFound(shiftRequest.getUserId())));
     }
 
     public Shift toShift(GenerateShiftRequest generateShiftRequest)
     {
-        return new Shift(generateShiftRequest.getDate(), generateShiftRequest.getType(), null, null, null, null, Boolean.FALSE, Boolean.FALSE, carRepository.findById(generateShiftRequest.getCarId()).orElseThrow(CarExceptionSupplier.carNotFound(generateShiftRequest.getCarId())), userRepository.findById(generateShiftRequest.getUserId()).orElseThrow(UserExceptionSupplier.userNotFound(generateShiftRequest.getUserId())));
+        return new Shift(generateShiftRequest.getDate(), generateShiftRequest.getType(), null, null, null, null, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, carRepository.findById(generateShiftRequest.getCarId()).orElseThrow(CarExceptionSupplier.carNotFound(generateShiftRequest.getCarId())), userRepository.findById(generateShiftRequest.getUserId()).orElseThrow(UserExceptionSupplier.userNotFound(generateShiftRequest.getUserId())));
     }
 
     public Shift toShift(Shift shift, StartShiftRequest startShiftRequest)
@@ -75,6 +75,7 @@ public class ShiftMapper
         shift.setEndMileage(shiftRequest.getEndMileage());
         shift.setIsStarted(shiftRequest.getIsStarted());
         shift.setIsDone(shiftRequest.getIsDone());
+        shift.setIsCarAvailable(shiftRequest.getIsCarAvailable());
         shift.setCar(carRepository.findById(shiftRequest.getCarId()).orElseThrow(CarExceptionSupplier.carNotFound(shiftRequest.getCarId())));
         shift.setUser(userRepository.findById(shiftRequest.getUserId()).orElseThrow(UserExceptionSupplier.userNotFound(shiftRequest.getUserId())));
         return shift;
@@ -117,6 +118,6 @@ public class ShiftMapper
 
     public ShiftResponse toShiftResponse(Shift shift)
     {
-        return new ShiftResponse(shift.getId(), shift.getDate(), shift.getType(), shift.getStartMileage(), shift.getLpg(), shift.getPetrol(), shift.getEndMileage(), shift.getIsStarted(), shift.getIsDone(), shift.getCar().getId(), shift.getUser().getId());
+        return new ShiftResponse(shift.getId(), shift.getDate(), shift.getType(), shift.getStartMileage(), shift.getLpg(), shift.getPetrol(), shift.getEndMileage(), shift.getIsStarted(), shift.getIsDone(), shift.getIsCarAvailable(), shift.getCar().getId(), shift.getUser().getId());
     }
 }

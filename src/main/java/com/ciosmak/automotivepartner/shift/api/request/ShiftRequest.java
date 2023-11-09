@@ -18,11 +18,12 @@ public class ShiftRequest
     private final Integer endMileage;
     private final Boolean isStarted;
     private final Boolean isDone;
+    private final Boolean isCarAvailable;
     private final Long carId;
     private final Long userId;
 
     @JsonCreator
-    public ShiftRequest(LocalDate date, Type type, Integer startMileage, BigDecimal lpg, BigDecimal petrol, Integer endMileage, Boolean isStarted, Boolean isDone, Long carId, Long userId)
+    public ShiftRequest(LocalDate date, Type type, Integer startMileage, BigDecimal lpg, BigDecimal petrol, Integer endMileage, Boolean isStarted, Boolean isDone, Boolean isCarAvailable, Long carId, Long userId)
     {
         this.date = date;
         this.type = type;
@@ -32,6 +33,7 @@ public class ShiftRequest
         this.endMileage = endMileage;
         this.isStarted = isStarted;
         this.isDone = isDone;
+        this.isCarAvailable = isCarAvailable;
         this.carId = carId;
         this.userId = userId;
     }
