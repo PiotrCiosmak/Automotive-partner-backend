@@ -78,7 +78,7 @@ public class ShiftService
 
     private LocalDate getNextMonday()
     {
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now().minusDays(0);
         return today.with(TemporalAdjusters.next(DayOfWeek.MONDAY));
     }
 
@@ -89,11 +89,10 @@ public class ShiftService
             throw ShiftExceptionSupplier.shiftsAlreadyGenerated().get();
         }
 
-        //todo remove
-      /*  if (!isWeekendToday())
+        if (!isWeekendToday())
         {
             throw ShiftExceptionSupplier.shiftsGeneratingTooEarly().get();
-        }*/
+        }
     }
 
     public boolean isWeekendToday()
@@ -244,11 +243,10 @@ public class ShiftService
             throw ShiftExceptionSupplier.shiftAlreadyStarted(shift.getId()).get();
         }
 
-        //todo remove
-/*        if (!canShiftBeStartedToday(shift.getDate()))
+        if (!canShiftBeStartedToday(shift.getDate()))
         {
             throw ShiftExceptionSupplier.shiftCanNotBeStartedToday(shift.getId()).get();
-        }*/
+        }
 
         if (!shift.getIsCarAvailable())
         {

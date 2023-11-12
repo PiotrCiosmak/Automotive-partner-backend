@@ -39,10 +39,10 @@ public class AvailabilityService
         ArrayList<LocalDate> weekDates = getDatesOfNextWeek();
 
         Optional<Availability> availabilityCandidate = availabilityRepository.findByUser_IdAndDate(userId, getFirstDayOfNextWeek());
-        if (availabilityCandidate.isPresent())
+/*        if (availabilityCandidate.isPresent())
         {
             throw AvailabilityExceptionSupplier.availabilityAlreadySubmitted(user.getFirstName(), user.getLastName()).get();
-        }
+        }*/
 
         List<AvailabilityResponse> availabilityResponses = new ArrayList<>();
 
