@@ -1,6 +1,7 @@
 package com.ciosmak.automotivepartner.accident.service;
 
 import com.ciosmak.automotivepartner.accident.api.request.AccidentRequest;
+import com.ciosmak.automotivepartner.accident.api.request.LateAccidentRequest;
 import com.ciosmak.automotivepartner.accident.api.resposne.AccidentResponse;
 import com.ciosmak.automotivepartner.accident.api.resposne.BaseAccidentResponse;
 import com.ciosmak.automotivepartner.accident.api.resposne.ExtendedAccidentResponse;
@@ -97,6 +98,84 @@ public class AccidentService
         }
     }
 
+    private void checkIfMileageIsCorrect(Integer oldMileage, Integer newMileage)
+    {
+        if (oldMileage == null || newMileage == null)
+        {
+            throw AccidentExceptionSupplier.emptyMileage().get();
+        }
+
+        if (isMileageIncorrect(oldMileage) || isMileageIncorrect(newMileage))
+        {
+            throw AccidentExceptionSupplier.incorrectMileage().get();
+        }
+
+        if (oldMileage > newMileage)
+        {
+            throw AccidentExceptionSupplier.incorrectMileage().get();
+        }
+    }
+
+    private boolean isMileageIncorrect(Integer mileage)
+    {
+        return mileage < 0;
+    }
+
+    private void updateCarMileage(Car car, Integer endMileage)
+    {
+        car.setMileage(endMileage);
+    }
+
+    @Transactional
+    public AccidentResponse completeUnreported(LateAccidentRequest lateAccidentRequest)
+    {
+        Shift shift = shiftRepository.findById(lateAccidentRequest.getShiftId()).orElseThrow(ShiftExceptionSupplier.shiftNotFound(lateAccidentRequest.getShiftId()));
+        checkDoneShift(shift);
+
+        checkIfLateAccidentDataAreCorrect(lateAccidentRequest, shift.getStartMileage());
+
+        List<Photo> photos = new ArrayList<>();
+        List<String> accidentPhotosUlrs = lateAccidentRequest.getAccidentPhotosUrls();
+        for (var accidentPhotoUlr : accidentPhotosUlrs)
+        {
+            photos.add(new Photo(accidentPhotoUlr, PhotoType.CAR_DAMAGE, shift));
+        }
+
+        List<String> documentPhotosUlrs = lateAccidentRequest.getDocumentPhotoUrl();
+        for (var documentPhotoUlr : documentPhotosUlrs)
+        {
+            photos.add(new Photo(documentPhotoUlr, PhotoType.STATEMENT, shift));
+        }
+
+        photoRepository.saveAll(photos);
+
+        Accident accident = accidentRepository.save(accidentMapper.toAccident(lateAccidentRequest));
+        return accidentMapper.toAccidentResponse(accident);
+    }
+
+    private void checkDoneShift(Shift shift)
+    {
+        if (!shift.getIsStarted())
+        {
+            throw ShiftExceptionSupplier.shiftNotStarted(shift.getId()).get();
+        }
+
+        if (!shift.getIsDone())
+        {
+            throw ShiftExceptionSupplier.shiftNotDone(shift.getId()).get();
+        }
+    }
+
+
+    private void checkIfLateAccidentDataAreCorrect(LateAccidentRequest lateAccidentRequest, Integer startMileage)
+    {
+        List<String> accidentPhotosUrls = lateAccidentRequest.getAccidentPhotosUrls();
+        checkIfAccidentPhotosUrlsAreCorrect(accidentPhotosUrls);
+
+        List<String> documentPhotosUrls = lateAccidentRequest.getDocumentPhotoUrl();
+        checkIfDocumentPhotosUrlsAreCorrect(documentPhotosUrls);
+    }
+
     private void checkIfAccidentPhotosUrlsAreCorrect(List<String> photosUrls)
     {
         if (!areEnoughAccidentPhotos(photosUrls))
@@ -142,34 +221,6 @@ public class AccidentService
     private boolean isPhotoUrlEmpty(String photoUrl)
     {
         return photoUrl.isEmpty();
-    }
-
-    private void checkIfMileageIsCorrect(Integer oldMileage, Integer newMileage)
-    {
-        if (oldMileage == null || newMileage == null)
-        {
-            throw AccidentExceptionSupplier.emptyMileage().get();
-        }
-
-        if (isMileageIncorrect(oldMileage) || isMileageIncorrect(newMileage))
-        {
-            throw AccidentExceptionSupplier.incorrectMileage().get();
-        }
-
-        if (oldMileage > newMileage)
-        {
-            throw AccidentExceptionSupplier.incorrectMileage().get();
-        }
-    }
-
-    private boolean isMileageIncorrect(Integer mileage)
-    {
-        return mileage < 0;
-    }
-
-    private void updateCarMileage(Car car, Integer endMileage)
-    {
-        car.setMileage(endMileage);
     }
 
     public List<BaseAccidentResponse> findAllAccidents()

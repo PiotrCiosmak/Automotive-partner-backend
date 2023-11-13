@@ -1,6 +1,7 @@
 package com.ciosmak.automotivepartner.accident.support;
 
 import com.ciosmak.automotivepartner.accident.api.request.AccidentRequest;
+import com.ciosmak.automotivepartner.accident.api.request.LateAccidentRequest;
 import com.ciosmak.automotivepartner.accident.api.resposne.AccidentResponse;
 import com.ciosmak.automotivepartner.accident.api.resposne.BaseAccidentResponse;
 import com.ciosmak.automotivepartner.accident.api.resposne.ExtendedAccidentResponse;
@@ -29,6 +30,11 @@ public class AccidentMapper
         accident.setIsGuilty(accidentRequest.getIsGuilty());
         accident.setShift(shiftRepository.findById(accidentRequest.getShiftId()).orElseThrow(ShiftExceptionSupplier.shiftNotFound(accidentRequest.getShiftId())));
         return accident;
+    }
+
+    public Accident toAccident(LateAccidentRequest lateAccidentRequest)
+    {
+        return new Accident(lateAccidentRequest.getIsGuilty(), Boolean.FALSE, shiftRepository.findById(lateAccidentRequest.getShiftId()).orElseThrow(ShiftExceptionSupplier.shiftNotFound(lateAccidentRequest.getShiftId())));
     }
 
     public AccidentResponse toAccidentResponse(Accident accident)

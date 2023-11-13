@@ -1,6 +1,7 @@
 package com.ciosmak.automotivepartner.accident.api;
 
 import com.ciosmak.automotivepartner.accident.api.request.AccidentRequest;
+import com.ciosmak.automotivepartner.accident.api.request.LateAccidentRequest;
 import com.ciosmak.automotivepartner.accident.api.resposne.AccidentResponse;
 import com.ciosmak.automotivepartner.accident.api.resposne.BaseAccidentResponse;
 import com.ciosmak.automotivepartner.accident.api.resposne.ExtendedAccidentResponse;
@@ -27,6 +28,14 @@ public class AccidentApi
     public ResponseEntity<AccidentResponse> report(@RequestBody AccidentRequest accidentRequest)
     {
         AccidentResponse accidentResponse = accidentService.report(accidentRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(accidentResponse);
+    }
+
+    @PostMapping("/complete-unreported")
+    @Operation(summary = "Complete unreported")
+    public ResponseEntity<AccidentResponse> completeUnreported(@RequestBody LateAccidentRequest lateAccidentRequest)
+    {
+        AccidentResponse accidentResponse = accidentService.completeUnreported(lateAccidentRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(accidentResponse);
     }
 
