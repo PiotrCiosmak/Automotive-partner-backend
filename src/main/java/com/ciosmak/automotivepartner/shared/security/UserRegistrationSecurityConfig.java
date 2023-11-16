@@ -107,6 +107,7 @@ public class UserRegistrationSecurityConfig
                         "/api/shifts/update-fuel",
                         "/api/cars/**",
                         "/api/accident/find",
+                        "/api/accident/change-guilt/{id}",
                         "/api/accident/complete-unreported",
                         "/api/accidents/find/{id}",
                         "/api/availability/quantity",

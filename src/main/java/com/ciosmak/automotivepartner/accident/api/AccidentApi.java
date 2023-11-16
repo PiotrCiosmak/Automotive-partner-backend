@@ -31,6 +31,14 @@ public class AccidentApi
         return ResponseEntity.status(HttpStatus.CREATED).body(accidentResponse);
     }
 
+    @PutMapping("/change-guilt/{id}")
+    @Operation(summary = "Change guilt")
+    public ResponseEntity<AccidentResponse> changeGuilt(@PathVariable Long id)
+    {
+        AccidentResponse accidentResponse = accidentService.changeGuilt(id);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(accidentResponse);
+    }
+
     @PostMapping("/complete-unreported")
     @Operation(summary = "Complete unreported")
     public ResponseEntity<AccidentResponse> completeUnreported(@RequestBody LateAccidentRequest lateAccidentRequest)

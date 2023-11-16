@@ -127,6 +127,14 @@ public class AccidentService
     }
 
     @Transactional
+    public AccidentResponse changeGuilt(Long id)
+    {
+        Accident accident = accidentRepository.findById(id).orElseThrow(AccidentExceptionSupplier.accidentNotFound(id));
+        accident.setIsGuilty(!accident.getIsGuilty());
+        return accidentMapper.toAccidentResponse(accident);
+    }
+
+    @Transactional
     public AccidentResponse completeUnreported(LateAccidentRequest lateAccidentRequest)
     {
         Shift shift = shiftRepository.findById(lateAccidentRequest.getShiftId()).orElseThrow(ShiftExceptionSupplier.shiftNotFound(lateAccidentRequest.getShiftId()));
