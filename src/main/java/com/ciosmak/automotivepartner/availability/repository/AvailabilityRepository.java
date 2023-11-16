@@ -15,10 +15,12 @@ public interface AvailabilityRepository extends JpaRepository<Availability, Long
 {
     Optional<Availability> findByUser_IdAndDate(Long userId, LocalDate date);
 
-    Optional<Availability> findByUser_IdAndDateAndType(Long userId, LocalDate date, Type type);
-
     @Query("SELECT COUNT(a) FROM Availability a WHERE a.date = :date AND a.type = :type")
     Integer countByDateAndType(LocalDate date, Type type);
 
     List<Availability> findAllByDateAndType(LocalDate date, Type type);
+
+    @Query("SELECT a FROM Availability a WHERE a.isUsed = false " + "AND a.date > CURRENT_DATE " + "OR (a.date = CURRENT_DATE " + "AND ((HOUR(CURRENT_TIME) < 6) OR (HOUR(CURRENT_TIME) >= 6 AND HOUR(CURRENT_TIME) < 18 AND a.type = 1)))")
+    List<Availability> findAllByIsUsedFalseAndDateFuture();
+
 }
