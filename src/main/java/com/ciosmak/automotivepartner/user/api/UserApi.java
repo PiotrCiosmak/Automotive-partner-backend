@@ -52,7 +52,7 @@ public class UserApi
     public ResponseEntity<String> changePassword(@RequestBody UserChangePasswordRequest userChangePasswordRequest)
     {
         String message = userService.changePassword(userChangePasswordRequest);
-        return ResponseEntity.status(HttpStatus.OK).body(message);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(message);
     }
 
     @PutMapping("/block/{id}")
@@ -100,7 +100,7 @@ public class UserApi
     public ResponseEntity<List<UserResponse>> findAll(@RequestParam(required = false, defaultValue = "") String filterText)
     {
         List<UserResponse> userResponses = userService.findAll(filterText);
-        return ResponseEntity.status(HttpStatus.OK).body(userResponses);
+        return ResponseEntity.status(HttpStatus.FOUND).body(userResponses);
     }
 
     @GetMapping("/find/unblocked")
@@ -108,7 +108,7 @@ public class UserApi
     public ResponseEntity<List<UserResponse>> findAllUnblocked(@RequestParam(required = false, defaultValue = "") String filterText)
     {
         List<UserResponse> userResponses = userService.findAllUnblocked(filterText);
-        return ResponseEntity.status(HttpStatus.OK).body(userResponses);
+        return ResponseEntity.status(HttpStatus.FOUND).body(userResponses);
     }
 
     @GetMapping("/find/blocked")
@@ -116,7 +116,7 @@ public class UserApi
     public ResponseEntity<List<UserResponse>> findAllBlocked(@RequestParam(required = false, defaultValue = "") String filterText)
     {
         List<UserResponse> userResponses = userService.findAllBlocked(filterText);
-        return ResponseEntity.status(HttpStatus.OK).body(userResponses);
+        return ResponseEntity.status(HttpStatus.FOUND).body(userResponses);
     }
 
     @GetMapping("/find/admins")
@@ -124,7 +124,7 @@ public class UserApi
     public ResponseEntity<List<UserResponse>> findAllAdmins(@RequestParam(required = false, defaultValue = "") String filterText)
     {
         List<UserResponse> userResponses = userService.findAllAdmins(filterText);
-        return ResponseEntity.status(HttpStatus.OK).body(userResponses);
+        return ResponseEntity.status(HttpStatus.FOUND).body(userResponses);
     }
 
     @GetMapping("/find/super-admins")
@@ -132,7 +132,7 @@ public class UserApi
     public ResponseEntity<List<UserResponse>> findAllSuperAdmins(@RequestParam(required = false, defaultValue = "") String filterText)
     {
         List<UserResponse> userResponses = userService.findAllSuperAdmins(filterText);
-        return ResponseEntity.status(HttpStatus.OK).body(userResponses);
+        return ResponseEntity.status(HttpStatus.FOUND).body(userResponses);
     }
 
     @GetMapping("/find/drivers")
@@ -140,7 +140,7 @@ public class UserApi
     public ResponseEntity<List<UserResponse>> findAllDrivers(@RequestParam(required = false, defaultValue = "") String filterText)
     {
         List<UserResponse> userResponses = userService.findAllDrivers(filterText);
-        return ResponseEntity.status(HttpStatus.OK).body(userResponses);
+        return ResponseEntity.status(HttpStatus.FOUND).body(userResponses);
     }
 
     @DeleteMapping("/delete/{id}")

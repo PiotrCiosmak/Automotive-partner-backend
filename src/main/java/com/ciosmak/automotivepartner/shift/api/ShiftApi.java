@@ -62,7 +62,7 @@ public class ShiftApi
     public ResponseEntity<List<ShiftResponse>> findAllByDayAndType(@RequestParam LocalDate date, @RequestParam Type type)
     {
         List<ShiftResponse> shiftResponses = shiftService.findAllByDayAndType(date, type);
-        return ResponseEntity.status(HttpStatus.OK).body(shiftResponses);
+        return ResponseEntity.status(HttpStatus.FOUND).body(shiftResponses);
     }
 
     @GetMapping("/info/{id}")
@@ -78,7 +78,7 @@ public class ShiftApi
     public ResponseEntity<ShiftResponse> updateFuel(@RequestBody UpdateFuelRequest updateFuelRequest)
     {
         ShiftResponse shiftResponse = shiftService.updateFuel(updateFuelRequest);
-        return ResponseEntity.status(HttpStatus.OK).body(shiftResponse);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(shiftResponse);
     }
 
     @GetMapping("/find/car-unavailable")
@@ -86,6 +86,6 @@ public class ShiftApi
     public ResponseEntity<List<ShiftResponse>> findAllWithUnavailableCarSinceDate(@RequestParam LocalDate date)
     {
         List<ShiftResponse> shiftResponse = shiftService.findAllWithUnavailableCarSinceDate(date);
-        return ResponseEntity.status(HttpStatus.OK).body(shiftResponse);
+        return ResponseEntity.status(HttpStatus.FOUND).body(shiftResponse);
     }
 }

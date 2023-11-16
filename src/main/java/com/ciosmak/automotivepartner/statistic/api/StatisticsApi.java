@@ -27,7 +27,7 @@ public class StatisticsApi
     public ResponseEntity<OverallStatisticsResponse> findOverall(@PathVariable Long user_id)
     {
         OverallStatisticsResponse overallStatisticsResponse = statisticsService.findOverall(user_id);
-        return ResponseEntity.status(HttpStatus.OK).body(overallStatisticsResponse);
+        return ResponseEntity.status(HttpStatus.FOUND).body(overallStatisticsResponse);
     }
 
     @GetMapping("/find/detail/{user_id}")
@@ -35,7 +35,7 @@ public class StatisticsApi
     public ResponseEntity<StatisticsResponse> findInSelectedMonth(@PathVariable Long user_id, @RequestParam LocalDate date)
     {
         StatisticsResponse statisticsResponse = statisticsService.findInSelectedMonth(user_id, date);
-        return ResponseEntity.status(HttpStatus.OK).body(statisticsResponse);
+        return ResponseEntity.status(HttpStatus.FOUND).body(statisticsResponse);
     }
 
     @GetMapping("/find/{year}")
@@ -43,6 +43,6 @@ public class StatisticsApi
     public ResponseEntity<YearStatisticsResponse> findInSelectedYear(@RequestParam Year year)
     {
         YearStatisticsResponse yearStatisticsResponse = statisticsService.findInSelectedYear(year);
-        return ResponseEntity.status(HttpStatus.OK).body(yearStatisticsResponse);
+        return ResponseEntity.status(HttpStatus.FOUND).body(yearStatisticsResponse);
     }
 }

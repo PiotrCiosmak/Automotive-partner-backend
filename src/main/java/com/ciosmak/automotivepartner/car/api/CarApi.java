@@ -50,7 +50,7 @@ public class CarApi
     public ResponseEntity<CarResponse> updateMileage(@RequestBody UpdateCarMileageRequest updateCarMileageRequest)
     {
         CarResponse carResponse = carService.updateMileage(updateCarMileageRequest);
-        return ResponseEntity.status(HttpStatus.OK).body(carResponse);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(carResponse);
     }
 
     @GetMapping("/find")
@@ -58,7 +58,7 @@ public class CarApi
     public ResponseEntity<List<CarResponse>> findAll(@RequestParam(required = false, defaultValue = "") String filterText)
     {
         List<CarResponse> carResponses = carService.findAll(filterText);
-        return ResponseEntity.status(HttpStatus.OK).body(carResponses);
+        return ResponseEntity.status(HttpStatus.FOUND).body(carResponses);
     }
 
     @GetMapping("/find/unblocked")
@@ -66,7 +66,7 @@ public class CarApi
     public ResponseEntity<List<CarResponse>> findAllUnblocked(@RequestParam(required = false, defaultValue = "") String filterText)
     {
         List<CarResponse> carResponses = carService.findAllUnblocked(filterText);
-        return ResponseEntity.status(HttpStatus.OK).body(carResponses);
+        return ResponseEntity.status(HttpStatus.FOUND).body(carResponses);
     }
 
     @GetMapping("/find/blocked")
@@ -74,7 +74,7 @@ public class CarApi
     public ResponseEntity<List<CarResponse>> findAllBlocked(@RequestParam(required = false, defaultValue = "") String filterText)
     {
         List<CarResponse> carResponses = carService.findAllBlocked(filterText);
-        return ResponseEntity.status(HttpStatus.OK).body(carResponses);
+        return ResponseEntity.status(HttpStatus.FOUND).body(carResponses);
     }
 
     @DeleteMapping("/delete/{id}")

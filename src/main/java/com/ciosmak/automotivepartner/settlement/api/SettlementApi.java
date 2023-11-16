@@ -58,7 +58,7 @@ public class SettlementApi
     public ResponseEntity<SettlementResponse> update(@RequestBody SettlementRequest settlementRequest)
     {
         SettlementResponse settlementResponse = settlementService.update(settlementRequest);
-        return ResponseEntity.status(HttpStatus.OK).body(settlementResponse);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(settlementResponse);
     }
 
     @GetMapping("/find")

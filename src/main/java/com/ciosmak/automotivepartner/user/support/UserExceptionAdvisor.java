@@ -26,7 +26,7 @@ public class UserExceptionAdvisor
     private final MessageSource messageSource;
 
     @ExceptionHandler(ChangePasswordLinkSendException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorMessageResponse changePasswordLinkSend(ChangePasswordLinkSendException exception)
     {

@@ -52,7 +52,7 @@ public class AccidentApi
     public ResponseEntity<List<BaseAccidentResponse>> findAll()
     {
         List<BaseAccidentResponse> baseAccidentResponses = accidentService.findAllAccidents();
-        return ResponseEntity.status(HttpStatus.OK).body(baseAccidentResponses);
+        return ResponseEntity.status(HttpStatus.FOUND).body(baseAccidentResponses);
     }
 
     @GetMapping("/find/{id}")
@@ -60,6 +60,6 @@ public class AccidentApi
     public ResponseEntity<ExtendedAccidentResponse> find(@PathVariable Long id)
     {
         ExtendedAccidentResponse extendedAccidentResponse = accidentService.findAccident(id);
-        return ResponseEntity.status(HttpStatus.OK).body(extendedAccidentResponse);
+        return ResponseEntity.status(HttpStatus.FOUND).body(extendedAccidentResponse);
     }
 }
