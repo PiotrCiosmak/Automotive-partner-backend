@@ -1,5 +1,7 @@
 package com.ciosmak.automotivepartner.car.service;
 
+import com.ciosmak.automotivepartner.availability.domain.Availability;
+import com.ciosmak.automotivepartner.availability.repository.AvailabilityRepository;
 import com.ciosmak.automotivepartner.car.api.request.CarRequest;
 import com.ciosmak.automotivepartner.car.api.request.UpdateCarMileageRequest;
 import com.ciosmak.automotivepartner.car.api.response.CarResponse;
@@ -9,11 +11,17 @@ import com.ciosmak.automotivepartner.car.support.CarExceptionSupplier;
 import com.ciosmak.automotivepartner.car.support.CarMapper;
 import com.ciosmak.automotivepartner.shift.domain.Shift;
 import com.ciosmak.automotivepartner.shift.repository.ShiftRepository;
+import com.ciosmak.automotivepartner.shift.service.ShiftService;
+import com.ciosmak.automotivepartner.shift.support.Type;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -21,8 +29,10 @@ import java.util.stream.Collectors;
 public class CarService
 {
     private final CarRepository carRepository;
+    private final AvailabilityRepository availabilityRepository;
     private final CarMapper carMapper;
     private final ShiftRepository shiftRepository;
+    private final ShiftService shiftService;
 
     @Transactional
     public CarResponse add(CarRequest carRequest)
@@ -158,11 +168,39 @@ public class CarService
             }
         }
 
-        //W widoku kalendarza dla kierowcy i admina pokazać jak wyświetla się ze auto jest nie dostepne na ten moment
+        List<Availability> availabilities = availabilityRepository.findAllByIsUsedFalseAndDateFuture();
+
+        Map<Pair<LocalDate, Type>, List<Availability>> dateToAvailabilities = availabilities.stream()
+                .collect(Collectors.groupingBy(
+                        availability -> Pair.of(availability.getDate(), availability.getType()),
+                        Collectors.toList()
+                ));
+
+        for (Map.Entry<Pair<LocalDate, Type>, List<Availability>> entry : dateToAvailabilities.entrySet())
+        {
+            LocalDate date = entry.getKey().getLeft();
+            Type type = entry.getKey().getRight();
+            List<Availability> availabilitiesActualDateAndType = entry.getValue();
+
+            List<Long> userIds = new ArrayList<>();
+            for (var availability : availabilitiesActualDateAndType)
+            {
+                userIds.add(availability.getUser().getId());
+            }
+
+            int numberOfPotentialShifts = userIds.size();
+            List<Car> availableCars = carRepository.findAvailableCarsForShift(date, type);
+            int numberOfPossibleShiftsToBeGenerated = Math.min(numberOfPotentialShifts, availableCars.size());
+
+            for (int i = 0; i < numberOfPossibleShiftsToBeGenerated; ++i)
+            {
+                shiftService.generateShift(date, type, car.getId(), userIds.get(i));
+                availabilitiesActualDateAndType.get(i).setIsUsed(true);
+            }
+        }
 
         return carMapper.toCarResponse(car);
     }
-
 
     @Transactional
     public CarResponse updateMileage(UpdateCarMileageRequest updateCarMileageRequest)
