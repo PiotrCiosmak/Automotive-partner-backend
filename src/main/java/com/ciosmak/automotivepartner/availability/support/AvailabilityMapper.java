@@ -16,7 +16,7 @@ public class AvailabilityMapper
 
     public Availability toAvailability(AvailabilityRequest availabilityRequest)
     {
-        return new Availability(availabilityRequest.getType(), availabilityRequest.getDate(), userRepository.findById(availabilityRequest.getUserId()).orElseThrow(UserExceptionSupplier.userNotFound(availabilityRequest.getUserId())));
+        return new Availability(availabilityRequest.getType(), availabilityRequest.getDate(), Boolean.FALSE, userRepository.findById(availabilityRequest.getUserId()).orElseThrow(UserExceptionSupplier.userNotFound(availabilityRequest.getUserId())));
     }
 
     public Availability toAvailability(Availability availability, AvailabilityRequest availabilityRequest)
@@ -29,6 +29,6 @@ public class AvailabilityMapper
 
     public AvailabilityResponse toAvailabilityResponse(Availability availability)
     {
-        return new AvailabilityResponse(availability.getId(), availability.getType(), availability.getDate(), availability.getUser().getId());
+        return new AvailabilityResponse(availability.getId(), availability.getType(), availability.getDate(), availability.getIsUsed(), availability.getUser().getId());
     }
 }

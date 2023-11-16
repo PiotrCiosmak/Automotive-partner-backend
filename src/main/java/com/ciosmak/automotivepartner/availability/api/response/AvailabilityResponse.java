@@ -13,5 +13,6 @@ public class AvailabilityResponse
     private final Long id;
     private final Type type;
     private final LocalDate date;
+    private final Boolean isUsed;
     private final Long userId;
 }

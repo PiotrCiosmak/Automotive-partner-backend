@@ -27,6 +27,9 @@ public class Availability extends AbstractEntity
     @Column(name = "date", columnDefinition = "DATE", nullable = false)
     private LocalDate date;
 
+    @Column(name = "is_used", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean isUsed;
+
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
