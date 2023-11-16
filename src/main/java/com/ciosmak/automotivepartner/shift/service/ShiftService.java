@@ -115,6 +115,12 @@ public class ShiftService
         return nextWeekDates;
     }
 
+    public void generateShift(LocalDate date, Type type, Long carId, Long userId)
+    {
+        GenerateShiftRequest generateShiftRequest = new GenerateShiftRequest(date, type, carId, userId);
+        shiftRepository.save(shiftMapper.toShift(generateShiftRequest));
+    }
+
     private void generateShiftsForDate(LocalDate date, Type type, List<Shift> shifts)
     {
         List<Availability> availabilities = availabilityRepository.findAllByDateAndType(date, type);
@@ -131,6 +137,7 @@ public class ShiftService
         {
             GenerateShiftRequest generateShiftRequest = new GenerateShiftRequest(date, type, cars.get(i).getId(), userIdToFinalScore.get(i));
             shifts.add(shiftRepository.save(shiftMapper.toShift(generateShiftRequest)));
+            availabilities.get(i).setIsUsed(Boolean.TRUE);
         }
     }
 
