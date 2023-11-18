@@ -7,6 +7,7 @@ import com.ciosmak.automotivepartner.availability.domain.Availability;
 import com.ciosmak.automotivepartner.availability.repository.AvailabilityRepository;
 import com.ciosmak.automotivepartner.availability.support.AvailabilityExceptionSupplier;
 import com.ciosmak.automotivepartner.availability.support.AvailabilityMapper;
+import com.ciosmak.automotivepartner.shift.repository.ShiftRepository;
 import com.ciosmak.automotivepartner.shift.support.Type;
 import com.ciosmak.automotivepartner.user.domain.User;
 import com.ciosmak.automotivepartner.user.repository.UserRepository;
@@ -27,6 +28,7 @@ import java.util.Optional;
 public class AvailabilityService
 {
     private final AvailabilityRepository availabilityRepository;
+    private final ShiftRepository shiftRepository;
     private final UserRepository userRepository;
     private final AvailabilityMapper availabilityMapper;
 
@@ -36,14 +38,13 @@ public class AvailabilityService
         Long userId = weekAvailabilityRequest.getUserId();
         User user = userRepository.findById(userId).orElseThrow(UserExceptionSupplier.userNotFound(userId));
 
-        ArrayList<LocalDate> weekDates = getDatesOfNextWeek();
-
         Optional<Availability> availabilityCandidate = availabilityRepository.findByUser_IdAndDate(userId, getFirstDayOfNextWeek());
-/*        if (availabilityCandidate.isPresent())
+        if (availabilityCandidate.isPresent())
         {
             throw AvailabilityExceptionSupplier.availabilityAlreadySubmitted(user.getFirstName(), user.getLastName()).get();
-        }*/
+        }
 
+        ArrayList<LocalDate> weekDates = getDatesOfNextWeek();
         List<AvailabilityResponse> availabilityResponses = new ArrayList<>();
 
         Optional<Availability> availabilityCandidateForPreviousDay = availabilityRepository.findByUser_IdAndDate(userId, weekDates.get(0).minusDays(1));
@@ -55,7 +56,21 @@ public class AvailabilityService
             availabilityCandidateForPreviousDay = availabilityRepository.findByUser_IdAndDate(userId, weekDates.get(i));
             availabilityResponses.add(availabilityMapper.toAvailabilityResponse(availability));
         }
+
+        if (isWeekendToday())
+        {
+            throw AvailabilityExceptionSupplier.availabilitySubmittingTooLate().get();
+        }
+
         return availabilityResponses;
+    }
+
+    private boolean isWeekendToday()
+    {
+        LocalDate currentDate = LocalDate.now();
+        DayOfWeek dayOfWeek = currentDate.getDayOfWeek();
+
+        return dayOfWeek == DayOfWeek.FRIDAY || dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY;
     }
 
     private ArrayList<LocalDate> getDatesOfNextWeek()

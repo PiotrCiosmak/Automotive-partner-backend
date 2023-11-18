@@ -1,6 +1,7 @@
 package com.ciosmak.automotivepartner.availability.support;
 
 import com.ciosmak.automotivepartner.availability.support.exception.AvailabilityAlreadySubmittedException;
+import com.ciosmak.automotivepartner.availability.support.exception.AvailabilitySubmittingTooLateException;
 import com.ciosmak.automotivepartner.availability.support.exception.IncorrectAvailabilityDateException;
 import com.ciosmak.automotivepartner.availability.support.exception.IncorrectAvailabilityTypesException;
 import com.ciosmak.automotivepartner.shared.api.response.ErrorMessageResponse;
@@ -28,6 +29,16 @@ public class AvailabilityExceptionAdvisor
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorMessageResponse availabilityAlreadySubmitted(AvailabilityAlreadySubmittedException exception)
+    {
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
+    }
+
+    @ExceptionHandler(AvailabilitySubmittingTooLateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse availabilitySubmittingTooLate(AvailabilitySubmittingTooLateException exception)
     {
         String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
         LOG.error(errorMessage);

@@ -95,7 +95,7 @@ public class ShiftService
         }
     }
 
-    public boolean isWeekendToday()
+    private boolean isWeekendToday()
     {
         LocalDate currentDate = LocalDate.now();
         DayOfWeek dayOfWeek = currentDate.getDayOfWeek();
