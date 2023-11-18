@@ -27,10 +27,11 @@ public class ShiftApi
 
     @PostMapping("/generate")
     @Operation(summary = "Generate for next week")
-    public ResponseEntity<List<ShiftResponse>> generate()
+    public ResponseEntity<Void> generate()
     {
-        List<ShiftResponse> shiftResponses = shiftService.generate();
-        return ResponseEntity.status(HttpStatus.CREATED).body(shiftResponses);
+        shiftService.generate();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
     }
 
     @PostMapping("/start")

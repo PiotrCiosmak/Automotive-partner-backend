@@ -30,6 +30,7 @@ import com.ciosmak.automotivepartner.user.repository.UserRepository;
 import com.ciosmak.automotivepartner.user.support.UserExceptionSupplier;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -55,8 +56,9 @@ public class ShiftService
     private final AccidentRepository accidentRepository;
     private final SettlementRepository settlementRepository;
 
+    @Scheduled(cron = "0 1 0 * * FRI")
     @Transactional
-    public List<ShiftResponse> generate()
+    public void generate()
     {
         List<Shift> nextWeekShifts = shiftRepository.findAllByDate(getNextMonday());
         checkIfGenerationIsAllowed(nextWeekShifts);
@@ -68,12 +70,10 @@ public class ShiftService
             generateShiftsForDate(date, Type.NIGHT, shifts);
         }
 
-        List<ShiftResponse> shiftResponses = new ArrayList<>();
         for (var shift : shifts)
         {
-            shiftResponses.add(shiftMapper.toShiftResponse(shift));
+            shiftMapper.toShiftResponse(shift);
         }
-        return shiftResponses;
     }
 
     private LocalDate getNextMonday()
@@ -225,11 +225,7 @@ public class ShiftService
             userIdToFinalScore.put(userId, finalScore);
         }
 
-        Map<Long, BigDecimal> sortedUserIdToSum = userIdToFinalScore.entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByValue())
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-                        (e1, e2) -> e1, LinkedHashMap::new));
+        Map<Long, BigDecimal> sortedUserIdToSum = userIdToFinalScore.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
         return new ArrayList<>(sortedUserIdToSum.keySet());
     }

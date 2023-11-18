@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @OpenAPIDefinition(
         info = @Info(
@@ -16,6 +17,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
                 )
         )
 )
+@EnableScheduling
 @SpringBootApplication()
 //TODO doczytać czy musze sam konfigurowac czy nie@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 public class AutomotivePartnerApplication
