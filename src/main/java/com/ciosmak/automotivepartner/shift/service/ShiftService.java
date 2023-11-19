@@ -9,10 +9,7 @@ import com.ciosmak.automotivepartner.photo.domain.Photo;
 import com.ciosmak.automotivepartner.photo.repository.PhotoRepository;
 import com.ciosmak.automotivepartner.photo.support.PhotoType;
 import com.ciosmak.automotivepartner.settlement.repository.SettlementRepository;
-import com.ciosmak.automotivepartner.shift.api.request.EndShiftRequest;
-import com.ciosmak.automotivepartner.shift.api.request.GenerateShiftRequest;
-import com.ciosmak.automotivepartner.shift.api.request.StartShiftRequest;
-import com.ciosmak.automotivepartner.shift.api.request.UpdateFuelRequest;
+import com.ciosmak.automotivepartner.shift.api.request.*;
 import com.ciosmak.automotivepartner.shift.api.response.ExtendedShiftResponse;
 import com.ciosmak.automotivepartner.shift.api.response.ShiftResponse;
 import com.ciosmak.automotivepartner.shift.domain.Shift;
@@ -37,6 +34,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -56,185 +55,82 @@ public class ShiftService
     private final AccidentRepository accidentRepository;
     private final SettlementRepository settlementRepository;
 
-    @Scheduled(cron = "0 1 0 * * FRI")
     @Transactional
-    public void generate()
+    public void cancel(CancelShiftRequest cancelShiftRequest)
     {
-        List<Shift> nextWeekShifts = shiftRepository.findAllByDate(getNextMonday());
-        checkIfGenerationIsAllowed(nextWeekShifts);
+        LocalDate date = cancelShiftRequest.getDate();
+        Type type = cancelShiftRequest.getType();
+        Shift shift = shiftRepository.findByUser_IdAndDateAndType(cancelShiftRequest.getUserId(), date, type).orElseThrow(ShiftExceptionSupplier.userNotAssignedToThisShift(cancelShiftRequest.getUserId(), date, type));
+        checkIfShiftCanBeCanceled(shift);
 
-        List<Shift> shifts = new ArrayList<>();
-        for (var date : getNextWeekDates())
+        List<Availability> availabilities = availabilityRepository.findAllByDateAndTypeAndIsUsedFalse(date, type);
+        if (availabilities.isEmpty())
         {
-            generateShiftsForDate(date, Type.DAY, shifts);
-            generateShiftsForDate(date, Type.NIGHT, shifts);
+            shiftRepository.delete(shift);
+            return;
         }
 
-        for (var shift : shifts)
-        {
-            shiftMapper.toShiftResponse(shift);
-        }
+        removeAvailabilityOfUserWhoCancelsShift(shift);
+
+        Availability availabilityOfUserWhoReceivedShift = availabilities.get(0);
+        updateAvailabilityOfUserWhoReceivedShift(availabilityOfUserWhoReceivedShift);
+        updateShift(shift, availabilityOfUserWhoReceivedShift.getUser());
     }
 
-    private LocalDate getNextMonday()
+    private void checkIfShiftCanBeCanceled(Shift shift)
     {
-        LocalDate today = LocalDate.now().minusDays(0);
-        return today.with(TemporalAdjusters.next(DayOfWeek.MONDAY));
-    }
-
-    private void checkIfGenerationIsAllowed(List<Shift> nextWeekShifts)
-    {
-        if (!nextWeekShifts.isEmpty())
+        if (shift.getIsDone() || shift.getDate().isBefore(LocalDate.now()))
         {
-            throw ShiftExceptionSupplier.shiftsAlreadyGenerated().get();
+            throw ShiftExceptionSupplier.shiftAlreadyDone(shift.getId()).get();
         }
 
-        if (!isWeekendToday())
+        if (shift.getIsStarted())
         {
-            throw ShiftExceptionSupplier.shiftsGeneratingTooEarly().get();
+            throw ShiftExceptionSupplier.shiftAlreadyStarted(shift.getId()).get();
         }
-    }
 
-    private boolean isWeekendToday()
-    {
-        LocalDate currentDate = LocalDate.now();
-        DayOfWeek dayOfWeek = currentDate.getDayOfWeek();
-
-        return dayOfWeek == DayOfWeek.FRIDAY || dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY;
-    }
-
-    private List<LocalDate> getNextWeekDates()
-    {
-        List<LocalDate> nextWeekDates = new ArrayList<>();
-        LocalDate nextMonday = getNextMonday();
-
-        for (int i = 0; i < 7; ++i)
+        if (isShiftStartWithin24Hours(shift))
         {
-            nextWeekDates.add(nextMonday.plusDays(i));
-        }
-        return nextWeekDates;
-    }
-
-    public void generateShift(LocalDate date, Type type, Long carId, Long userId)
-    {
-        GenerateShiftRequest generateShiftRequest = new GenerateShiftRequest(date, type, carId, userId);
-        shiftRepository.save(shiftMapper.toShift(generateShiftRequest));
-    }
-
-    private void generateShiftsForDate(LocalDate date, Type type, List<Shift> shifts)
-    {
-        List<Availability> availabilities = availabilityRepository.findAllByDateAndType(date, type);
-        removeAvailabilityOfBlockedUsers(availabilities);
-
-        List<Car> cars = carRepository.findAllByIsBlocked(Boolean.FALSE);
-
-        Map<Long, BigDecimal> userIdToAccidentRatio = calculateAccidentRadios(availabilities);
-        Map<Long, BigDecimal> userIdToPerformanceRatio = calculatePerformanceRatios(availabilities);
-        List<Long> userIdToFinalScore = calculateFinalScores(userIdToAccidentRatio, userIdToPerformanceRatio);
-
-        int shiftsToGenerate = Math.min(availabilities.size(), cars.size());
-        for (int i = 0; i < shiftsToGenerate; ++i)
-        {
-            GenerateShiftRequest generateShiftRequest = new GenerateShiftRequest(date, type, cars.get(i).getId(), userIdToFinalScore.get(i));
-            shifts.add(shiftRepository.save(shiftMapper.toShift(generateShiftRequest)));
-            availabilities.get(i).setIsUsed(Boolean.TRUE);
+            throw ShiftExceptionSupplier.shiftCancelTooLate().get();
         }
     }
 
-    private void removeAvailabilityOfBlockedUsers(List<Availability> availabilities)
+    private boolean isShiftStartWithin24Hours(Shift shift)
     {
-        for (var availability : availabilities)
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime shiftStart = shift.getType() == Type.DAY ? shift.getDate().atTime(LocalTime.of(6, 0)) : shift.getDate().atTime(LocalTime.of(18, 0));
+
+        return now.plusHours(24).isAfter(shiftStart);
+    }
+
+    private void removeAvailabilityOfUserWhoCancelsShift(Shift shift)
+    {
+        Optional<Availability> availability = availabilityRepository.findByUser_IdAndDate(shift.getUser().getId(), shift.getDate());
+        if (availability.isPresent())
         {
-            User user = availability.getUser();
-            if (user.getIsBlocked())
-            {
-                availabilities.remove(availability);
-            }
+            availabilityRepository.delete(availability.get());
+        }
+        else
+        {
+            throw ShiftExceptionSupplier.userNotAssignedToThisShift(shift.getUser().getId(), shift.getDate(), shift.getType()).get();
         }
     }
 
-    private Map<Long, BigDecimal> calculateAccidentRadios(List<Availability> availabilities)
+    private void updateAvailabilityOfUserWhoReceivedShift(Availability availability)
     {
-        Map<Long, BigDecimal> userIdToAccidentRatio = new HashMap<>();
-        for (var availability : availabilities)
-        {
-            Long userId = availability.getUser().getId();
-
-            Integer numberOfAccidentsCausedByDriver = accidentRepository.countGuiltyAccidentsByUserId(userId);
-            Integer numberOfEndedShifts = shiftRepository.countByUser_IdAndIsDoneTrue(userId);
-            BigDecimal accidentRadio;
-            if (numberOfEndedShifts == 0)
-            {
-                accidentRadio = BigDecimal.ZERO;
-            }
-            else
-            {
-                accidentRadio = BigDecimal.valueOf(numberOfAccidentsCausedByDriver * 1.0 / numberOfEndedShifts);
-            }
-            userIdToAccidentRatio.put(userId, accidentRadio);
-        }
-        return userIdToAccidentRatio;
+        availability.setIsUsed(Boolean.TRUE);
     }
 
-    private Map<Long, BigDecimal> calculatePerformanceRatios(List<Availability> availabilities)
+    private void updateShift(Shift shift, User user)
     {
-        Map<Long, BigDecimal> userIdToPerformanceRatio = new HashMap<>();
-
-        LocalDate previousMonthDate = calculatePreviousMonthDate();
-
-        for (var availability : availabilities)
-        {
-            Long userId = availability.getUser().getId();
-            BigDecimal lastMonthLpg = shiftRepository.getTotalLpgByUserAndYearAndMonth(previousMonthDate.getYear(), previousMonthDate.getMonthValue(), userId).orElse(BigDecimal.ZERO);
-            BigDecimal lastMonthNetProfit = settlementRepository.findNetProfitByYearMonthAndUserId(previousMonthDate.getYear(), previousMonthDate.getMonthValue(), userId).orElse(BigDecimal.ZERO);
-            BigDecimal performanceRatio;
-            if (lastMonthLpg.equals(BigDecimal.ZERO))
-            {
-                performanceRatio = BigDecimal.ZERO;
-            }
-            else
-            {
-                performanceRatio = lastMonthLpg.divide(lastMonthNetProfit, RoundingMode.CEILING);
-            }
-            userIdToPerformanceRatio.put(userId, performanceRatio);
-        }
-        return userIdToPerformanceRatio;
-    }
-
-    public LocalDate calculatePreviousMonthDate()
-    {
-        LocalDate currentDate = LocalDate.now();
-        LocalDate previousMonthDate = currentDate.minusMonths(1);
-        previousMonthDate = previousMonthDate.withDayOfMonth(1);
-        return previousMonthDate;
-    }
-
-    private List<Long> calculateFinalScores(Map<Long, BigDecimal> userIdToAccidentRatio, Map<Long, BigDecimal> userIdToPerformanceRatio)
-    {
-        Map<Long, BigDecimal> userIdToFinalScore = new HashMap<>();
-
-        for (Long userId : userIdToAccidentRatio.keySet())
-        {
-            BigDecimal accidentRatio = userIdToAccidentRatio.get(userId);
-            BigDecimal accidentRatioWithWeight = accidentRatio.multiply(BigDecimal.ONE);
-
-            BigDecimal performanceRatio = userIdToPerformanceRatio.get(userId);
-            BigDecimal performanceRatioWithWeight = performanceRatio.multiply(BigDecimal.TEN);
-
-            BigDecimal finalScore = accidentRatioWithWeight.add(performanceRatioWithWeight);
-            userIdToFinalScore.put(userId, finalScore);
-        }
-
-        Map<Long, BigDecimal> sortedUserIdToSum = userIdToFinalScore.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-
-        return new ArrayList<>(sortedUserIdToSum.keySet());
+        shift.setUser(user);
     }
 
     @Transactional
     public ShiftResponse start(StartShiftRequest startShiftRequest)
     {
         userRepository.findById(startShiftRequest.getUserId()).orElseThrow(UserExceptionSupplier.userNotFound(startShiftRequest.getUserId()));
-        Shift shift = shiftRepository.findByUser_IdAndDateAndType(startShiftRequest.getUserId(), startShiftRequest.getDate(), startShiftRequest.getType()).orElseThrow(ShiftExceptionSupplier.shiftStart(startShiftRequest.getUserId(), startShiftRequest.getDate(), startShiftRequest.getType()));
+        Shift shift = shiftRepository.findByUser_IdAndDateAndType(startShiftRequest.getUserId(), startShiftRequest.getDate(), startShiftRequest.getType()).orElseThrow(ShiftExceptionSupplier.userNotAssignedToThisShift(startShiftRequest.getUserId(), startShiftRequest.getDate(), startShiftRequest.getType()));
 
         if (shift.getIsDone())
         {
@@ -471,6 +367,180 @@ public class ShiftService
     private void updateCarMileage(Car car, Integer endMileage)
     {
         car.setMileage(endMileage);
+    }
+
+    @Scheduled(cron = "0 1 0 * * FRI")
+    @Transactional
+    public void generate()
+    {
+        List<Shift> nextWeekShifts = shiftRepository.findAllByDate(getNextMonday());
+        checkIfGenerationIsAllowed(nextWeekShifts);
+
+        List<Shift> shifts = new ArrayList<>();
+        for (var date : getNextWeekDates())
+        {
+            generateShiftsForDate(date, Type.DAY, shifts);
+            generateShiftsForDate(date, Type.NIGHT, shifts);
+        }
+
+        for (var shift : shifts)
+        {
+            shiftMapper.toShiftResponse(shift);
+        }
+    }
+
+    private LocalDate getNextMonday()
+    {
+        LocalDate today = LocalDate.now().minusDays(0);
+        return today.with(TemporalAdjusters.next(DayOfWeek.MONDAY));
+    }
+
+    private void checkIfGenerationIsAllowed(List<Shift> nextWeekShifts)
+    {
+        if (!nextWeekShifts.isEmpty())
+        {
+            throw ShiftExceptionSupplier.shiftsAlreadyGenerated().get();
+        }
+
+        if (!isWeekendToday())
+        {
+            throw ShiftExceptionSupplier.shiftsGeneratingTooEarly().get();
+        }
+    }
+
+    private boolean isWeekendToday()
+    {
+        LocalDate currentDate = LocalDate.now();
+        DayOfWeek dayOfWeek = currentDate.getDayOfWeek();
+
+        return dayOfWeek == DayOfWeek.FRIDAY || dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY;
+    }
+
+    private List<LocalDate> getNextWeekDates()
+    {
+        List<LocalDate> nextWeekDates = new ArrayList<>();
+        LocalDate nextMonday = getNextMonday();
+
+        for (int i = 0; i < 7; ++i)
+        {
+            nextWeekDates.add(nextMonday.plusDays(i));
+        }
+        return nextWeekDates;
+    }
+
+    public void generateShift(LocalDate date, Type type, Long carId, Long userId)
+    {
+        GenerateShiftRequest generateShiftRequest = new GenerateShiftRequest(date, type, carId, userId);
+        shiftRepository.save(shiftMapper.toShift(generateShiftRequest));
+    }
+
+    private void generateShiftsForDate(LocalDate date, Type type, List<Shift> shifts)
+    {
+        List<Availability> availabilities = availabilityRepository.findAllByDateAndType(date, type);
+        removeAvailabilityOfBlockedUsers(availabilities);
+
+        List<Car> cars = carRepository.findAllByIsBlocked(Boolean.FALSE);
+
+        Map<Long, BigDecimal> userIdToAccidentRatio = calculateAccidentRadios(availabilities);
+        Map<Long, BigDecimal> userIdToPerformanceRatio = calculatePerformanceRatios(availabilities);
+        List<Long> userIdToFinalScore = calculateFinalScores(userIdToAccidentRatio, userIdToPerformanceRatio);
+
+        int shiftsToGenerate = Math.min(availabilities.size(), cars.size());
+        for (int i = 0; i < shiftsToGenerate; ++i)
+        {
+            GenerateShiftRequest generateShiftRequest = new GenerateShiftRequest(date, type, cars.get(i).getId(), userIdToFinalScore.get(i));
+            shifts.add(shiftRepository.save(shiftMapper.toShift(generateShiftRequest)));
+            availabilities.get(i).setIsUsed(Boolean.TRUE);
+        }
+    }
+
+    private void removeAvailabilityOfBlockedUsers(List<Availability> availabilities)
+    {
+        for (var availability : availabilities)
+        {
+            User user = availability.getUser();
+            if (user.getIsBlocked())
+            {
+                availabilities.remove(availability);
+            }
+        }
+    }
+
+    private Map<Long, BigDecimal> calculateAccidentRadios(List<Availability> availabilities)
+    {
+        Map<Long, BigDecimal> userIdToAccidentRatio = new HashMap<>();
+        for (var availability : availabilities)
+        {
+            Long userId = availability.getUser().getId();
+
+            Integer numberOfAccidentsCausedByDriver = accidentRepository.countGuiltyAccidentsByUserId(userId);
+            Integer numberOfEndedShifts = shiftRepository.countByUser_IdAndIsDoneTrue(userId);
+            BigDecimal accidentRadio;
+            if (numberOfEndedShifts == 0)
+            {
+                accidentRadio = BigDecimal.ZERO;
+            }
+            else
+            {
+                accidentRadio = BigDecimal.valueOf(numberOfAccidentsCausedByDriver * 1.0 / numberOfEndedShifts);
+            }
+            userIdToAccidentRatio.put(userId, accidentRadio);
+        }
+        return userIdToAccidentRatio;
+    }
+
+    private Map<Long, BigDecimal> calculatePerformanceRatios(List<Availability> availabilities)
+    {
+        Map<Long, BigDecimal> userIdToPerformanceRatio = new HashMap<>();
+
+        LocalDate previousMonthDate = calculatePreviousMonthDate();
+
+        for (var availability : availabilities)
+        {
+            Long userId = availability.getUser().getId();
+            BigDecimal lastMonthLpg = shiftRepository.getTotalLpgByUserAndYearAndMonth(previousMonthDate.getYear(), previousMonthDate.getMonthValue(), userId).orElse(BigDecimal.ZERO);
+            BigDecimal lastMonthNetProfit = settlementRepository.findNetProfitByYearMonthAndUserId(previousMonthDate.getYear(), previousMonthDate.getMonthValue(), userId).orElse(BigDecimal.ZERO);
+            BigDecimal performanceRatio;
+            if (lastMonthLpg.equals(BigDecimal.ZERO))
+            {
+                performanceRatio = BigDecimal.ZERO;
+            }
+            else
+            {
+                performanceRatio = lastMonthLpg.divide(lastMonthNetProfit, RoundingMode.CEILING);
+            }
+            userIdToPerformanceRatio.put(userId, performanceRatio);
+        }
+        return userIdToPerformanceRatio;
+    }
+
+    public LocalDate calculatePreviousMonthDate()
+    {
+        LocalDate currentDate = LocalDate.now();
+        LocalDate previousMonthDate = currentDate.minusMonths(1);
+        previousMonthDate = previousMonthDate.withDayOfMonth(1);
+        return previousMonthDate;
+    }
+
+    private List<Long> calculateFinalScores(Map<Long, BigDecimal> userIdToAccidentRatio, Map<Long, BigDecimal> userIdToPerformanceRatio)
+    {
+        Map<Long, BigDecimal> userIdToFinalScore = new HashMap<>();
+
+        for (Long userId : userIdToAccidentRatio.keySet())
+        {
+            BigDecimal accidentRatio = userIdToAccidentRatio.get(userId);
+            BigDecimal accidentRatioWithWeight = accidentRatio.multiply(BigDecimal.ONE);
+
+            BigDecimal performanceRatio = userIdToPerformanceRatio.get(userId);
+            BigDecimal performanceRatioWithWeight = performanceRatio.multiply(BigDecimal.TEN);
+
+            BigDecimal finalScore = accidentRatioWithWeight.add(performanceRatioWithWeight);
+            userIdToFinalScore.put(userId, finalScore);
+        }
+
+        Map<Long, BigDecimal> sortedUserIdToSum = userIdToFinalScore.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+        return new ArrayList<>(sortedUserIdToSum.keySet());
     }
 
     public List<ShiftResponse> findAllByDayAndType(LocalDate date, Type type)

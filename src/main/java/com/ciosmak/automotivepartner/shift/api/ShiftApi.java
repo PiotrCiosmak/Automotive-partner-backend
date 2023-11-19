@@ -1,5 +1,6 @@
 package com.ciosmak.automotivepartner.shift.api;
 
+import com.ciosmak.automotivepartner.shift.api.request.CancelShiftRequest;
 import com.ciosmak.automotivepartner.shift.api.request.EndShiftRequest;
 import com.ciosmak.automotivepartner.shift.api.request.StartShiftRequest;
 import com.ciosmak.automotivepartner.shift.api.request.UpdateFuelRequest;
@@ -25,13 +26,12 @@ public class ShiftApi
 {
     private final ShiftService shiftService;
 
-    @PostMapping("/generate")
-    @Operation(summary = "Generate for next week")
-    public ResponseEntity<Void> generate()
+    @DeleteMapping("/cancel")
+    @Operation(summary = "Cancel")
+    public ResponseEntity<Void> cancel(@RequestBody CancelShiftRequest cancelShiftRequest)
     {
-        shiftService.generate();
+        shiftService.cancel(cancelShiftRequest);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-
     }
 
     @PostMapping("/start")
@@ -56,6 +56,15 @@ public class ShiftApi
     {
         ShiftResponse shiftResponse = shiftService.end(endShiftRequest);
         return ResponseEntity.status(HttpStatus.OK).body(shiftResponse);
+    }
+
+    @PostMapping("/generate")
+    @Operation(summary = "Generate for next week")
+    public ResponseEntity<Void> generate()
+    {
+        shiftService.generate();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
     }
 
     @GetMapping("/find")

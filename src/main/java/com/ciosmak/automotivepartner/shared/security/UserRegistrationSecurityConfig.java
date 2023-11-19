@@ -50,7 +50,7 @@ public class UserRegistrationSecurityConfig
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers(
-                        "/api/shifts/generate",
+                        "/api/shifts/cancel",
                         "/api/shifts/start",
                         "/api/shifts/check/{id}",
                         "/api/shifts/end",
@@ -74,6 +74,7 @@ public class UserRegistrationSecurityConfig
                         "/api/users/find/drivers",
                         "/api/users/delete/{id}",
                         "/api/emails/**",
+                        "/api/shifts/generate",
                         "/api/shifts/find",
                         "/api/shifts/info/{id}",
                         "/api/shifts/update-fuel",
@@ -103,6 +104,7 @@ public class UserRegistrationSecurityConfig
                         "/api/users/find/drivers",
                         "/api/users/delete/{id}",
                         "/api/emails/**",
+                        "/api/shifts/generate",
                         "/api/shifts/find",
                         "/api/shifts/info/{id}",
                         "/api/shifts/update-fuel",
