@@ -64,7 +64,7 @@ public class ShiftExceptionSupplier
     {
         return () -> new ShiftAlreadyStartedException(id);
     }
-    
+
     public static Supplier<ShiftCancelTooLateException> shiftCancelTooLate()
     {
         return ShiftCancelTooLateException::new;
@@ -100,13 +100,13 @@ public class ShiftExceptionSupplier
         return ShiftsGeneratingTooEarlyException::new;
     }
 
-    public static Supplier<ShiftStartException> shiftStart(Long userId, LocalDate date, Type type)
-    {
-        return () -> new ShiftStartException(userId, date, type);
-    }
-
     public static Supplier<UnavailableCarException> unavailableCar(Long id)
     {
         return () -> new UnavailableCarException(id);
+    }
+
+    public static Supplier<UserNotAssignedToThisShiftException> userNotAssignedToThisShift(Long userId, LocalDate date, Type type)
+    {
+        return () -> new UserNotAssignedToThisShiftException(userId, date, type);
     }
 }

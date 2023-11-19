@@ -205,20 +205,20 @@ public class ShiftExceptionAdvisor
         return new ErrorMessageResponse(errorMessage);
     }
 
-    @ExceptionHandler(ShiftStartException.class)
+    @ExceptionHandler(UnavailableCarException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorMessageResponse shiftStart(ShiftStartException exception)
+    public ErrorMessageResponse unavailableCar(UnavailableCarException exception)
     {
         String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
         LOG.error(errorMessage);
         return new ErrorMessageResponse(errorMessage);
     }
 
-    @ExceptionHandler(UnavailableCarException.class)
+    @ExceptionHandler(UserNotAssignedToThisShiftException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorMessageResponse unavailableCar(UnavailableCarException exception)
+    public ErrorMessageResponse userNotAssignedToThisShift(UserNotAssignedToThisShiftException exception)
     {
         String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
         LOG.error(errorMessage);
