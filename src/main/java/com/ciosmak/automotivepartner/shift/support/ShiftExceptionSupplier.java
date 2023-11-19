@@ -64,6 +64,11 @@ public class ShiftExceptionSupplier
     {
         return () -> new ShiftAlreadyStartedException(id);
     }
+    
+    public static Supplier<ShiftCancelTooLateException> shiftCancelTooLate()
+    {
+        return ShiftCancelTooLateException::new;
+    }
 
     public static Supplier<ShiftCanNotBeStartedTodayException> shiftCanNotBeStartedToday(Long id)
     {

@@ -135,6 +135,16 @@ public class ShiftExceptionAdvisor
         return new ErrorMessageResponse(errorMessage);
     }
 
+    @ExceptionHandler(ShiftCancelTooLateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessageResponse shiftCancelTooLate(ShiftCancelTooLateException exception)
+    {
+        String errorMessage = messageSource.getMessage(getClassName(exception), exception.properties, LocaleContextHolder.getLocale());
+        LOG.error(errorMessage);
+        return new ErrorMessageResponse(errorMessage);
+    }
+
     @ExceptionHandler(ShiftCanNotBeStartedTodayException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
