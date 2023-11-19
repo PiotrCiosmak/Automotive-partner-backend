@@ -92,7 +92,6 @@ public class ShiftMapper
 
     public ExtendedShiftResponse toExtendedShiftResponse(Shift shift)
     {
-
         List<Photo> startShiftPhotos = photoRepository.findByShiftIdAndType(shift.getId(), PhotoType.SHIFT_START);
         List<PhotoResponse> startShiftPhotosResponses = new ArrayList<>();
         for (var startShiftPhoto : startShiftPhotos)
@@ -113,7 +112,7 @@ public class ShiftMapper
 
         boolean isAccidentHappened = accidentRepository.findByShiftId(shift.getId()).isPresent();
 
-        return new ExtendedShiftResponse(shift.getUser().getFirstName(), shift.getUser().getLastName(), shift.getCar().getRegistrationNumber(), shift.getStartMileage(), shift.getEndMileage(), shift.getEndMileage() - shift.getStartMileage(), shift.getLpg(), shift.getPetrol(), startShiftPhotosResponses, endShiftPhotosResponses, invoicePhotoResponse, isAccidentHappened);
+        return new ExtendedShiftResponse(shift.getUser().getFirstName(), shift.getUser().getLastName(), shift.getDate(), shift.getCar().getRegistrationNumber(), shift.getStartMileage(), shift.getEndMileage(), shift.getEndMileage() - shift.getStartMileage(), shift.getLpg(), shift.getPetrol(), startShiftPhotosResponses, endShiftPhotosResponses, invoicePhotoResponse, isAccidentHappened);
     }
 
     public ShiftResponse toShiftResponse(Shift shift)
