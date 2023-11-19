@@ -9,14 +9,14 @@ import java.time.LocalDate;
 @Getter
 public class CancelShiftRequest
 {
-    private final Long id;
+    private final Long userId;
     private final LocalDate date;
     private final Type type;
 
     @JsonCreator
-    public CancelShiftRequest(Long id, LocalDate date, Type type)
+    public CancelShiftRequest(Long userId, LocalDate date, Type type)
     {
-        this.id = id;
+        this.userId = userId;
         this.date = date;
         this.type = type;
     }
