@@ -151,12 +151,11 @@ public class UserApi
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    //TODO
-    /*@PostMapping("/logout/{id}")
+    @PostMapping("/logout")
     @Operation(summary = "Logout")
-    public ResponseEntity<Void> logout(@PathVariable Long id)
+    public ResponseEntity<Void> logout()
     {
-        userService.logout(id);
+        userService.logout();
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }*/
+    }
 }

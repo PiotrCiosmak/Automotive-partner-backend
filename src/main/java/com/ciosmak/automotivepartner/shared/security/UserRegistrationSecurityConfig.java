@@ -7,7 +7,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -29,14 +28,16 @@ public class UserRegistrationSecurityConfig
                 .disable()
                 .authorizeHttpRequests()
                 .requestMatchers(
-                        "/api/**",//TOOD USUNAĆ podczas realasu, albo po dodaniu formualrzy
+                        "/api/**",//TODO (release) Usunąć podczas release
                         "/api/tokens/verify-email/**",
                         "/api/users/register/**",
+                        "/api/users/logout",
                         "/api/users/login/**",
                         "/api/users/forgot-password/**",
                         "/api/users/change-password/**",
-                        "/swagger-ui/**",
-                        "/v3/api-docs/**")//TODO usunać swagger i v3 podczas releasu apki
+                        "/api/users/login-form",//TODO (front end communication) Umożliwia przekierowanie wszystkich do tego endpoint
+                        "/swagger-ui/**",//TODO (release) Usunąć podczas release
+                        "/v3/api-docs/**")//TODO (release) Usunąć podczas release
                 .anonymous()
                 .and()
                 .authorizeHttpRequests()
@@ -118,15 +119,16 @@ public class UserRegistrationSecurityConfig
                 .hasAnyAuthority("SUPER_ADMIN")
                 .and()
                 .formLogin()
-                //.loginPage("/api/users/login")//TODO OKREŚLA STRONE LOGOWANIA
-                .defaultSuccessUrl("/")
+                .loginPage("/api/users/login-form")//TODO (front end communication) Określa stronę logowania, przechodzi tam gdy chcemy wejść na adres do którego nie mamy uprawnień lub nie istnieje
+                .defaultSuccessUrl("/")//TODO (front end communication) Określa stronę na którą przechodzimy po udanym logowaniu
                 .permitAll()
                 .and()
                 .logout()
+                .logoutUrl("/api/users/logout")
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/")
+                .deleteCookies("JSESSIONID")
+                .logoutSuccessUrl("/api/users/login-form")//TODO (front end communication) określa stronę na którą przechodzimy po wylogowaniu
                 .and()
                 .build();
     }

@@ -28,6 +28,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -189,7 +190,7 @@ public class UserService implements UserDetailsService
             hasDigit = true;
         }
 
-        Pattern specialCharPattern = Pattern.compile("[~!@#$%^&*()_+{}\\\\[\\\\]:;,.<>/?-]");
+        Pattern specialCharPattern = Pattern.compile("[~!@#$%^&*()_+{}\\[\\]:;,.<>/?-]");
         Matcher specialCharMatcher = specialCharPattern.matcher(password);
         if (specialCharMatcher.find())
         {
@@ -447,11 +448,10 @@ public class UserService implements UserDetailsService
         return role.equals(Role.SUPER_ADMIN);
     }
 
-    //TODO
-/*    public void logout(Long id)
+    public void logout()
     {
-        userRepository.findById(id).orElseThrow(UserExceptionSupplier.userNotFound(id));
-    }*/
+        SecurityContextHolder.clearContext();
+    }
 
     @Override
     public User loadUserByUsername(String email)
