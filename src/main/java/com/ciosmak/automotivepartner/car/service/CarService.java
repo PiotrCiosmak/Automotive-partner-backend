@@ -153,7 +153,7 @@ public class CarService
         }
         car.setIsBlocked(Boolean.FALSE);
 
-        List<Shift> shifts = shiftRepository.findShiftsForCarAndFutureDate(car.getId());
+        List<Shift> shifts = shiftRepository.findShiftsForCarAndDateFuture(car.getId());
         for (var shift : shifts)
         {
             List<Car> availableCars = carRepository.findAvailableCarsForShift(shift.getDate(), shift.getType());
