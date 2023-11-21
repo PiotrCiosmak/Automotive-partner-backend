@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Tag(name = "shifts")
@@ -93,7 +94,7 @@ public class ShiftApi
 
     @GetMapping("/find/car-unavailable")
     @Operation(summary = "Find all with unavailable car since date")
-    public ResponseEntity<List<ShiftResponse>> findAllWithUnavailableCarSinceDate(@RequestParam LocalDate date)
+    public ResponseEntity<List<ShiftResponse>> findAllWithUnavailableCarSinceDate(@RequestParam LocalDateTime date)
     {
         List<ShiftResponse> shiftResponse = shiftService.findAllWithUnavailableCarSinceDate(date);
         return ResponseEntity.status(HttpStatus.FOUND).body(shiftResponse);
