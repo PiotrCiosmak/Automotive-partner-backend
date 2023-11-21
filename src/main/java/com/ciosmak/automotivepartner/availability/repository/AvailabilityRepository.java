@@ -22,7 +22,6 @@ public interface AvailabilityRepository extends JpaRepository<Availability, Long
 
     List<Availability> findAllByDateAndTypeAndIsUsedFalse(LocalDate date, Type type);
 
-    @Query("SELECT a FROM Availability a WHERE a.isUsed = false " + "AND a.date > CURRENT_DATE " + "OR (a.date = CURRENT_DATE " + "AND ((HOUR(CURRENT_TIME) < 6) OR (HOUR(CURRENT_TIME) >= 6 AND HOUR(CURRENT_TIME) < 18 AND a.type = 1)))")
+    @Query("SELECT a FROM Availability a WHERE a.isUsed = false AND a.date > CURRENT_DATE OR (a.date = CURRENT_DATE AND ((HOUR(CURRENT_TIME) < 6) OR (HOUR(CURRENT_TIME) >= 6 AND HOUR(CURRENT_TIME) < 18 AND a.type = 1)))")
     List<Availability> findAllByIsUsedFalseAndDateFuture();
-
 }
