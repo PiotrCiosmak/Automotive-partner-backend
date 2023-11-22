@@ -94,9 +94,9 @@ public class ShiftApi
 
     @GetMapping("/find/car-unavailable")
     @Operation(summary = "Find all with unavailable car since date")
-    public ResponseEntity<List<ShiftResponse>> findAllWithUnavailableCarSinceDate(@RequestParam LocalDateTime date)
+    public ResponseEntity<List<ShiftResponse>> findAllWithUnavailableCarSinceDate(@RequestParam LocalDateTime dateTime)
     {
-        List<ShiftResponse> shiftResponse = shiftService.findAllWithUnavailableCarSinceDate(date);
+        List<ShiftResponse> shiftResponse = shiftService.findAllWithUnavailableCarSinceDate(dateTime);
         return ResponseEntity.status(HttpStatus.FOUND).body(shiftResponse);
     }
 }

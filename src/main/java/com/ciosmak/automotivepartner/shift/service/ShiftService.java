@@ -618,9 +618,11 @@ public class ShiftService
         return fuel.compareTo(BigDecimal.ZERO) <= 0;
     }
 
-    public List<ShiftResponse> findAllWithUnavailableCarSinceDate(LocalDateTime date)
+    public List<ShiftResponse> findAllWithUnavailableCarSinceDate(LocalDateTime dateTime)
     {
-        List<Shift> shifts = shiftRepository.findByIsCarAvailableFalseAndDateGreaterThanEqual(date);
+        LocalDate date = dateTime.toLocalDate();
+        Integer hour = dateTime.toLocalTime().getHour();
+        List<Shift> shifts = shiftRepository.findByIsCarAvailableFalseAndDateGreaterThanEqual(date, hour);
         return shifts.stream().map(shiftMapper::toShiftResponse).collect(Collectors.toList());
     }
 }
