@@ -3,6 +3,7 @@ package com.ciosmak.automotivepartner.api.repository;
 import com.ciosmak.automotivepartner.email.domain.Email;
 import com.ciosmak.automotivepartner.email.repository.EmailRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
@@ -18,11 +19,17 @@ public class EmailRepositoryTest
     @Autowired
     private EmailRepository emailRepository;
 
+    private static Email email;
+
+    @BeforeAll
+    public static void setUp()
+    {
+        email = Email.builder().email("test@example.com").build();
+    }
+
     @Test
     public void shouldReturnEmailWhenEmailIsInDatabase()
     {
-        Email email = Email.builder().email("test@gmail.com").build();
-
         Email savedEmail = emailRepository.save(email);
 
         Assertions.assertThat(savedEmail).isNotNull();
@@ -32,21 +39,26 @@ public class EmailRepositoryTest
     @Test
     public void shouldFindEmailByEmailWhenEmailIsInDatabase()
     {
-        Email email = Email.builder().email("test@gmail.com").build();
-
         emailRepository.save(email);
 
         Optional<Email> foundEmail = emailRepository.findByEmail(email.getEmail());
 
         Assertions.assertThat(foundEmail).isNotEmpty();
         Assertions.assertThat(foundEmail.get()).isNotNull();
+        Assertions.assertThat(foundEmail.get().getEmail()).isEqualTo("test@example.com");
+    }
+
+    @Test
+    public void shouldNotFindEmailByEmailWhenEmailIsNotInDatabase()
+    {
+        Optional<Email> foundEmail = emailRepository.findByEmail(email.getEmail());
+
+        Assertions.assertThat(foundEmail).isEmpty();
     }
 
     @Test
     public void shouldDeleteEmailWhenEmailIsInDatabase()
     {
-        Email email = Email.builder().email("test@gmail.com").build();
-
         emailRepository.save(email);
 
         emailRepository.deleteById(email.getId());
