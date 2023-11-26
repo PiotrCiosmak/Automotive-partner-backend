@@ -175,5 +175,4 @@ public class CarRepositoryTest
             Assertions.assertThat(foundCar).isEmpty();
         }
     }
-
 }
