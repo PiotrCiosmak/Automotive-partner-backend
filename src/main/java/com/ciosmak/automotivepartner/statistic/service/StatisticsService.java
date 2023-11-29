@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Year;
-import java.util.Optional;
+import java.util.List;
 
 @AllArgsConstructor
 @Service
@@ -30,12 +30,12 @@ public class StatisticsService
     {
         userRepository.findById(userId).orElseThrow(UserExceptionSupplier.userNotFound(userId));
 
-        Optional<Statistics> statisticsCandidate = statisticsRepository.findByUserId(userId);
-        if (statisticsCandidate.isEmpty())
+        List<Statistics> statistics = statisticsRepository.findByUserId(userId);
+        if (statistics.isEmpty())
         {
             return statisticsMapper.toEmptyOverallStatisticsResponse(userId);
         }
-        return statisticsMapper.toOverallStatisticsResponse(statisticsCandidate.get());
+        return statisticsMapper.toOverallStatisticsResponse(statistics);
     }
 
     public StatisticsResponse findInSelectedMonth(Long userId, LocalDate date)
