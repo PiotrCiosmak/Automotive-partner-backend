@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @AllArgsConstructor
 @Component
@@ -60,9 +61,20 @@ public class StatisticsMapper
         return new StatisticsResponse(statistics.getId(), adjustDate(statistics.getDate()), statistics.getMileage(), statistics.getLpg(), statistics.getPetrol(), statistics.getUser().getId());
     }
 
-    public OverallStatisticsResponse toOverallStatisticsResponse(Statistics statistics)
+    public OverallStatisticsResponse toOverallStatisticsResponse(List<Statistics> statisticsList)
     {
-        return new OverallStatisticsResponse(statistics.getMileage(), statistics.getLpg(), statistics.getPetrol(), statistics.getUser().getId());
+        Long userId = statisticsList.get(0).getUser().getId();
+        Integer mileage = 0;
+        BigDecimal lpg = BigDecimal.ZERO;
+        BigDecimal petrol = BigDecimal.ZERO;
+
+        for (var statistics : statisticsList)
+        {
+            mileage += statistics.getMileage();
+            lpg = lpg.add(statistics.getLpg());
+            petrol = petrol.add(statistics.getPetrol());
+        }
+        return new OverallStatisticsResponse(mileage, lpg, petrol, userId);
     }
 
     public OverallStatisticsResponse toEmptyOverallStatisticsResponse(Long userId)

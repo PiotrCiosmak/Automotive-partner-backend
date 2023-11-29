@@ -329,16 +329,18 @@ public class ShiftService
 
         Optional<Statistics> userMonthStatisticsCandidate = statisticsRepository.findByUserIdAndDate(shift.getUser().getId(), adjustDate(shift.getDate()));
 
+        Statistics statistics;
         if (userMonthStatisticsCandidate.isEmpty())
         {
             StatisticsRequest statisticsRequest = getStatisticsRequest(shift);
-            statisticsRepository.save(statisticsMapper.toStatistics(statisticsRequest));
+            statistics = statisticsMapper.toStatistics(statisticsRequest);
         }
         else
         {
             Statistics userMonthStatistics = userMonthStatisticsCandidate.get();
-            statisticsMapper.toStatistics(userMonthStatistics, statisticsUpdateRequest);
+            statistics = statisticsMapper.toStatistics(userMonthStatistics, statisticsUpdateRequest);
         }
+        statisticsRepository.save(statistics);
     }
 
     private StatisticsUpdateRequest getStatisticsUpdateRequest(Shift shift)
