@@ -1,4 +1,4 @@
-package com.ciosmak.automotivepartner.api.repository;
+package com.ciosmak.automotivepartner.repository;
 
 import com.ciosmak.automotivepartner.car.domain.Car;
 import com.ciosmak.automotivepartner.car.repository.CarRepository;

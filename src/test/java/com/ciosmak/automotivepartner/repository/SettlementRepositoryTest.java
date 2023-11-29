@@ -1,4 +1,4 @@
-package com.ciosmak.automotivepartner.api.repository;
+package com.ciosmak.automotivepartner.repository;
 
 import com.ciosmak.automotivepartner.settlement.domain.Settlement;
 import com.ciosmak.automotivepartner.settlement.repository.SettlementRepository;
@@ -113,7 +113,7 @@ public class SettlementRepositoryTest
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {1100, 2000, 3000, 4000, 5000, 6000, 7000})
+    @ValueSource(ints = {1000, 2000, 3000, 4000, 5000, 6000, 7000})
     public void shouldFindNetProfitByYearMonthAndUserIdWhenExists(Integer netProfit)
     {
         LocalDate date = LocalDate.of(2023, 10, 1);
