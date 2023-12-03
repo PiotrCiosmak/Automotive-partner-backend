@@ -107,11 +107,22 @@ public class TokenRepositoryTest
     @ValueSource(strings = {"VERIFICATION", "CHANGE_PASSWORD"})
     public void shouldNotFindTokenByUserAndTypeAndExpirationTimeAfterWhenTokenOfThatTypeAndExpirationTimeAfterConnectedToThisUserIsNotInDatabase(TokenType tokenType)
     {
-        tokenRepository.delete(changePasswordToken);
+        tokenRepository.deleteAll();
 
-        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeAfter(user, tokenType, LocalDateTime.MAX);
+        loadExpiredTokens();
+
+        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeAfter(user, tokenType, LocalDateTime.now());
 
         Assertions.assertThat(foundToken).isEmpty();
+    }
+
+    private void loadExpiredTokens()
+    {
+        verificationToken = Token.builder().token("abcde123").type(TokenType.VERIFICATION).expirationTime(LocalDateTime.now().minusDays(1)).user(user).build();
+        tokenRepository.save(verificationToken);
+
+        changePasswordToken = Token.builder().token("abcde321").type(TokenType.CHANGE_PASSWORD).expirationTime(LocalDateTime.now().minusDays(1)).user(user).build();
+        tokenRepository.save(changePasswordToken);
     }
 
     @ParameterizedTest
@@ -151,19 +162,19 @@ public class TokenRepositoryTest
     {
         tokenRepository.deleteAll();
 
-        loadExpiredTokens();
+        loadUnExpiredTokens();
 
-        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeBefore(user, tokenType, LocalDateTime.MIN);
+        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeBefore(user, tokenType, LocalDateTime.now());
 
         Assertions.assertThat(foundToken).isEmpty();
     }
 
-    private void loadExpiredTokens()
+    private void loadUnExpiredTokens()
     {
-        verificationToken = Token.builder().token("abcde123").type(TokenType.VERIFICATION).expirationTime(LocalDateTime.MIN).user(user).build();
+        verificationToken = Token.builder().token("abcde123").type(TokenType.VERIFICATION).expirationTime(LocalDateTime.now().plusDays(1)).user(user).build();
         tokenRepository.save(verificationToken);
 
-        changePasswordToken = Token.builder().token("abcde321").type(TokenType.CHANGE_PASSWORD).expirationTime(LocalDateTime.MIN).user(user).build();
+        changePasswordToken = Token.builder().token("abcde321").type(TokenType.CHANGE_PASSWORD).expirationTime(LocalDateTime.now().plusDays(1)).user(user).build();
         tokenRepository.save(changePasswordToken);
     }
 
