@@ -86,7 +86,7 @@ public class AccidentRepositoryTest
     }
 
     @Test
-    public void shouldFindAllAccidents()
+    public void shouldFindAllAccidentsWhenAccidentsAreInDatabase()
     {
         List<Accident> foundAccidents = accidentRepository.findAll();
 
