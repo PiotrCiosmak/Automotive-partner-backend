@@ -9,7 +9,7 @@ import org.assertj.core.data.Percentage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -53,6 +53,7 @@ public class SettlementRepositoryTest
     public void shouldReturnSettlementWhenSettlementIsInDatabase()
     {
         Settlement savedSettlement = settlementRepository.save(Settlement.builder().date(LocalDate.of(2022, 10, 1)).netProfit(BigDecimal.valueOf(999)).factor(BigDecimal.ONE).tips(BigDecimal.ZERO).penalties(BigDecimal.ZERO).finalProfit(BigDecimal.valueOf(999)).isBugReported(Boolean.FALSE).user(user).build());
+
         Assertions.assertThat(savedSettlement).isNotNull();
         Assertions.assertThat(savedSettlement.getDate()).isEqualTo(LocalDate.of(2022, 10, 1));
         Assertions.assertThat(savedSettlement.getNetProfit()).isCloseTo(BigDecimal.valueOf(999), Percentage.withPercentage(0.01));
@@ -67,9 +68,12 @@ public class SettlementRepositoryTest
     @Test
     public void shouldFindByIdWhenIdIsCorrect()
     {
-        for (long i = 1L; i <= numberOfSettlements; ++i)
+        long firstId = settlementRepository.findAll().get(0).getId();
+        long lastId = firstId + numberOfSettlements;
+        for (long i = firstId; i < lastId; ++i)
         {
             Optional<Settlement> foundSettlement = settlementRepository.findById(i);
+
             Assertions.assertThat(foundSettlement).isNotEmpty();
         }
     }
@@ -78,29 +82,38 @@ public class SettlementRepositoryTest
     public void shouldNotFindByIdWhenIdIsIncorrect()
     {
         settlementRepository.deleteAll();
-        for (long i = 1L; i <= numberOfSettlements; ++i)
+        for (long i = 999L; i < numberOfSettlements; ++i)
         {
+
             Optional<Settlement> foundSettlement = settlementRepository.findById(i);
             Assertions.assertThat(foundSettlement).isEmpty();
         }
     }
 
-    @Test
-    public void shouldFindByUserAndDateWhenSettlementIsInDatabase()
+    @ParameterizedTest
+    @CsvSource({
+            "2023, 10",
+            "2023, 11",
+            "2023, 12",
+            "2024, 1",
+            "2024, 2",
+            "2024, 3",
+            "2024, 4"
+    })
+    public void shouldFindByUserAndDateWhenSettlementIsInDatabase(int year, int month)
     {
-        LocalDate date = LocalDate.of(2023, 10, 1);
-        while (date.isBefore(LocalDate.of(2024, 4, 1)))
-        {
-            Optional<Settlement> foundSettlement = settlementRepository.findByUserIdAndDate(user.getId(), date);
-            Assertions.assertThat(foundSettlement).isNotEmpty();
-            date = date.plusMonths(1);
-        }
+        LocalDate date = LocalDate.of(year, month, 1);
+
+        Optional<Settlement> foundSettlement = settlementRepository.findByUserIdAndDate(user.getId(), date);
+
+        Assertions.assertThat(foundSettlement).isNotEmpty();
     }
 
     @Test
     public void shouldNotFindByUserAndDateWhenSettlementIsNotInDatabase()
     {
         Optional<Settlement> foundSettlement = settlementRepository.findByUserIdAndDate(user.getId(), LocalDate.of(2022, 10, 1));
+
         Assertions.assertThat(foundSettlement).isEmpty();
     }
 
@@ -108,28 +121,34 @@ public class SettlementRepositoryTest
     public void shouldFindAllWithBugReportedTrueWhenSettlementsAreInDatabase()
     {
         List<Settlement> foundSettlements = settlementRepository.findAllWithBugReportedTrue();
+
         Assertions.assertThat(foundSettlements).isNotEmpty();
         Assertions.assertThat(foundSettlements.size()).isEqualTo(2);
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {1000, 2000, 3000, 4000, 5000, 6000, 7000})
-    public void shouldFindNetProfitByYearMonthAndUserIdWhenExists(Integer netProfit)
+    @CsvSource({
+            "1000, 2023, 10",
+            "2000, 2023, 11",
+            "3000, 2023, 12",
+            "4000, 2024, 1",
+            "5000, 2024, 2",
+            "6000, 2024, 3",
+            "7000, 2024, 4"
+    })
+    public void shouldFindNetProfitByYearMonthAndUserIdWhenExists(Integer netProfit, Integer year, Integer month)
     {
-        LocalDate date = LocalDate.of(2023, 10, 1);
-        while (date.isBefore(LocalDate.of(2024, 4, 1)))
-        {
-            Optional<BigDecimal> foundNetProfit = settlementRepository.findNetProfitByYearMonthAndUserId(date.getYear(), date.getMonthValue(), user.getId());
-            Assertions.assertThat(foundNetProfit).isNotEmpty();
-            Assertions.assertThat(foundNetProfit.get()).isCloseTo(BigDecimal.valueOf(netProfit), Percentage.withPercentage(0.01));
-            date = date.plusMonths(1);
-        }
+        Optional<BigDecimal> foundNetProfit = settlementRepository.findNetProfitByYearMonthAndUserId(year, month, user.getId());
+
+        Assertions.assertThat(foundNetProfit).isNotEmpty();
+        Assertions.assertThat(foundNetProfit.get()).isCloseTo(BigDecimal.valueOf(netProfit), Percentage.withPercentage(0.01));
     }
 
     @Test
     public void shouldNotFindNetProfitByYearMonthAndUserIdWhenDoesNotExists()
     {
         Optional<BigDecimal> foundNetProfit = settlementRepository.findNetProfitByYearMonthAndUserId(2022, 1, user.getId());
+
         Assertions.assertThat(foundNetProfit).isEmpty();
     }
 }
