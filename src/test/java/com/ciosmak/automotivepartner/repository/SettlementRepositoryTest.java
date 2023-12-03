@@ -89,7 +89,15 @@ public class SettlementRepositoryTest
     }
 
     @ParameterizedTest
-    @CsvSource({"2023, 10", "2023, 11", "2023, 12", "2024, 1", "2024, 2", "2024, 3", "2024, 4"})
+    @CsvSource({
+            "2023, 10",
+            "2023, 11",
+            "2023, 12",
+            "2024, 1",
+            "2024, 2",
+            "2024, 3",
+            "2024, 4"
+    })
     public void shouldFindSettlementByUserAndDateWhenSettlementForThisDateAndForThatUserIsInDatabase(int year, int month)
     {
         LocalDate date = LocalDate.of(year, month, 1);
@@ -117,7 +125,15 @@ public class SettlementRepositoryTest
     }
 
     @ParameterizedTest
-    @CsvSource({"1000, 2023, 10", "2000, 2023, 11", "3000, 2023, 12", "4000, 2024, 1", "5000, 2024, 2", "6000, 2024, 3", "7000, 2024, 4"})
+    @CsvSource({
+            "1000, 2023, 10",
+            "2000, 2023, 11",
+            "3000, 2023, 12",
+            "4000, 2024, 1",
+            "5000, 2024, 2",
+            "6000, 2024, 3",
+            "7000, 2024, 4"
+    })
     public void shouldFindNetProfitByYearMonthAndUserIdWhenNetProfitForThisDateForThatUserIsInDatabase(Integer netProfit, Integer year, Integer month)
     {
         Optional<BigDecimal> foundNetProfit = settlementRepository.findNetProfitByYearMonthAndUserId(year, month, user.getId());

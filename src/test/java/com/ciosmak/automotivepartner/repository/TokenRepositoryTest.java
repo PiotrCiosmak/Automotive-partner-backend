@@ -69,7 +69,10 @@ public class TokenRepositoryTest
     }
 
     @ParameterizedTest
-    @CsvSource({"VERIFICATION, test123", "CHANGE_PASSWORD, test321"})
+    @CsvSource({
+            "VERIFICATION, test123",
+            "CHANGE_PASSWORD, test321"
+    })
     public void shouldFindTokenByTokenContentAndTypeWhenTokenOfThatTypeAndContentIsInDatabase(TokenType tokenType, String tokenContent)
     {
         Optional<Token> foundToken = tokenRepository.findByTokenAndType(tokenContent, tokenType);
@@ -82,7 +85,12 @@ public class TokenRepositoryTest
     }
 
     @ParameterizedTest
-    @CsvSource({"VERIFICATION, abcd123", "CHANGE_PASSWORD, abcd123", "VERIFICATION, test321", "CHANGE_PASSWORD, test123",})
+    @CsvSource({
+            "VERIFICATION, abcd123",
+            "CHANGE_PASSWORD, abcd123",
+            "VERIFICATION, test321",
+            "CHANGE_PASSWORD, test123"
+    })
     public void shouldNotFindTokenByTokenContentAndTypeWhenTokenOfThatTypeAndContentIsInNotDatabase(TokenType tokenType, String tokenContent)
     {
         Optional<Token> foundToken = tokenRepository.findByTokenAndType(tokenContent, tokenType);
@@ -91,7 +99,10 @@ public class TokenRepositoryTest
     }
 
     @ParameterizedTest
-    @CsvSource({"VERIFICATION, test123", "CHANGE_PASSWORD, test321"})
+    @CsvSource({
+            "VERIFICATION, test123",
+            "CHANGE_PASSWORD, test321"
+    })
     public void shouldFindTokenByUserAndTypeAndExpirationTimeAfterWhenTokenOfThatTypeAndExpirationTimeAfterConnectedToThisUserIsInDatabase(TokenType tokenType, String tokenContent)
     {
         Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeAfter(user, tokenType, LocalDateTime.MAX);
@@ -144,7 +155,10 @@ public class TokenRepositoryTest
     }
 
     @ParameterizedTest
-    @CsvSource({"VERIFICATION, test123", "CHANGE_PASSWORD, test321"})
+    @CsvSource({
+            "VERIFICATION, test123",
+            "CHANGE_PASSWORD, test321"
+    })
     public void shouldFindTokenByUserAndTypeAndExpirationTimeBeforeWhenTokenOfThatTypeAndExpirationTimeBeforeConnectedToThisUserIsInDatabase(TokenType tokenType, String tokenContent)
     {
         Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeBefore(user, tokenType, LocalDateTime.MIN);
