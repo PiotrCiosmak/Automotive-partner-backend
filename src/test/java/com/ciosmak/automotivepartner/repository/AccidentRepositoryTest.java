@@ -51,7 +51,7 @@ public class AccidentRepositoryTest
     }
 
     @Test
-    public void shouldReturnAccidentWhenAccidentIsInDatabase()
+    public void shouldSaveAccident()
     {
         Accident savedAccident = accidentRepository.save(Accident.builder().isGuilty(Boolean.FALSE).isEndOfWork(Boolean.TRUE).shift(shifts.get(0)).build());
 
@@ -62,7 +62,7 @@ public class AccidentRepositoryTest
     }
 
     @Test
-    public void shouldFindAccidentByShiftIdWhenAccidentIsInDatabase()
+    public void shouldFindAccidentByShiftIdWhenAccidentConnectedWithThisShiftIsInDatabase()
     {
         Optional<Accident> foundAccident = accidentRepository.findByShiftId(shifts.get(0).getId());
 
@@ -70,7 +70,7 @@ public class AccidentRepositoryTest
     }
 
     @Test
-    public void shouldNotFindAccidentByShiftIdWhenAccidentIsNotInDatabase()
+    public void shouldNotFindAccidentByShiftIdWhenAccidentConnectedWithThisShiftIsNotInDatabase()
     {
         Optional<Accident> foundAccident = accidentRepository.findByShiftId(999L);
 
@@ -105,7 +105,7 @@ public class AccidentRepositoryTest
     }
 
     @Test
-    public void shouldFindByIdWhenIdIsCorrect()
+    public void shouldFindAccidentByIdWhenAccidentWithThisIdIsInDatabase()
     {
         long firstId = accidentRepository.findAll().get(0).getId();
         long lastId = firstId + numberOfAccidents;
@@ -118,7 +118,7 @@ public class AccidentRepositoryTest
     }
 
     @Test
-    public void shouldNotFindByIdWhenIdIsIncorrect()
+    public void shouldNotFindAccidentByIdWhenAccidentWithThisIdIsNotInDatabase()
     {
         for (long i = 999L; i < numberOfAccidents; ++i)
         {
