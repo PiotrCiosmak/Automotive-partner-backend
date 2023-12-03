@@ -81,7 +81,6 @@ public class SettlementRepositoryTest
     @Test
     public void shouldNotFindByIdWhenIdIsIncorrect()
     {
-        settlementRepository.deleteAll();
         for (long i = 999L; i < numberOfSettlements; ++i)
         {
 
