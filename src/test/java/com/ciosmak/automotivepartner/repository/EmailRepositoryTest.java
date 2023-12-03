@@ -34,7 +34,7 @@ public class EmailRepositoryTest
     }
 
     @Test
-    public void shouldReturnEmailWhenEmailIsInDatabase()
+    public void shouldSaveEmail()
     {
         Email savedEmail = emailRepository.save(Email.builder().email("test.b@example.com").build());
 
@@ -63,7 +63,7 @@ public class EmailRepositoryTest
     }
 
     @Test
-    public void shouldDeleteEmailWhenEmailIsInDatabase()
+    public void shouldDeleteEmailByIdWhenEmailWithThisIdIsInDatabase()
     {
         long firstId = emailRepository.findAll().get(0).getId();
         long lastId = firstId + numberOfEmails;
