@@ -30,6 +30,16 @@ public class AvailabilityRepositoryTest
     private AvailabilityRepository availabilityRepository;
     private User user;
 
+    void loadAvailabilityWithPastOrPresentDateOrUsed()
+    {
+        List<Availability> availabilities = new ArrayList<>();
+        availabilities.add(Availability.builder().type(Type.DAY).date(LocalDate.MAX).isUsed(Boolean.TRUE).user(user).build());
+        availabilities.add(Availability.builder().type(Type.NIGHT).date(LocalDate.MAX).isUsed(Boolean.TRUE).user(user).build());
+        availabilities.add(Availability.builder().type(Type.FREE).date(LocalDate.now().minusYears(1)).isUsed(Boolean.FALSE).user(user).build());
+        availabilities.add(Availability.builder().type(Type.FREE).date(LocalDate.MAX).isUsed(Boolean.TRUE).user(user).build());
+        availabilityRepository.saveAll(availabilities);
+    }
+
     @BeforeEach
     public void setUp()
     {
@@ -48,7 +58,7 @@ public class AvailabilityRepositoryTest
     }
 
     @Test
-    public void shouldReturnAvailabilityWhenAvailabilityIsInDatabase()
+    public void shouldSaveAvailability()
     {
         Availability savedAvailability = availabilityRepository.save(Availability.builder().type(Type.FREE).date(LocalDate.of(2024, 5, 1)).isUsed(Boolean.FALSE).user(user).build());
 
@@ -60,23 +70,23 @@ public class AvailabilityRepositoryTest
 
     @ParameterizedTest
     @CsvSource({
-            "2023, 10",
-            "2023, 11",
-            "2023, 12",
-            "2024, 1",
-            "2024, 2",
-            "2024, 3",
-            "2024, 4"
+            "2023, 10, 1",
+            "2023, 11, 1",
+            "2023, 12, 1",
+            "2024, 1, 1",
+            "2024, 2, 1",
+            "2024, 3, 1",
+            "2024, 4, 1"
     })
-    public void shouldFindAccidentByUserIdAndDateWhenAccidentIsInDatabase(int year, int month)
+    public void shouldFindAvailabilityByUserIdAndDateWhenAvailabilityIsForThatDayAndIsConnectedWithThisUserIsInDatabase(int year, int month, int day)
     {
-        Optional<Availability> foundAvailability = availabilityRepository.findByUser_IdAndDate(user.getId(), LocalDate.of(year, month, 1));
+        Optional<Availability> foundAvailability = availabilityRepository.findByUser_IdAndDate(user.getId(), LocalDate.of(year, month, day));
 
         Assertions.assertThat(foundAvailability).isNotEmpty();
     }
 
     @Test
-    public void shouldNotFindAccidentByUserIdAndDateIdWhenAccidentIsNotInDatabase()
+    public void shouldNotFindAvailabilityByUserIdAndDateWhenAvailabilityIsForThatDayAndIsConnectedWithThisUserIsNotInDatabase()
     {
         Optional<Availability> foundAvailability = availabilityRepository.findByUser_IdAndDate(user.getId(), LocalDate.of(2022, 10, 1));
 
@@ -124,7 +134,7 @@ public class AvailabilityRepositoryTest
             "2024, 3, 1, NIGHT",
             "2024, 4, 1, FREE"
     })
-    public void shouldFindAllAvailabilitiesByDateAndTypeWhenAvailabilitiesAreInDatabase(int year, int month, int day, Type type)
+    public void shouldFindAllAvailabilitiesByDateAndTypeWhenAvailabilitiesForThatDateAndWithThisTypeAreInDatabase(int year, int month, int day, Type type)
     {
         List<Availability> foundAvailabilities = availabilityRepository.findAllByDateAndType(LocalDate.of(year, month, day), type);
 
@@ -148,7 +158,7 @@ public class AvailabilityRepositoryTest
             "2024, 4, 1, DAY, 0",
             "2024, 4, 1, NIGHT, 0",
     })
-    public void shouldFindZeroAvailabilitiesByDateAndTypeWhenAvailabilitiesAreNotInDatabase(int year, int month, int day, Type type)
+    public void shouldFindZeroAvailabilitiesByDateAndTypeWhenAvailabilitiesForThatDateAndWithThisTypeAreNotInDatabase(int year, int month, int day, Type type)
     {
         List<Availability> foundAvailabilities = availabilityRepository.findAllByDateAndType(LocalDate.of(year, month, day), type);
 
@@ -161,7 +171,7 @@ public class AvailabilityRepositoryTest
             "2024, 3, 1, NIGHT",
             "2024, 4, 1, FREE"
     })
-    public void shouldFindAllAvailabilitiesByDateAndTypeAndIsUsedFalseWhenAvailabilitiesAreInDatabase(int year, int month, int day, Type type)
+    public void shouldFindAllAvailabilitiesByDateAndTypeAndIsUsedFalseWhenAvailabilitiesForThatDateAndWithThisTypeAndUnusedAreInDatabase(int year, int month, int day, Type type)
     {
         List<Availability> foundAvailabilities = availabilityRepository.findAllByDateAndTypeAndIsUsedFalse(LocalDate.of(year, month, day), type);
 
@@ -189,7 +199,7 @@ public class AvailabilityRepositoryTest
             "2024, 4, 1, DAY",
             "2024, 4, 1, NIGHT"
     })
-    public void shouldFindZeroAvailabilitiesByDateAndTypeAndIsUsedFalseWhenAvailabilitiesAreNotInDatabase(int year, int month, int day, Type type)
+    public void shouldFindZeroAvailabilitiesByDateAndTypeAndIsUsedFalseWhenAvailabilitiesForThatDateAndWithThisTypeAndUnusedAreNotInDatabase(int year, int month, int day, Type type)
     {
         List<Availability> foundAvailabilities = availabilityRepository.findAllByDateAndTypeAndIsUsedFalse(LocalDate.of(year, month, day), type);
 
@@ -197,7 +207,7 @@ public class AvailabilityRepositoryTest
     }
 
     @Test
-    public void shouldFindAllAvailabilitiesByIsUsedFalseAndDateFutureWhenAvailabilitiesAreInDatabase()
+    public void shouldFindAllAvailabilitiesByIsUsedFalseAndDateFutureWhenFutureUnusedAvailabilitiesAreInDatabase()
     {
         List<Availability> foundAvailabilities = availabilityRepository.findAllByIsUsedFalseAndDateFuture();
 
@@ -206,17 +216,19 @@ public class AvailabilityRepositoryTest
     }
 
     @Test
-    public void shouldFindZeroAvailabilitiesByIsUsedFalseAndDateFutureWhenAvailabilitiesAreNotInDatabase()
+    public void shouldFindZeroAvailabilitiesByIsUsedFalseAndDateFutureWhenFutureUnusedAvailabilitiesAreNotInDatabase()
     {
         availabilityRepository.deleteAll();
-        
+
+        loadAvailabilityWithPastOrPresentDateOrUsed();
+
         List<Availability> foundAvailabilities = availabilityRepository.findAllByIsUsedFalseAndDateFuture();
 
         Assertions.assertThat(foundAvailabilities).isEmpty();
     }
 
     @Test
-    public void shouldDeleteAvailabilityWhenAvailabilityIsInDatabase()
+    public void shouldDeleteAvailabilityByIdWhenAvailabilityWithThisIsInDatabase()
     {
         long firstId = availabilityRepository.findAll().get(0).getId();
         long lastId = firstId + numberOfAvailability;
