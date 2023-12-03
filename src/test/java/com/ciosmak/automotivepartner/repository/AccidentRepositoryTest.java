@@ -92,7 +92,6 @@ public class AccidentRepositoryTest
 
         Assertions.assertThat(foundAccidents).isNotEmpty();
         Assertions.assertThat(foundAccidents.size()).isEqualTo(3);
-
     }
 
     @Test
