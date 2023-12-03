@@ -46,6 +46,7 @@ public class CarRepositoryTest
     public void shouldReturnCarWhenCarIsInDatabase()
     {
         Car savedCar = carRepository.save(Car.builder().registrationNumber("AA54321").mileage(0).isBlocked(Boolean.FALSE).build());
+
         Assertions.assertThat(savedCar).isNotNull();
         Assertions.assertThat(savedCar.getRegistrationNumber()).isEqualTo("AA54321");
         Assertions.assertThat(savedCar.getMileage()).isEqualTo(0);
@@ -57,6 +58,7 @@ public class CarRepositoryTest
     public void shouldFindCarByRegistrationNumberWhenRegistrationNumberIsInDatabase(String expectedRegistrationNumber)
     {
         Optional<Car> foundCar = carRepository.findByRegistrationNumber(expectedRegistrationNumber);
+
         Assertions.assertThat(foundCar).isNotEmpty();
         Assertions.assertThat(foundCar.get().getRegistrationNumber()).isEqualTo(expectedRegistrationNumber);
     }
@@ -65,6 +67,7 @@ public class CarRepositoryTest
     public void shouldNotFindCarByRegistrationNumberWhenRegistrationNumberIsWrong()
     {
         Optional<Car> foundCar = carRepository.findByRegistrationNumber("YY99999");
+
         Assertions.assertThat(foundCar).isEmpty();
     }
 
