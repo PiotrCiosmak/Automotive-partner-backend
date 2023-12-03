@@ -54,14 +54,11 @@ public class CarRepositoryTest
 
     @ParameterizedTest
     @ValueSource(strings = {"AA12345", "BB12345", "CC12345", "DD12345", "EE12345"})
-    public void shouldFindCarByRegistrationNumberWhenRegistrationNumberIsInDatabase(String registrationNumber)
+    public void shouldFindCarByRegistrationNumberWhenRegistrationNumberIsInDatabase(String expectedRegistrationNumber)
     {
-        for (long i = 1L; i <= numberOfCars; ++i)
-        {
-            Optional<Car> foundCar = carRepository.findByRegistrationNumber(registrationNumber);
-            Assertions.assertThat(foundCar).isNotEmpty();
-            Assertions.assertThat(foundCar.get().getRegistrationNumber()).isEqualTo(registrationNumber);
-        }
+        Optional<Car> foundCar = carRepository.findByRegistrationNumber(expectedRegistrationNumber);
+        Assertions.assertThat(foundCar).isNotEmpty();
+        Assertions.assertThat(foundCar.get().getRegistrationNumber()).isEqualTo(expectedRegistrationNumber);
     }
 
     @Test
@@ -168,10 +165,13 @@ public class CarRepositoryTest
     @Test
     public void shouldDeleteCarWhenCarIsInDatabase()
     {
-        for (long i = 1L; i <= numberOfCars; ++i)
+        long firstId = carRepository.findAll().get(0).getId();
+        long lastId = firstId + numberOfCars;
+        for (long i = firstId; i < lastId; ++i)
         {
             carRepository.deleteById(i);
             Optional<Car> foundCar = carRepository.findById(i);
+
             Assertions.assertThat(foundCar).isEmpty();
         }
     }
