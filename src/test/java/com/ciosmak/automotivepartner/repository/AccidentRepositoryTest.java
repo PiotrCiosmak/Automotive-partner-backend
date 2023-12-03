@@ -120,7 +120,6 @@ public class AccidentRepositoryTest
     @Test
     public void shouldNotFindByIdWhenIdIsIncorrect()
     {
-        accidentRepository.deleteAll();
         for (long i = 999L; i < numberOfAccidents; ++i)
         {
             Optional<Accident> foundSettlement = accidentRepository.findById(i);
