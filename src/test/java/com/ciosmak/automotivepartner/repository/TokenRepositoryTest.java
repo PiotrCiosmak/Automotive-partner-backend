@@ -8,6 +8,9 @@ import com.ciosmak.automotivepartner.user.support.Role;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -44,7 +47,7 @@ public class TokenRepositoryTest
     }
 
     @Test
-    public void shouldReturnVerificationTokenWhenTokenIsInDatabase()
+    public void shouldSaveVerificationToken()
     {
         Token savedToken = tokenRepository.save(verificationToken);
 
@@ -55,7 +58,7 @@ public class TokenRepositoryTest
     }
 
     @Test
-    public void shouldReturnChangePasswordTokenWhenTokenIsInDatabase()
+    public void shouldSaveChangePasswordToken()
     {
         Token savedToken = tokenRepository.save(changePasswordToken);
 
@@ -65,233 +68,126 @@ public class TokenRepositoryTest
         Assertions.assertThat(savedToken.getExpirationTime()).isEqualTo(tokenExpirationTime);
     }
 
-    @Test
-    public void shouldFindVerificationTokenByTokenAndTypeWhenTokenIsInDatabase()
+    @ParameterizedTest
+    @CsvSource({"VERIFICATION, test123", "CHANGE_PASSWORD, test321"})
+    public void shouldFindTokenByTokenContentAndTypeWhenTokenOfThatTypeAndContentIsInDatabase(TokenType tokenType, String tokenContent)
     {
-        Optional<Token> foundToken = tokenRepository.findByTokenAndType("test123", TokenType.VERIFICATION);
+        Optional<Token> foundToken = tokenRepository.findByTokenAndType(tokenContent, tokenType);
 
         Assertions.assertThat(foundToken).isNotEmpty();
         Assertions.assertThat(foundToken.get()).isNotNull();
-        Assertions.assertThat(foundToken.get().getToken()).isEqualTo("test123");
-        Assertions.assertThat(foundToken.get().getType()).isEqualTo(TokenType.VERIFICATION);
+        Assertions.assertThat(foundToken.get().getToken()).isEqualTo(tokenContent);
+        Assertions.assertThat(foundToken.get().getType()).isEqualTo(tokenType);
         Assertions.assertThat(foundToken.get().getExpirationTime()).isEqualTo(tokenExpirationTime);
     }
 
-    @Test
-    public void shouldFindChangePasswordTokenByTokenAndTypeWhenTokenIsInDatabase()
+    @ParameterizedTest
+    @CsvSource({"VERIFICATION, abcd123", "CHANGE_PASSWORD, abcd123", "VERIFICATION, test321", "CHANGE_PASSWORD, test123",})
+    public void shouldNotFindTokenByTokenContentAndTypeWhenTokenOfThatTypeAndContentIsInNotDatabase(TokenType tokenType, String tokenContent)
     {
-        Optional<Token> foundToken = tokenRepository.findByTokenAndType("test321", TokenType.CHANGE_PASSWORD);
+        Optional<Token> foundToken = tokenRepository.findByTokenAndType(tokenContent, tokenType);
+
+        Assertions.assertThat(foundToken).isEmpty();
+    }
+
+    @ParameterizedTest
+    @CsvSource({"VERIFICATION, test123", "CHANGE_PASSWORD, test321"})
+    public void shouldFindTokenByUserAndTypeAndExpirationTimeAfterWhenTokenOfThatTypeAndExpirationTimeAfterConnectedToThisUserIsInDatabase(TokenType tokenType, String tokenContent)
+    {
+        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeAfter(user, tokenType, LocalDateTime.MAX);
 
         Assertions.assertThat(foundToken).isNotEmpty();
         Assertions.assertThat(foundToken.get()).isNotNull();
-        Assertions.assertThat(foundToken.get().getToken()).isEqualTo("test321");
-        Assertions.assertThat(foundToken.get().getType()).isEqualTo(TokenType.CHANGE_PASSWORD);
+        Assertions.assertThat(foundToken.get().getToken()).isEqualTo(tokenContent);
+        Assertions.assertThat(foundToken.get().getType()).isEqualTo(tokenType);
         Assertions.assertThat(foundToken.get().getExpirationTime()).isEqualTo(tokenExpirationTime);
     }
 
-    @Test
-    public void shouldNotFindVerificationTokenByTokenAndTypeWhenTokenIsNotInDatabase()
-    {
-        Optional<Token> foundToken = tokenRepository.findByTokenAndType("abcd123", TokenType.VERIFICATION);
-
-        Assertions.assertThat(foundToken).isEmpty();
-    }
-
-    @Test
-    public void shouldNotFindChangePasswordTokenByTokenAndTypeWhenTokenIsNotInDatabase()
-    {
-        Optional<Token> foundToken = tokenRepository.findByTokenAndType("abcd123", TokenType.CHANGE_PASSWORD);
-
-        Assertions.assertThat(foundToken).isEmpty();
-    }
-
-    @Test
-    public void shouldNotFindVerificationTokenByTokenAndTypeWhenTokenTypeIsWrong()
-    {
-        Optional<Token> foundToken = tokenRepository.findByTokenAndType("test123", TokenType.CHANGE_PASSWORD);
-
-        Assertions.assertThat(foundToken).isEmpty();
-    }
-
-    @Test
-    public void shouldNotFindChangePasswordTokenByTokenAndTypeWhenTokenTypeIsWrong()
-    {
-        Optional<Token> foundToken = tokenRepository.findByTokenAndType("test321", TokenType.VERIFICATION);
-
-        Assertions.assertThat(foundToken).isEmpty();
-    }
-
-    @Test
-    public void shouldNotFindVerificationTokenByTokenAndTypeWhenTokenIsWrong()
-    {
-        Optional<Token> foundToken = tokenRepository.findByTokenAndType("abcd123", TokenType.VERIFICATION);
-
-        Assertions.assertThat(foundToken).isEmpty();
-    }
-
-    @Test
-    public void shouldNotFindChangePasswordTokenByTokenAndTypeWhenTokenIsWrong()
-    {
-        Optional<Token> foundToken = tokenRepository.findByTokenAndType("abcd123", TokenType.CHANGE_PASSWORD);
-
-        Assertions.assertThat(foundToken).isEmpty();
-    }
-
-    @Test
-    public void shouldFindVerificationTokenByUserAndTypeAndExpirationTimeAfterWhenTokenIsInDatabase()
-    {
-        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeAfter(user, TokenType.VERIFICATION, LocalDateTime.MAX);
-
-        Assertions.assertThat(foundToken).isNotEmpty();
-        Assertions.assertThat(foundToken.get()).isNotNull();
-        Assertions.assertThat(foundToken.get().getToken()).isEqualTo("test123");
-        Assertions.assertThat(foundToken.get().getType()).isEqualTo(TokenType.VERIFICATION);
-        Assertions.assertThat(foundToken.get().getExpirationTime()).isEqualTo(tokenExpirationTime);
-    }
-
-    @Test
-    public void shouldFindChangePasswordTokenByUserAndTypeAndExpirationTimeAfterWhenTokenIsInDatabase()
-    {
-        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeAfter(user, TokenType.CHANGE_PASSWORD, LocalDateTime.MAX);
-
-        Assertions.assertThat(foundToken).isNotEmpty();
-        Assertions.assertThat(foundToken.get()).isNotNull();
-        Assertions.assertThat(foundToken.get().getToken()).isEqualTo("test321");
-        Assertions.assertThat(foundToken.get().getType()).isEqualTo(TokenType.CHANGE_PASSWORD);
-        Assertions.assertThat(foundToken.get().getExpirationTime()).isEqualTo(tokenExpirationTime);
-    }
-
-    @Test
-    public void shouldNotFindVerificationTokenByUserAndTypeAndExpirationTimeAfterWhenTypeIsWrong()
+    @ParameterizedTest
+    @ValueSource(strings = {"VERIFICATION", "CHANGE_PASSWORD"})
+    public void shouldNotFindTokenByUserAndTypeAndExpirationTimeAfterWhenTokenOfThatTypeAndExpirationTimeAfterConnectedToThisUserIsNotInDatabase(TokenType tokenType)
     {
         tokenRepository.delete(changePasswordToken);
 
-        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeAfter(user, TokenType.CHANGE_PASSWORD, LocalDateTime.MAX);
+        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeAfter(user, tokenType, LocalDateTime.MAX);
 
         Assertions.assertThat(foundToken).isEmpty();
     }
 
-    @Test
-    public void shouldNotFindChangePasswordTokenByUserAndTypeAndExpirationTimeAfterWhenTypeIsWrong()
+    @ParameterizedTest
+    @ValueSource(strings = {"VERIFICATION", "CHANGE_PASSWORD"})
+    public void shouldNotFindTokenByUserAndTypeAndExpirationTimeAfterWhenUserIsWrong(TokenType tokenType)
     {
-        tokenRepository.delete(verificationToken);
-
-        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeAfter(user, TokenType.VERIFICATION, LocalDateTime.MAX);
+        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeAfter(null, tokenType, LocalDateTime.MAX);
 
         Assertions.assertThat(foundToken).isEmpty();
     }
 
-    @Test
-    public void shouldNotFindVerificationTokenByUserAndTypeAndExpirationTimeAfterWhenUserIsWrong()
+    @ParameterizedTest
+    @ValueSource(strings = {"VERIFICATION", "CHANGE_PASSWORD"})
+    public void shouldNotFindTokenByUserAndTypeAndExpirationTimeAfterWhenExpirationTimeAfterIsWrong(TokenType tokenType)
     {
-        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeAfter(null, TokenType.CHANGE_PASSWORD, LocalDateTime.MAX);
+        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeAfter(user, tokenType, LocalDateTime.MIN);
 
         Assertions.assertThat(foundToken).isEmpty();
     }
 
-    @Test
-    public void shouldNotFindChangePasswordTokenByUserAndTypeAndExpirationTimeAfterWhenUserIsWrong()
+    @ParameterizedTest
+    @CsvSource({"VERIFICATION, test123", "CHANGE_PASSWORD, test321"})
+    public void shouldFindTokenByUserAndTypeAndExpirationTimeBeforeWhenTokenOfThatTypeAndExpirationTimeBeforeConnectedToThisUserIsInDatabase(TokenType tokenType, String tokenContent)
     {
-        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeAfter(null, TokenType.CHANGE_PASSWORD, LocalDateTime.MAX);
-
-        Assertions.assertThat(foundToken).isEmpty();
-    }
-
-    @Test
-    public void shouldNotFindVerificationTokenByUserAndTypeAndExpirationTimeAfterWhenExpirationTimeAfterIsWrong()
-    {
-        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeAfter(user, TokenType.VERIFICATION, LocalDateTime.MIN);
-
-        Assertions.assertThat(foundToken).isEmpty();
-    }
-
-    @Test
-    public void shouldNotFindChangePasswordTokenByUserAndTypeAndExpirationTimeAfterWhenExpirationTimeAfterIsWrong()
-    {
-        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeAfter(user, TokenType.CHANGE_PASSWORD, LocalDateTime.MIN);
-
-        Assertions.assertThat(foundToken).isEmpty();
-    }
-
-    @Test
-    public void shouldFindVerificationTokenByUserAndTypeAndExpirationTimeBeforeWhenTokenIsInDatabase()
-    {
-        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeBefore(user, TokenType.VERIFICATION, LocalDateTime.MIN);
+        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeBefore(user, tokenType, LocalDateTime.MIN);
 
         Assertions.assertThat(foundToken).isNotEmpty();
         Assertions.assertThat(foundToken.get()).isNotNull();
-        Assertions.assertThat(foundToken.get().getToken()).isEqualTo("test123");
-        Assertions.assertThat(foundToken.get().getType()).isEqualTo(TokenType.VERIFICATION);
+        Assertions.assertThat(foundToken.get().getToken()).isEqualTo(tokenContent);
+        Assertions.assertThat(foundToken.get().getType()).isEqualTo(tokenType);
         Assertions.assertThat(foundToken.get().getExpirationTime()).isEqualTo(tokenExpirationTime);
     }
 
-    @Test
-    public void shouldFindChangePasswordTokenByUserAndTypeAndExpirationTimeBeforeWhenTokenIsInDatabase()
-    {
-        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeBefore(user, TokenType.CHANGE_PASSWORD, LocalDateTime.MIN);
-
-        Assertions.assertThat(foundToken).isNotEmpty();
-        Assertions.assertThat(foundToken.get()).isNotNull();
-        Assertions.assertThat(foundToken.get().getToken()).isEqualTo("test321");
-        Assertions.assertThat(foundToken.get().getType()).isEqualTo(TokenType.CHANGE_PASSWORD);
-        Assertions.assertThat(foundToken.get().getExpirationTime()).isEqualTo(tokenExpirationTime);
-    }
-
-    @Test
-    public void shouldNotFindVerificationTokenByUserAndTypeAndExpirationTimeBeforeWhenTypeIsWrong()
+    @ParameterizedTest
+    @ValueSource(strings = {"VERIFICATION", "CHANGE_PASSWORD"})
+    public void shouldNotFindTokenByUserAndTypeAndExpirationTimeBeforeWhenTokenOfThatTypeAndExpirationTimeBeforeConnectedToThisUserIsNotInDatabase(TokenType tokenType)
     {
         tokenRepository.deleteAll();
 
-        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeBefore(user, TokenType.CHANGE_PASSWORD, LocalDateTime.MIN);
+        loadExpiredTokens();
+
+        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeBefore(user, tokenType, LocalDateTime.MIN);
 
         Assertions.assertThat(foundToken).isEmpty();
     }
 
-    @Test
-    public void shouldNotFindChangePasswordTokenByUserAndTypeAndExpirationTimeBeforeWhenTypeIsWrong()
+    private void loadExpiredTokens()
     {
-        tokenRepository.deleteAll();
+        verificationToken = Token.builder().token("abcde123").type(TokenType.VERIFICATION).expirationTime(LocalDateTime.MIN).user(user).build();
+        tokenRepository.save(verificationToken);
 
-        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeBefore(user, TokenType.VERIFICATION, LocalDateTime.MIN);
-
-        Assertions.assertThat(foundToken).isEmpty();
+        changePasswordToken = Token.builder().token("abcde321").type(TokenType.CHANGE_PASSWORD).expirationTime(LocalDateTime.MIN).user(user).build();
+        tokenRepository.save(changePasswordToken);
     }
 
-    @Test
-    public void shouldNotFindVerificationTokenByUserAndTypeAndExpirationTimeBeforeWhenUserIsWrong()
+    @ParameterizedTest
+    @ValueSource(strings = {"VERIFICATION", "CHANGE_PASSWORD"})
+    public void shouldNotFindTokenByUserAndTypeAndExpirationTimeBeforeWhenUserIsWrong(TokenType tokenType)
     {
-        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeBefore(null, TokenType.VERIFICATION, LocalDateTime.MIN);
+        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeBefore(null, tokenType, LocalDateTime.MIN);
 
         Assertions.assertThat(foundToken).isEmpty();
     }
 
-    @Test
-    public void shouldNotFindChangePasswordTokenByUserAndTypeAndExpirationTimeBeforeWhenUserIsWrong()
-    {
-        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeBefore(null, TokenType.CHANGE_PASSWORD, LocalDateTime.MIN);
-
-        Assertions.assertThat(foundToken).isEmpty();
-    }
-
-    @Test
-    public void shouldNotFindVerificationTokenByUserAndTypeAndExpirationTimeBeforeWhenExpirationTimeBeforeIsWrong()
+    @ParameterizedTest
+    @ValueSource(strings = {"VERIFICATION", "CHANGE_PASSWORD"})
+    public void shouldNotFindTokenByUserAndTypeAndExpirationTimeBeforeWhenExpirationTimeBeforeIsWrong(TokenType tokenType)
     {
         tokenRepository.save(verificationToken);
-        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeBefore(user, TokenType.VERIFICATION, LocalDateTime.MAX);
+        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeBefore(user, tokenType, LocalDateTime.MAX);
 
         Assertions.assertThat(foundToken).isEmpty();
     }
 
     @Test
-    public void shouldNotFindChangePasswordTokenByUserAndTypeAndExpirationTimeExpirationTimeBeforeWhenTokenIsWrong()
-    {
-        Optional<Token> foundToken = tokenRepository.findByUserAndTypeAndExpirationTimeBefore(user, TokenType.CHANGE_PASSWORD, LocalDateTime.MAX);
-
-        Assertions.assertThat(foundToken).isEmpty();
-    }
-
-    @Test
-    public void shouldDeleteVerificationTokenWhenTokenIsInDatabase()
+    public void shouldDeleteVerificationTokenWhenTokenWithThisIdIsInDatabase()
     {
         tokenRepository.deleteById(verificationToken.getId());
 
@@ -301,12 +197,12 @@ public class TokenRepositoryTest
     }
 
     @Test
-    public void shouldDeleteChangePasswordTokenWhenTokenIsInDatabase()
+    public void shouldDeleteChangePasswordTokenWhenTokenWithThisIdIsInDatabase()
     {
         tokenRepository.deleteById(changePasswordToken.getId());
 
         Optional<Token> foundToken = tokenRepository.findById(changePasswordToken.getId());
-        
+
         Assertions.assertThat(foundToken).isEmpty();
     }
 }
