@@ -45,7 +45,7 @@ public class StatisticsRepositoryTest
     }
 
     @Test
-    public void shouldReturnStatisticsWhenStatisticsAreInDatabase()
+    public void shouldSaveStatistics()
     {
         Statistics savedStatistics = statisticsRepository.save(Statistics.builder().date(LocalDate.of(2022, 10, 1)).mileage(999).lpg(BigDecimal.valueOf(99)).petrol(BigDecimal.valueOf(9)).user(user).build());
 
@@ -57,7 +57,7 @@ public class StatisticsRepositoryTest
     }
 
     @Test
-    public void shouldFindStatisticsByUserIdWhenStatisticsIsInDatabase()
+    public void shouldFindStatisticsByUserIdWhenStatisticsConnectedToThatUserIsInDatabase()
     {
         List<Statistics> foundStatistics = statisticsRepository.findByUserId(user.getId());
 
@@ -66,7 +66,7 @@ public class StatisticsRepositoryTest
     }
 
     @Test
-    public void shouldNotFindStatisticsByUserIdWhenStatisticsIsNotInDatabase()
+    public void shouldNotFindStatisticsByUserIdWhenStatisticsConnectedToThatUserIsNotInDatabase()
     {
         List<Statistics> foundStatistics = statisticsRepository.findByUserId(99L);
 
@@ -74,14 +74,8 @@ public class StatisticsRepositoryTest
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "2023, 10",
-            "2023, 11",
-            "2023, 12",
-            "2024, 1",
-            "2024, 2"
-    })
-    public void shouldFindStatisticsByUserIdAndDateWhenStatisticsIsInDatabase(int year, int month)
+    @CsvSource({"2023, 10", "2023, 11", "2023, 12", "2024, 1", "2024, 2"})
+    public void shouldFindStatisticsByUserIdAndDateWhenStatisticsFormThisDateConnectedToThatUserIsInDatabase(int year, int month)
     {
         LocalDate date = LocalDate.of(year, month, 1);
 
@@ -91,7 +85,7 @@ public class StatisticsRepositoryTest
     }
 
     @Test
-    public void shouldNotFindStatisticsByUserIdAndDateWhenStatisticsIsNotInDatabase()
+    public void shouldNotFindStatisticsByUserIdAndDateWhenStatisticsFormThisDateConnectedToThatUserIsNotInDatabase()
     {
         Optional<Statistics> foundStatistics = statisticsRepository.findByUserIdAndDate(user.getId(), LocalDate.of(2022, 10, 1));
 
@@ -99,10 +93,7 @@ public class StatisticsRepositoryTest
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "2023, 6000",
-            "2024, 9000"
-    })
+    @CsvSource({"2023, 6000", "2024, 9000"})
     public void shouldSumMileageByYear(int year, int expectedMileage)
     {
         Integer mileage = statisticsRepository.sumMileageByYear(year);
@@ -111,10 +102,7 @@ public class StatisticsRepositoryTest
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "2023, 600",
-            "2024, 900"
-    })
+    @CsvSource({"2023, 600", "2024, 900"})
     public void shouldSumLpgByYear(int year, int expectedLpg)
     {
         BigDecimal lpg = statisticsRepository.sumLpgByYear(year);
@@ -123,10 +111,7 @@ public class StatisticsRepositoryTest
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "2023, 60",
-            "2024, 90"
-    })
+    @CsvSource({"2023, 60", "2024, 90"})
     public void shouldSumPetrolByYear(int year, int expectedPetrol)
     {
         BigDecimal petrol = statisticsRepository.sumPetrolByYear(year);
