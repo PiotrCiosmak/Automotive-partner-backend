@@ -219,7 +219,6 @@ public class AvailabilityRepositoryTest
     public void shouldFindZeroAvailabilitiesByIsUsedFalseAndDateFutureWhenFutureUnusedAvailabilitiesAreNotInDatabase()
     {
         availabilityRepository.deleteAll();
-
         loadAvailabilityWithPastOrPresentDateOrUsed();
 
         List<Availability> foundAvailabilities = availabilityRepository.findAllByIsUsedFalseAndDateFuture();

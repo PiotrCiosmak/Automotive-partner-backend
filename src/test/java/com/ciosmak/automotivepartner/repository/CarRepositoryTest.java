@@ -29,6 +29,17 @@ public class CarRepositoryTest
     @Autowired
     private CarRepository carRepository;
 
+    void loadUnAvailableCars()
+    {
+        List<Car> cars = new ArrayList<>();
+        cars.add(Car.builder().registrationNumber("AB12345").mileage(1000).isBlocked(Boolean.TRUE).build());
+        cars.add(Car.builder().registrationNumber("CD2345").mileage(2000).isBlocked(Boolean.TRUE).build());
+        cars.add(Car.builder().registrationNumber("EF12345").mileage(3000).isBlocked(Boolean.TRUE).build());
+        cars.add(Car.builder().registrationNumber("GH12345").mileage(4000).isBlocked(Boolean.TRUE).build());
+        cars.add(Car.builder().registrationNumber("IJ12345").mileage(5000).isBlocked(Boolean.TRUE).build());
+        carRepository.saveAll(cars);
+    }
+
     @BeforeEach
     public void setUp()
     {
@@ -43,7 +54,7 @@ public class CarRepositoryTest
     }
 
     @Test
-    public void shouldReturnCarWhenCarIsInDatabase()
+    public void shouldSaveCar()
     {
         Car savedCar = carRepository.save(Car.builder().registrationNumber("AA54321").mileage(0).isBlocked(Boolean.FALSE).build());
 
@@ -55,7 +66,7 @@ public class CarRepositoryTest
 
     @ParameterizedTest
     @ValueSource(strings = {"AA12345", "BB12345", "CC12345", "DD12345", "EE12345"})
-    public void shouldFindCarByRegistrationNumberWhenRegistrationNumberIsInDatabase(String expectedRegistrationNumber)
+    public void shouldFindCarByRegistrationNumberWhenCarWithThatRegistrationNumberIsInDatabase(String expectedRegistrationNumber)
     {
         Optional<Car> foundCar = carRepository.findByRegistrationNumber(expectedRegistrationNumber);
 
@@ -64,7 +75,7 @@ public class CarRepositoryTest
     }
 
     @Test
-    public void shouldNotFindCarByRegistrationNumberWhenRegistrationNumberIsWrong()
+    public void shouldNotFindCarByRegistrationNumberWhenCarWithThatRegistrationNumberIsNotInDatabase()
     {
         Optional<Car> foundCar = carRepository.findByRegistrationNumber("YY99999");
 
@@ -94,7 +105,7 @@ public class CarRepositoryTest
     }
 
     @Test
-    public void shouldFindAllUnblockedCars()
+    public void shouldFindAllUnblockedCarsWhenUnblockedCarsAreInDataset()
     {
         List<Car> foundedCars = carRepository.findAllByIsBlocked(Boolean.FALSE);
 
@@ -107,7 +118,7 @@ public class CarRepositoryTest
     }
 
     @Test
-    public void shouldFindAllBlockedCars()
+    public void shouldFindAllBlockedCarsWhenBlockedCarsAreInDataset()
     {
         List<Car> foundedCars = carRepository.findAllByIsBlocked(Boolean.TRUE);
 
@@ -129,7 +140,6 @@ public class CarRepositoryTest
             Assertions.assertThat(car).isNotNull();
             Assertions.assertThat(carRepository.isBlocked(car.getId())).isEqualTo(Boolean.TRUE);
         }
-
     }
 
     @Test
@@ -145,7 +155,7 @@ public class CarRepositoryTest
     }
 
     @Test
-    public void shouldFindAvailableCarsForShiftWhenShiftExistsAndCarsAreAvailable()
+    public void shouldFindAvailableCarsForShiftWhenSomeCarIsAvailable()
     {
         User user = User.builder().firstName("Test").lastName("Test").email("test@example.com").password("Test123_").phoneNumber("123456789").role(Role.DRIVER).build();
 
@@ -156,9 +166,10 @@ public class CarRepositoryTest
     }
 
     @Test
-    public void shouldNotFindAvailableCarsForShiftWhenCarsAreNotAvailable()
+    public void shouldNotFindAvailableCarsForShiftWhenAnyCarIsNotAvailable()
     {
         carRepository.deleteAll();
+        loadUnAvailableCars();
 
         List<Car> foundCars = carRepository.findAvailableCarsForShift(LocalDate.now(), Type.DAY);
 
@@ -166,7 +177,7 @@ public class CarRepositoryTest
     }
 
     @Test
-    public void shouldDeleteCarWhenCarIsInDatabase()
+    public void shouldDeleteCarByIdWhenCarWithThisIsInDatabase()
     {
         long firstId = carRepository.findAll().get(0).getId();
         long lastId = firstId + numberOfCars;
