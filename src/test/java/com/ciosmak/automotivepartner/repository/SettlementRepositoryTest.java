@@ -50,7 +50,7 @@ public class SettlementRepositoryTest
     }
 
     @Test
-    public void shouldReturnSettlementWhenSettlementIsInDatabase()
+    public void shouldSaveSettlement()
     {
         Settlement savedSettlement = settlementRepository.save(Settlement.builder().date(LocalDate.of(2022, 10, 1)).netProfit(BigDecimal.valueOf(999)).factor(BigDecimal.ONE).tips(BigDecimal.ZERO).penalties(BigDecimal.ZERO).finalProfit(BigDecimal.valueOf(999)).isBugReported(Boolean.FALSE).user(user).build());
 
@@ -66,7 +66,7 @@ public class SettlementRepositoryTest
     }
 
     @Test
-    public void shouldFindByIdWhenIdIsCorrect()
+    public void shouldFindSettlementByIdWhenSettlementWithThisIdIsInDatabase()
     {
         long firstId = settlementRepository.findAll().get(0).getId();
         long lastId = firstId + numberOfSettlements;
@@ -79,27 +79,18 @@ public class SettlementRepositoryTest
     }
 
     @Test
-    public void shouldNotFindByIdWhenIdIsIncorrect()
+    public void shouldNotFindSettlementByIdWhenSettlementWithThisIdIsNotInDatabase()
     {
         for (long i = 999L; i < numberOfSettlements; ++i)
         {
-
             Optional<Settlement> foundSettlement = settlementRepository.findById(i);
             Assertions.assertThat(foundSettlement).isEmpty();
         }
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "2023, 10",
-            "2023, 11",
-            "2023, 12",
-            "2024, 1",
-            "2024, 2",
-            "2024, 3",
-            "2024, 4"
-    })
-    public void shouldFindByUserAndDateWhenSettlementIsInDatabase(int year, int month)
+    @CsvSource({"2023, 10", "2023, 11", "2023, 12", "2024, 1", "2024, 2", "2024, 3", "2024, 4"})
+    public void shouldFindSettlementByUserAndDateWhenSettlementForThisDateAndForThatUserIsInDatabase(int year, int month)
     {
         LocalDate date = LocalDate.of(year, month, 1);
 
@@ -109,7 +100,7 @@ public class SettlementRepositoryTest
     }
 
     @Test
-    public void shouldNotFindByUserAndDateWhenSettlementIsNotInDatabase()
+    public void shouldNotFindSettlementByUserAndDateWhenSettlementForThisDateAndForThatUserIsNotInDatabase()
     {
         Optional<Settlement> foundSettlement = settlementRepository.findByUserIdAndDate(user.getId(), LocalDate.of(2022, 10, 1));
 
@@ -117,7 +108,7 @@ public class SettlementRepositoryTest
     }
 
     @Test
-    public void shouldFindAllWithBugReportedTrueWhenSettlementsAreInDatabase()
+    public void shouldFindAllSettlementsWithBugReportedTrueWhenSettlementsWithBugReportedTrueAreInDatabase()
     {
         List<Settlement> foundSettlements = settlementRepository.findAllWithBugReportedTrue();
 
@@ -126,16 +117,8 @@ public class SettlementRepositoryTest
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "1000, 2023, 10",
-            "2000, 2023, 11",
-            "3000, 2023, 12",
-            "4000, 2024, 1",
-            "5000, 2024, 2",
-            "6000, 2024, 3",
-            "7000, 2024, 4"
-    })
-    public void shouldFindNetProfitByYearMonthAndUserIdWhenExists(Integer netProfit, Integer year, Integer month)
+    @CsvSource({"1000, 2023, 10", "2000, 2023, 11", "3000, 2023, 12", "4000, 2024, 1", "5000, 2024, 2", "6000, 2024, 3", "7000, 2024, 4"})
+    public void shouldFindNetProfitByYearMonthAndUserIdWhenNetProfitForThisDateForThatUserIsInDatabase(Integer netProfit, Integer year, Integer month)
     {
         Optional<BigDecimal> foundNetProfit = settlementRepository.findNetProfitByYearMonthAndUserId(year, month, user.getId());
 
@@ -144,7 +127,7 @@ public class SettlementRepositoryTest
     }
 
     @Test
-    public void shouldNotFindNetProfitByYearMonthAndUserIdWhenDoesNotExists()
+    public void shouldNotFindNetProfitByYearMonthAndUserIdWhenNetProfitForThisDateForThatUserIsNotInDatabase()
     {
         Optional<BigDecimal> foundNetProfit = settlementRepository.findNetProfitByYearMonthAndUserId(2022, 1, user.getId());
 
