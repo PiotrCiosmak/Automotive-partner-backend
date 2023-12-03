@@ -57,7 +57,7 @@ public class StatisticsRepositoryTest
     }
 
     @Test
-    public void shouldFindStatisticByUserIdWhenStatisticIsInDatabase()
+    public void shouldFindStatisticsByUserIdWhenStatisticsIsInDatabase()
     {
         List<Statistics> foundStatistics = statisticsRepository.findByUserId(user.getId());
 
@@ -66,7 +66,7 @@ public class StatisticsRepositoryTest
     }
 
     @Test
-    public void shouldNotFindStatisticByUserIdWhenStatisticIsNotInDatabase()
+    public void shouldNotFindStatisticsByUserIdWhenStatisticsIsNotInDatabase()
     {
         List<Statistics> foundStatistics = statisticsRepository.findByUserId(99L);
 
@@ -81,7 +81,7 @@ public class StatisticsRepositoryTest
             "2024, 1",
             "2024, 2"
     })
-    public void shouldFindStatisticByUserIdAndDateWhenStatisticIsInDatabase(int year, int month)
+    public void shouldFindStatisticsByUserIdAndDateWhenStatisticsIsInDatabase(int year, int month)
     {
         LocalDate date = LocalDate.of(year, month, 1);
 
@@ -91,7 +91,7 @@ public class StatisticsRepositoryTest
     }
 
     @Test
-    public void shouldNotFindStatisticByUserIdAndDateWhenStatisticIsNotInDatabase()
+    public void shouldNotFindStatisticsByUserIdAndDateWhenStatisticsIsNotInDatabase()
     {
         Optional<Statistics> foundStatistics = statisticsRepository.findByUserIdAndDate(user.getId(), LocalDate.of(2022, 10, 1));
 
