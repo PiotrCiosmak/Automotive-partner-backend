@@ -8,6 +8,8 @@ import org.assertj.core.api.Assertions;
 import org.assertj.core.data.Percentage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -46,6 +48,7 @@ public class StatisticsRepositoryTest
     public void shouldReturnStatisticsWhenStatisticsAreInDatabase()
     {
         Statistics savedStatistics = statisticsRepository.save(Statistics.builder().date(LocalDate.of(2022, 10, 1)).mileage(999).lpg(BigDecimal.valueOf(99)).petrol(BigDecimal.valueOf(9)).user(user).build());
+
         Assertions.assertThat(savedStatistics).isNotNull();
         Assertions.assertThat(savedStatistics.getDate()).isEqualTo(LocalDate.of(2022, 10, 1));
         Assertions.assertThat(savedStatistics.getMileage()).isEqualTo(999);
@@ -57,6 +60,7 @@ public class StatisticsRepositoryTest
     public void shouldFindStatisticByUserIdWhenStatisticIsInDatabase()
     {
         List<Statistics> foundStatistics = statisticsRepository.findByUserId(user.getId());
+
         Assertions.assertThat(foundStatistics).isNotEmpty();
         Assertions.assertThat(foundStatistics.size()).isEqualTo(5);
     }
@@ -65,64 +69,68 @@ public class StatisticsRepositoryTest
     public void shouldNotFindStatisticByUserIdWhenStatisticIsNotInDatabase()
     {
         List<Statistics> foundStatistics = statisticsRepository.findByUserId(99L);
+
         Assertions.assertThat(foundStatistics).isEmpty();
     }
 
-    @Test
-    public void shouldFindStatisticByUserIdAndDateWhenStatisticIsInDatabase()
+    @ParameterizedTest
+    @CsvSource({
+            "2023, 10",
+            "2023, 11",
+            "2023, 12",
+            "2024, 1",
+            "2024, 2"
+    })
+    public void shouldFindStatisticByUserIdAndDateWhenStatisticIsInDatabase(int year, int month)
     {
-        LocalDate date = LocalDate.of(2023, 10, 1);
-        while (date.isBefore(LocalDate.of(2024, 3, 1)))
-        {
-            Optional<Statistics> foundStatistics = statisticsRepository.findByUserIdAndDate(user.getId(), date);
-            Assertions.assertThat(foundStatistics).isNotEmpty();
-            date = date.plusMonths(1);
-        }
+        LocalDate date = LocalDate.of(year, month, 1);
+
+        Optional<Statistics> foundStatistics = statisticsRepository.findByUserIdAndDate(user.getId(), date);
+
+        Assertions.assertThat(foundStatistics).isNotEmpty();
     }
 
     @Test
     public void shouldNotFindStatisticByUserIdAndDateWhenStatisticIsNotInDatabase()
     {
         Optional<Statistics> foundStatistics = statisticsRepository.findByUserIdAndDate(user.getId(), LocalDate.of(2022, 10, 1));
+
         Assertions.assertThat(foundStatistics).isEmpty();
     }
 
-    @Test
-    public void shouldSumMileageByYear()
+    @ParameterizedTest
+    @CsvSource({
+            "2023, 6000",
+            "2024, 9000"
+    })
+    public void shouldSumMileageByYear(int year, int expectedMileage)
     {
-        Integer mileage = statisticsRepository.sumMileageByYear(2023);
-        Assertions.assertThat(mileage).isEqualTo(6000);
+        Integer mileage = statisticsRepository.sumMileageByYear(year);
 
-        mileage = statisticsRepository.sumMileageByYear(2024);
-        Assertions.assertThat(mileage).isEqualTo(9000);
-
-        mileage = statisticsRepository.sumMileageByYear(2025);
-        Assertions.assertThat(mileage).isNull();
+        Assertions.assertThat(mileage).isEqualTo(expectedMileage);
     }
 
-    @Test
-    public void shouldSumLpgByYear()
+    @ParameterizedTest
+    @CsvSource({
+            "2023, 600",
+            "2024, 900"
+    })
+    public void shouldSumLpgByYear(int year, int expectedLpg)
     {
-        BigDecimal lpg = statisticsRepository.sumLpgByYear(2023);
-        Assertions.assertThat(lpg).isCloseTo(BigDecimal.valueOf(600), Percentage.withPercentage(0.01));
+        BigDecimal lpg = statisticsRepository.sumLpgByYear(year);
 
-        lpg = statisticsRepository.sumLpgByYear(2024);
-        Assertions.assertThat(lpg).isCloseTo(BigDecimal.valueOf(900), Percentage.withPercentage(0.01));
-
-        lpg = statisticsRepository.sumLpgByYear(2025);
-        Assertions.assertThat(lpg).isNull();
+        Assertions.assertThat(lpg).isCloseTo(BigDecimal.valueOf(expectedLpg), Percentage.withPercentage(0.01));
     }
 
-    @Test
-    public void shouldSumPetrolByYear()
+    @ParameterizedTest
+    @CsvSource({
+            "2023, 60",
+            "2024, 90"
+    })
+    public void shouldSumPetrolByYear(int year, int expectedPetrol)
     {
-        BigDecimal petrol = statisticsRepository.sumPetrolByYear(2023);
-        Assertions.assertThat(petrol).isCloseTo(BigDecimal.valueOf(60), Percentage.withPercentage(0.01));
+        BigDecimal petrol = statisticsRepository.sumPetrolByYear(year);
 
-        petrol = statisticsRepository.sumPetrolByYear(2024);
-        Assertions.assertThat(petrol).isCloseTo(BigDecimal.valueOf(90), Percentage.withPercentage(0.01));
-
-        petrol = statisticsRepository.sumPetrolByYear(2025);
-        Assertions.assertThat(petrol).isNull();
+        Assertions.assertThat(petrol).isCloseTo(BigDecimal.valueOf(expectedPetrol), Percentage.withPercentage(0.01));
     }
 }
