@@ -29,17 +29,6 @@ public class CarRepositoryTest
     @Autowired
     private CarRepository carRepository;
 
-    void loadUnAvailableCars()
-    {
-        List<Car> cars = new ArrayList<>();
-        cars.add(Car.builder().registrationNumber("AB12345").mileage(1000).isBlocked(Boolean.TRUE).build());
-        cars.add(Car.builder().registrationNumber("CD2345").mileage(2000).isBlocked(Boolean.TRUE).build());
-        cars.add(Car.builder().registrationNumber("EF12345").mileage(3000).isBlocked(Boolean.TRUE).build());
-        cars.add(Car.builder().registrationNumber("GH12345").mileage(4000).isBlocked(Boolean.TRUE).build());
-        cars.add(Car.builder().registrationNumber("IJ12345").mileage(5000).isBlocked(Boolean.TRUE).build());
-        carRepository.saveAll(cars);
-    }
-
     @BeforeEach
     public void setUp()
     {
@@ -174,6 +163,17 @@ public class CarRepositoryTest
         List<Car> foundCars = carRepository.findAvailableCarsForShift(LocalDate.now(), Type.DAY);
 
         Assertions.assertThat(foundCars).isEmpty();
+    }
+
+    void loadUnAvailableCars()
+    {
+        List<Car> cars = new ArrayList<>();
+        cars.add(Car.builder().registrationNumber("AB12345").mileage(1000).isBlocked(Boolean.TRUE).build());
+        cars.add(Car.builder().registrationNumber("CD2345").mileage(2000).isBlocked(Boolean.TRUE).build());
+        cars.add(Car.builder().registrationNumber("EF12345").mileage(3000).isBlocked(Boolean.TRUE).build());
+        cars.add(Car.builder().registrationNumber("GH12345").mileage(4000).isBlocked(Boolean.TRUE).build());
+        cars.add(Car.builder().registrationNumber("IJ12345").mileage(5000).isBlocked(Boolean.TRUE).build());
+        carRepository.saveAll(cars);
     }
 
     @Test

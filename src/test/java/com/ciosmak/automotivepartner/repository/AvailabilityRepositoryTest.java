@@ -30,16 +30,6 @@ public class AvailabilityRepositoryTest
     private AvailabilityRepository availabilityRepository;
     private User user;
 
-    void loadAvailabilityWithPastOrPresentDateOrUsed()
-    {
-        List<Availability> availabilities = new ArrayList<>();
-        availabilities.add(Availability.builder().type(Type.DAY).date(LocalDate.MAX).isUsed(Boolean.TRUE).user(user).build());
-        availabilities.add(Availability.builder().type(Type.NIGHT).date(LocalDate.MAX).isUsed(Boolean.TRUE).user(user).build());
-        availabilities.add(Availability.builder().type(Type.FREE).date(LocalDate.now().minusYears(1)).isUsed(Boolean.FALSE).user(user).build());
-        availabilities.add(Availability.builder().type(Type.FREE).date(LocalDate.MAX).isUsed(Boolean.TRUE).user(user).build());
-        availabilityRepository.saveAll(availabilities);
-    }
-
     @BeforeEach
     public void setUp()
     {
@@ -224,6 +214,16 @@ public class AvailabilityRepositoryTest
         List<Availability> foundAvailabilities = availabilityRepository.findAllByIsUsedFalseAndDateFuture();
 
         Assertions.assertThat(foundAvailabilities).isEmpty();
+    }
+
+    void loadAvailabilityWithPastOrPresentDateOrUsed()
+    {
+        List<Availability> availabilities = new ArrayList<>();
+        availabilities.add(Availability.builder().type(Type.DAY).date(LocalDate.MAX).isUsed(Boolean.TRUE).user(user).build());
+        availabilities.add(Availability.builder().type(Type.NIGHT).date(LocalDate.MAX).isUsed(Boolean.TRUE).user(user).build());
+        availabilities.add(Availability.builder().type(Type.FREE).date(LocalDate.now().minusYears(1)).isUsed(Boolean.FALSE).user(user).build());
+        availabilities.add(Availability.builder().type(Type.FREE).date(LocalDate.MAX).isUsed(Boolean.TRUE).user(user).build());
+        availabilityRepository.saveAll(availabilities);
     }
 
     @Test
