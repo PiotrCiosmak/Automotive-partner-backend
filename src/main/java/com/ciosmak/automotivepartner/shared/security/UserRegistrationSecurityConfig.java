@@ -72,7 +72,6 @@ public class UserRegistrationSecurityConfig
                         "/api/users/find/admins",
                         "/api/users/find/super-admins",
                         "/api/users/find/drivers",
-                        "/api/users/delete/{id}",
                         "/api/emails/**",
                         "/api/shifts/generate",
                         "/api/shifts/find",
