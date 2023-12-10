@@ -14,6 +14,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @AllArgsConstructor
 @Service
@@ -67,19 +69,11 @@ public class EmailService
 
     private Boolean isEmailIncorrect(String email)
     {
-        if (!email.contains("@"))
-        {
-            return true;
-        }
-
-        int indexOfAt = email.indexOf("@");
-        int lastIndexOfDot = email.lastIndexOf(".");
-        if (lastIndexOfDot == -1 || lastIndexOfDot < indexOfAt)
-        {
-            return true;
-        }
-
-        return email.endsWith(".");
+        String emailRegex = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+                + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        Matcher matcher = pattern.matcher(email);
+        return !matcher.matches();
     }
 
     @Transactional
